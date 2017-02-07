@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Englishself-teacher:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Englishself_teacher_jar</output-path>
+    <root id="archive" name="Englishself-teacher.jar">
+      <element id="module-output" name="Englishself-teacher" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/json-20140107.jar" path-in-jar="/" />
+      <element id="dir-copy" path="$PROJECT_DIR$/src/icons" />
+    </root>
+  </artifact>
+</component>

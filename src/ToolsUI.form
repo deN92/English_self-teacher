@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="ToolsUI">
+  <grid id="27dc6" binding="tools_panel" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="659" height="511"/>
+    </constraints>
+    <properties>
+      <maximumSize width="-1" height="-1"/>
+      <minimumSize width="-1" height="-1"/>
+      <preferredSize width="-1" height="-1"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <grid id="1bd9c" binding="panel_settings" layout-manager="GridLayoutManager" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <grid id="1a72a" binding="panel_left" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="5" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="60" height="250"/>
+                <preferred-size width="60" height="250"/>
+                <maximum-size width="60" height="250"/>
+              </grid>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="573a2" class="javax.swing.JButton" binding="Btn_Back">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="2" fill="0" indent="0" use-parent-layout="false">
+                    <minimum-size width="50" height="35"/>
+                    <preferred-size width="50" height="35"/>
+                    <maximum-size width="50" height="35"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <icon value="icons/bt_position_back_25x25.png"/>
+                  <margin top="2" left="2" bottom="2" right="2"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="1407e" class="javax.swing.JButton" binding="Btn_Next">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                    <minimum-size width="50" height="35"/>
+                    <preferred-size width="50" height="35"/>
+                    <maximum-size width="50" height="35"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <icon value="icons/bt_position_next_25x25.png"/>
+                  <margin top="2" left="2" bottom="2" right="2"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="5d078" class="javax.swing.JButton" binding="Btn_Reset">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="0" indent="0" use-parent-layout="false">
+                    <minimum-size width="50" height="35"/>
+                    <preferred-size width="50" height="35"/>
+                    <maximum-size width="50" height="35"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <icon value="icons/bt_position_back_to_start_25x25.png"/>
+                  <margin top="2" left="2" bottom="2" right="2"/>
+                  <text value=""/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="cf715" binding="panel_right" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="60" height="250"/>
+                <preferred-size width="60" height="250"/>
+                <maximum-size width="60" height="250"/>
+              </grid>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="88ffa" class="javax.swing.JButton" binding="Btn_Save">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="0" indent="0" use-parent-layout="false">
+                    <minimum-size width="50" height="35"/>
+                    <preferred-size width="50" height="35"/>
+                    <maximum-size width="50" height="35"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <icon value="icons/bt_save_word_25x25.png"/>
+                  <margin top="2" left="2" bottom="2" right="2"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="1e298" class="javax.swing.JButton" binding="Btn_Del">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                    <minimum-size width="50" height="35"/>
+                    <preferred-size width="50" height="35"/>
+                    <maximum-size width="50" height="35"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <actionCommand value="Del"/>
+                  <icon value="icons/bt_del_word_25x25.png"/>
+                  <margin top="2" left="2" bottom="2" right="2"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="205bd" class="javax.swing.JButton" binding="Btn_Add">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="2" fill="0" indent="0" use-parent-layout="false">
+                    <minimum-size width="50" height="35"/>
+                    <preferred-size width="50" height="35"/>
+                    <maximum-size width="50" height="35"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <icon value="icons/bt_add_word_25x25.png"/>
+                  <margin top="2" left="2" bottom="2" right="2"/>
+                  <text value=""/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="5e5d3" binding="panel_table" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="400" height="250"/>
+                <preferred-size width="400" height="250"/>
+                <maximum-size width="400" height="250"/>
+              </grid>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <scrollpane id="d0100" binding="s_pane1">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                    <minimum-size width="400" height="200"/>
+                    <preferred-size width="400" height="200"/>
+                    <maximum-size width="400" height="200"/>
+                  </grid>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="66ffc" class="javax.swing.JTable" binding="table1" default-binding="true">
+                    <constraints/>
+                    <properties>
+                      <background color="-3164539"/>
+                      <dragEnabled value="false"/>
+                      <preferredScrollableViewportSize width="400" height="200"/>
+                      <rowHeight value="18"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
+            </children>
+          </grid>
+          <vspacer id="39989">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+                <minimum-size width="-1" height="15"/>
+                <preferred-size width="-1" height="15"/>
+                <maximum-size width="-1" height="15"/>
+              </grid>
+            </constraints>
+          </vspacer>
+        </children>
+      </grid>
+      <vspacer id="c4f5a">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </vspacer>
+      <grid id="75e62" binding="panel_design" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children/>
+      </grid>
+    </children>
+  </grid>
+</form>
