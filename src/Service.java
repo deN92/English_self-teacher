@@ -12,11 +12,12 @@ public class Service{
     ArrayList<String> list_answers_all = new ArrayList<>();
     DefaultTableModel[] model = new DefaultTableModel[4];
     JSONArray ja_words;
+    JSONObject jo_words;
     JSONObject[] jo_number_pair;
     String[] current_path = new String[2];
 
 
-    public void table(int number, boolean[] canEdit, String ja_words_temp){
+    public void table(int number, boolean[] canEdit, String ja_words_temp, String lib){
         try {
             dir_vocabulary_file(0);
             dir_vocabulary_file(1);
@@ -27,8 +28,15 @@ public class Service{
 
         String str_words = content_file(current_path[0]);
 
-        if(number == 2){str_words = ja_words_temp;}
-        ja_words = new JSONArray(str_words);
+        if(number == 2){
+            str_words = ja_words_temp;
+            ja_words = new JSONArray(str_words);
+        }
+        else {
+            jo_words = new JSONObject(str_words);
+            ja_words = new JSONArray(jo_words.getJSONArray(lib).toString());
+        }
+//        ja_words = ja_words.
         jo_number_pair = new JSONObject[ja_words.length()];
 
 
@@ -142,7 +150,7 @@ public class Service{
                     "Підтвердити", "Наступне запитання", "Старт", "Результат",  "Відмінити тест",   "Правильно", "Помилки",
                     "Повернутись до початку", "Налаштування", "Про програму", "Мова інтерфейсу", "Зміни", "Дизайн",
                     "Додати", "Видалити", "Зберегти", "Крок назад", "Крок вперед", "Початк. стан",
-                    "Повідомлення", "Запитань не вибрано!", "Рядок ще не заповнено!", " було видалено!",
+                    "Повідомлення", "Запитань не вибрано!", "Рядок ще не заповнено!", " було переміщено!",  " було видалено!",
                     "Слова не видалено!", "Записи успішно збережено", "Записи не збережено!", " вже існує в таблиці ",
                     "Детальніше про програму", "Перезапустіть програму будь-ласка"};
 
@@ -155,7 +163,7 @@ public class Service{
                     "Return to start", "Settings","About", "Language", "Edit", "Design",
                     "Add", "Del", "Save", "Back", "Next", "Reset",
                     "Message", "Question is not selected!",
-                    "The line is not yet completed", "Words have been removed",
+                    "The line is not yet completed",  "Words have been repositioned", "Words have been removed",
                     "Words are not removed", "Words success saved", "Words not saved", " Word already exists ",
                     "Description", "Restart program please"};
 
@@ -168,7 +176,7 @@ public class Service{
                     "Btn_Reset_start_test_name", "M_Settings_name", "M_About_name", "M_Lang_name", "MI_Edit_name", "MI_Design_name",
                     "Btn_Add_name", "Btn_Del_name", "Btn_Save_name", "Btn_Back_step_name", "Btn_Next_step_name", "Btn_Reset_name",
                     "OPM_Title", "OPM_Text_question_null",
-                    "OPM_Line_not_completed", "OPM_Words_removed", "OPM_Words_not_removed", "OPM_Words_success_saved",
+                    "OPM_Line_not_completed", "OPM_Words_repositioned", "OPM_Words_removed", "OPM_Words_not_removed", "OPM_Words_success_saved",
                     "OPM_Words_not_saved", "OPM_Already_exists", "MI_Description", "OPM_Restart_program"
             };
 

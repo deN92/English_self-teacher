@@ -110,7 +110,7 @@ public class MainUI{
         panel_test2.setVisible(false);
 
         boolean[] canEdit = {true, false, false, false, false, false};
-        service.table(0, canEdit, "");
+        service.table(0, canEdit, "", "words_new");
         elements_name();
         table1.setModel(service.model[0]);
         table1.setSize(s_pane1.getSize().width, s_pane1.getSize().height);
@@ -154,6 +154,7 @@ public class MainUI{
                     for (int i = 0; i < iL - iS + 1; i++) {
                         list_questions.add(service.jo_number_pair[iS + i - 1].names().getString(0));
                     }
+                    Collections.shuffle(list_questions, new Random(seed));
                 }
 
 //              Check questions from table
@@ -166,6 +167,7 @@ public class MainUI{
                             list_questions.add(service.jo_number_pair[col].names().getString(0));
                         }
                     }
+                    Collections.shuffle(list_questions, new Random(seed));
                 }
 
 //              Order questions
@@ -262,7 +264,10 @@ public class MainUI{
                             lang.SetLanguage("OPM_Title").toString(),
                             JOptionPane.WARNING_MESSAGE);
                 }
+
+
             }
+
         });
 
 
