@@ -25,6 +25,12 @@ public class ToolsUI{
     private JTable table2;
     private JButton Btn_Words_up;
     private JButton Btn_Words_down;
+    private JTextField field_search11;
+    private JTextField field_search12;
+    private JButton Btn_Search1;
+    private JTextField field_search21;
+    private JTextField field_search22;
+    private JButton Btn_Search2;
 
     private JSONArray ja_equal_words = new JSONArray();
     private JSONArray ja_equal_words2 = new JSONArray();
@@ -419,6 +425,18 @@ public class ToolsUI{
                 table1_list_delete_rows_indexes.clear();
             }
 
+        });
+        Btn_Search1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                service.wt_search(table1, field_search11, field_search12);
+            }
+        });
+        Btn_Search2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                service.wt_search(table2, field_search21, field_search22);
+            }
         });
     }
 

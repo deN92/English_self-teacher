@@ -3,6 +3,7 @@ import org.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -191,6 +192,26 @@ public class Service{
         }
     }
 
+
+    public void wt_search(JTable tab, JTextField tf1, JTextField tf2){
+        for(int i=0; i< tab.getRowCount(); i++){
+            String w = tab.getValueAt(i,2).toString().toLowerCase();
+            String wt = tab.getValueAt(i,3).toString().toLowerCase();
+
+            if(!tf1.getText().equals("")) {
+                if (w.contains(tf1.getText().toLowerCase())) {
+                    tab.changeSelection(i, 2, false, false);
+                }
+            }
+            if(!tf2.getText().equals("")) {
+                if (wt.contains(tf2.getText().toLowerCase())) {
+                    tab.changeSelection(i, 3, false, false);
+                }
+            }
+        }
+    }
+
+
     final static class SetColor{
         Service service = new Service();
         String val;
@@ -231,9 +252,14 @@ public class Service{
 
 
     private void array_content_words(String path, int list_numb) throws IOException {
-        JSONArray ob = new JSONArray();
-        if(list_numb == 0){
 
+
+
+        if(list_numb == 0){
+            JSONObject start_list = new JSONObject();
+            JSONArray words_studied = new JSONArray();
+            JSONArray words_new = new JSONArray();
+            JSONObject wt = new JSONObject();
             String[] words =
                     {"quiet", "broke", "mistakes", "turn", "stay",
                             "mind", "explain", "calm", "still", "become"};
@@ -241,13 +267,18 @@ public class Service{
                     {"тихо", "зламати", "помилки", "поворот", "залишитись",
                             "дбати", "пояснювати", "спокійний", "до цих пір", "стати/відповідати"};
 
+            words_studied.put(new JSONObject().put("hello","привіт"));
+            words_studied.put(new JSONObject().put("this","цей"));
             for (int i = 0; i < 10; i++) {
-                ob.put(i, new JSONObject().put(words[i], trans[i]));
+                words_new.put(new JSONObject().put(words[i], trans[i]));
             }
-            write_content_in_file(path, ob);
+
+            start_list.put("words_studied", words_studied);
+            start_list.put("words_new", words_new);
+            write_content_in_file(path, start_list);
         }
         else{
-
+            JSONArray ob = new JSONArray();
             JSONObject jo = new JSONObject();
             jo.put("lang","ua");
 
@@ -268,12 +299,19 @@ public class Service{
         }
     }
 
-    public void write_content_in_file(String path, JSONArray obj) throws IOException {
+    public void write_content_in_file(String path, Object obj) throws IOException {
         try {
             Writer out = new BufferedWriter(new OutputStreamWriter(
                     new FileOutputStream(path), "windows-1251"));
             try {
-                out.write(obj.toString(2));
+                if(obj.getClass().getName() == "org.json.JSONObject") {
+                    JSONObject obj1 = (JSONObject) obj;
+                    out.write(obj1.toString(2));
+                }
+                else if(obj.getClass().getName() == "org.json.JSONArray") {
+                    JSONArray obj1 = (JSONArray) obj;
+                    out.write(obj1.toString(2));
+                }
             } finally {
                 out.close();
             }

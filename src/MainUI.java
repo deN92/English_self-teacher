@@ -39,6 +39,9 @@ public class MainUI{
     private JButton Btn_answer;
     private JButton Btn_Reset2;
     private JScrollPane s_pane2;
+    private JTextField field_search1;
+    private JTextField field_search2;
+    private JButton Search_Ok;
 
     private Service service;
     private Service.Language lang;
@@ -49,6 +52,7 @@ public class MainUI{
     private DefaultListModel model_answer_true;
     private DefaultListModel model_answer_false;
 
+    private int result_count = 0;
     private int n;
     private int answer_true;
     private int answer_false;
@@ -114,10 +118,13 @@ public class MainUI{
         elements_name();
         table1.setModel(service.model[0]);
         table1.setSize(s_pane1.getSize().width, s_pane1.getSize().height);
-        int[] table_column_widths = {25,35,160,160,10,10};
+        int[] table_column_widths = {25,35,170,170,0,0};
         for (int i = 0; i < 6; i++) {
             table1.getColumnModel().getColumn(i).setMaxWidth(table_column_widths[i]);
         }
+        table1.removeColumn(table1.getColumnModel().getColumn(4));
+        table1.removeColumn(table1.getColumnModel().getColumn(4));
+//        table1.removeColumn(table1.getColumnModel().getColumn(5));
 
         RB_Count_questions.setSelected(true);
         RB_Option1.setSelected(true);
@@ -463,6 +470,12 @@ public class MainUI{
                 }
             }
         });
+        Search_Ok.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                service.wt_search(table1, field_search1, field_search2);
+            }
+        });
     }
 
     public int getCurrentColumnIndex(int index) {
@@ -481,7 +494,7 @@ public class MainUI{
         panel_test.setVisible(false);
         panel_test2.setVisible(false);
         panel_option_questions.setVisible(true);
-        panel_option_questions.getTopLevelAncestor().setSize(600,465);
+        panel_option_questions.getTopLevelAncestor().setSize(600,500);
     }
 
     private void parameter_enable(boolean[] s){
@@ -652,7 +665,7 @@ public class MainUI{
     public void showFrame() {
         JFrame frame = new JFrame("MainUI");
         frame.setContentPane(new MainUI().main_panel);
-        frame.setPreferredSize(new Dimension(600,465));
+        frame.setPreferredSize(new Dimension(600,500));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         new MenuUI().showMenu(frame);
