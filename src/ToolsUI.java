@@ -1,6 +1,8 @@
 import org.json.JSONArray;
 import org.json.JSONObject;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -31,6 +33,11 @@ public class ToolsUI{
     private JTextField field_search21;
     private JTextField field_search22;
     private JButton Btn_Search2;
+    private JSpinner spinner1;
+    private JSpinner spinner2;
+    private JCheckBox JCB_Scope_questions;
+    private JLabel Lbl_sp2_to_sp3;
+    private JLabel Lbl_Scope_questions;
 
     private JSONArray ja_equal_words = new JSONArray();
     private JSONArray ja_equal_words2 = new JSONArray();
@@ -50,7 +57,7 @@ public class ToolsUI{
     private Service service;
     private Service service2;
     private Service.Language lang;
-    int[] table_column_widths = {20,32,154,154,20,20};
+    int[] table_column_widths = {20,32,214,214,20,20};
     private Service.SetColor color1;
 
     private ArrayList<String> t1t2_list_eq = new ArrayList<>();
@@ -70,6 +77,8 @@ public class ToolsUI{
     }
 
     private void elements_name(){
+        Lbl_Scope_questions.setText(lang.SetLanguage("RB_Scope_questions_name").toString());
+        Lbl_sp2_to_sp3.setText(lang.SetLanguage("Lbl_sp2_to_sp3_name").toString());
         Btn_Add.setToolTipText(lang.SetLanguage("Btn_Add_name").toString());
         Btn_Del.setToolTipText(lang.SetLanguage("Btn_Del_name").toString());
         Btn_Save.setToolTipText(lang.SetLanguage("Btn_Save_name").toString());
@@ -86,17 +95,51 @@ public class ToolsUI{
         panel_right.setBackground(panel_settings.getBackground());
     }
 
+    private void scope_questions(boolean tf){
+        spinner1.setEnabled(tf);
+        spinner2.setEnabled(tf);
+        Lbl_Scope_questions.setEnabled(tf);
+        Lbl_sp2_to_sp3.setEnabled(tf);
+    }
+
+    private void autochoice(){
+        if(JCB_Scope_questions.isSelected()) {
+            for (int i = 0; i < table1.getRowCount(); i++) {
+                table1.setValueAt(false, i, 0);
+            }
+            for (int i = 0; i < table2.getRowCount(); i++) {
+                table2.setValueAt(false, i, 0);
+            }
+            for (int i = (int) spinner1.getValue() - 1; i < (int) spinner2.getValue(); i++) {
+                if (table1.getRowCount() > (int) spinner2.getValue() - 1) {
+                    table1.setValueAt(true, i, 0);
+                }
+                if (table2.getRowCount() > (int) spinner2.getValue() - 1) {
+                    table2.setValueAt(true, i, 0);
+                }
+            }
+        }
+        else{
+            for(int i=0; i< table1.getRowCount(); i++){
+                table1.setValueAt(false, i, 0);
+            }
+            for(int i=0; i< table2.getRowCount(); i++){
+                table2.setValueAt(false, i, 0);
+            }
+        }
+    }
+
     public ToolsUI(){
 
-
-        tools_panel.setSize(600,600);
-        tools_panel.setMaximumSize(new Dimension(600,600));
-        tools_panel.setMinimumSize(new Dimension(600,600));
-        tools_panel.setPreferredSize(new Dimension(600,600));
+        tools_panel.setSize(720,600);
+        tools_panel.setMaximumSize(new Dimension(720,600));
+        tools_panel.setMinimumSize(new Dimension(720,600));
+        tools_panel.setPreferredSize(new Dimension(720,600));
 
 
         service = new Service();
         service2 = new Service();
+
         service.table(1,canEdit, "", "words_new");
         service2.table(1,canEdit, "","words_studied");
         model = service.model[1];
@@ -124,6 +167,16 @@ public class ToolsUI{
         Btn_Next.setEnabled(false);
         lang = new Service.Language(service.current_path[1]);
         elements_name();
+
+        int large_numb;
+        if(service.ja_words.length() >= service2.ja_words.length()){
+            large_numb = service.ja_words.length();
+        }
+        else large_numb = service2.ja_words.length();
+        spinner1.setModel(new SpinnerNumberModel(1, 1, large_numb - 1, 1));
+        spinner2.setModel(new SpinnerNumberModel(2, 2, large_numb, 1));
+
+        scope_questions(false);
 
         Btn_Add.addActionListener(new ActionListener() {
             @Override
@@ -438,6 +491,53 @@ public class ToolsUI{
                 service.wt_search(table2, field_search21, field_search22);
             }
         });
+
+
+        spinner1.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent changeEvent) {
+                int jS1 = (int) spinner1.getValue();
+                int jS2 = (int) spinner2.getValue();
+                if (jS1 == jS2) {
+                    spinner2.setValue(jS1 + 1);
+                }
+                autochoice();
+            }
+        });
+
+        spinner2.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent changeEvent) {
+                if((int)spinner2.getValue() > service.ja_words.length()){
+                    Btn_Words_down.setEnabled(false);
+                }else Btn_Words_down.setEnabled(true);
+
+                if((int)spinner2.getValue() > service2.ja_words.length()){
+                    Btn_Words_up.setEnabled(false);
+                }else Btn_Words_up.setEnabled(true);
+
+                int jS1 = (int) spinner1.getValue();
+                int jS2 = (int) spinner2.getValue();
+                if (jS1 == jS2) {
+                    spinner1.setValue(jS2 - 1);
+                }
+                autochoice();
+            }
+        });
+
+
+        JCB_Scope_questions.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                autochoice();
+                if(JCB_Scope_questions.isSelected()) {
+                    scope_questions(true);
+                }
+                else{
+                    scope_questions(false);
+                }
+            }
+        });
     }
 
     private void bt_up_down(){
@@ -504,6 +604,9 @@ public class ToolsUI{
                 DefaultTableModel model = (DefaultTableModel) t2.getModel();
                 model.addRow(new Object[]{false, t2.getRowCount() + 1, al_name.get(i), al_translate.get(i), "", ""});
             }
+
+
+
             t2.changeSelection(t2.getRowCount() - 1, 0, false, false);
             JOptionPane.showMessageDialog(
                     null,

@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="main_panel" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="50" right="0"/>
     <constraints>
-      <xy x="26" y="20" width="624" height="1428"/>
+      <xy x="26" y="20" width="773" height="1428"/>
     </constraints>
     <properties>
       <maximumSize width="-1" height="-1"/>
@@ -196,16 +196,16 @@
           </component>
           <component id="3096c" class="javax.swing.JSpinner" binding="spinner1" default-binding="true">
             <constraints>
-              <grid row="3" column="4" row-span="1" col-span="5" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="3" column="5" row-span="1" col-span="4" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
           </component>
           <scrollpane id="9a700" binding="s_pane1">
             <constraints>
               <grid row="6" column="4" row-span="6" col-span="5" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
-                <minimum-size width="400" height="200"/>
-                <preferred-size width="400" height="200"/>
-                <maximum-size width="400" height="200"/>
+                <minimum-size width="520" height="200"/>
+                <preferred-size width="520" height="200"/>
+                <maximum-size width="520" height="200"/>
               </grid>
             </constraints>
             <properties/>
@@ -215,7 +215,7 @@
                 <constraints/>
                 <properties>
                   <background color="-3164539"/>
-                  <preferredScrollableViewportSize width="400" height="200"/>
+                  <preferredScrollableViewportSize width="520" height="200"/>
                   <rowHeight value="18"/>
                 </properties>
               </component>
@@ -314,7 +314,7 @@
           </vspacer>
           <component id="e1eaf" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
             <constraints>
-              <grid row="13" column="4" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="13" column="5" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
           </component>
@@ -364,36 +364,47 @@
           </component>
           <component id="c41f4" class="javax.swing.JTextField" binding="field_search1">
             <constraints>
-              <grid row="5" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false">
-                <minimum-size width="150" height="-1"/>
-                <preferred-size width="150" height="-1"/>
-                <maximum-size width="150" height="-1"/>
+              <grid row="5" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="180" height="-1"/>
+                <preferred-size width="180" height="-1"/>
+                <maximum-size width="180" height="-1"/>
               </grid>
             </constraints>
             <properties/>
           </component>
-          <hspacer id="b769a">
+          <component id="f49f" class="javax.swing.JTextField" binding="field_search2">
             <constraints>
-              <grid row="5" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <minimum-size width="60" height="-1"/>
-                <preferred-size width="60" height="-1"/>
-                <maximum-size width="60" height="-1"/>
+              <grid row="5" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="180" height="-1"/>
+                <preferred-size width="180" height="-1"/>
+                <maximum-size width="180" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <margin top="0" left="0" bottom="0" right="0"/>
+            </properties>
+          </component>
+          <hspacer id="f71e1">
+            <constraints>
+              <grid row="5" column="9" row-span="1" col-span="1" vsize-policy="1" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="14" height="-1"/>
+                <preferred-size width="14" height="-1"/>
+                <maximum-size width="14" height="-1"/>
               </grid>
             </constraints>
           </hspacer>
-          <component id="f49f" class="javax.swing.JTextField" binding="field_search2">
+          <hspacer id="9a096">
             <constraints>
-              <grid row="5" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
-                <minimum-size width="150" height="-1"/>
-                <preferred-size width="150" height="-1"/>
-                <maximum-size width="150" height="-1"/>
+              <grid row="5" column="6" row-span="1" col-span="1" vsize-policy="1" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <minimum-size width="15" height="-1"/>
+                <preferred-size width="15" height="-1"/>
+                <maximum-size width="15" height="-1"/>
               </grid>
             </constraints>
-            <properties/>
-          </component>
+          </hspacer>
           <component id="48c5e" class="javax.swing.JButton" binding="Search_Ok">
             <constraints>
-              <grid row="5" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+              <grid row="5" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="30" height="-1"/>
                 <preferred-size width="30" height="-1"/>
                 <maximum-size width="30" height="-1"/>
@@ -406,18 +417,13 @@
               <text value=""/>
             </properties>
           </component>
-          <hspacer id="f71e1">
+          <hspacer id="d24f7">
             <constraints>
-              <grid row="5" column="9" row-span="1" col-span="1" vsize-policy="1" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <minimum-size width="14" height="-1"/>
-                <preferred-size width="14" height="-1"/>
-                <maximum-size width="14" height="-1"/>
+              <grid row="5" column="8" row-span="1" col-span="1" vsize-policy="1" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="20" height="-1"/>
+                <preferred-size width="20" height="-1"/>
+                <maximum-size width="20" height="-1"/>
               </grid>
-            </constraints>
-          </hspacer>
-          <hspacer id="5105">
-            <constraints>
-              <grid row="5" column="7" row-span="1" col-span="1" vsize-policy="1" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
           </hspacer>
         </children>
@@ -561,9 +567,9 @@
           <scrollpane id="a0236" binding="s_pane2">
             <constraints>
               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
-                <minimum-size width="530" height="200"/>
-                <preferred-size width="530" height="200"/>
-                <maximum-size width="530" height="200"/>
+                <minimum-size width="650" height="200"/>
+                <preferred-size width="650" height="200"/>
+                <maximum-size width="650" height="200"/>
               </grid>
             </constraints>
             <properties/>
@@ -573,7 +579,7 @@
                 <constraints/>
                 <properties>
                   <background color="-3164539"/>
-                  <preferredScrollableViewportSize width="530" height="200"/>
+                  <preferredScrollableViewportSize width="650" height="200"/>
                   <rowHeight value="18"/>
                 </properties>
               </component>

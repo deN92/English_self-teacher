@@ -57,7 +57,7 @@ public class MainUI{
     private int answer_true;
     private int answer_false;
     private int sum2;
-    private int[] table2_column_widths = {25,160,160,23,160};
+    private int[] table2_column_widths = {25,200,200,23,200};
 
     private void elements_name(){
         lang = new Service.Language(service.current_path[1]);
@@ -118,7 +118,7 @@ public class MainUI{
         elements_name();
         table1.setModel(service.model[0]);
         table1.setSize(s_pane1.getSize().width, s_pane1.getSize().height);
-        int[] table_column_widths = {25,35,170,170,0,0};
+        int[] table_column_widths = {25,35,230,230,0,0};
         for (int i = 0; i < 6; i++) {
             table1.getColumnModel().getColumn(i).setMaxWidth(table_column_widths[i]);
         }
@@ -182,7 +182,7 @@ public class MainUI{
                     panel_option_questions.setVisible(false);
                     panel_test.setVisible(false);
                     panel_test2.setVisible(true);
-                    panel_test2.getTopLevelAncestor().setSize(600,400);
+                    panel_test2.getTopLevelAncestor().setSize(720,400);
 
                     DefaultTableModel dtm = new DefaultTableModel() {
                         String[] employee = (String[]) lang.SetLanguage("TC_name2");
@@ -256,7 +256,7 @@ public class MainUI{
                         rb[i].setForeground(Color.decode("#000"));
                     }
 
-                    panel_test.getTopLevelAncestor().setSize(600, 300);
+                    panel_test.getTopLevelAncestor().setSize(720, 300);
                     if(list_questions.size() == table1.getRowCount()) {
                         list_questions.remove(table1.getRowCount()-1);
                     }
@@ -351,7 +351,7 @@ public class MainUI{
                     Lbl_false_answers.setForeground(Color.red);
                     list1.setModel(model_answer_true);
                     list2.setModel(model_answer_false);
-                    panel_result.getTopLevelAncestor().setSize(600,400);
+                    panel_result.getTopLevelAncestor().setSize(720,400);
                 }
             }
         });
@@ -494,7 +494,7 @@ public class MainUI{
         panel_test.setVisible(false);
         panel_test2.setVisible(false);
         panel_option_questions.setVisible(true);
-        panel_option_questions.getTopLevelAncestor().setSize(600,500);
+        panel_option_questions.getTopLevelAncestor().setSize(720,500);
     }
 
     private void parameter_enable(boolean[] s){
@@ -665,7 +665,7 @@ public class MainUI{
     public void showFrame() {
         JFrame frame = new JFrame("MainUI");
         frame.setContentPane(new MainUI().main_panel);
-        frame.setPreferredSize(new Dimension(600,500));
+        frame.setPreferredSize(new Dimension(720,500));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         new MenuUI().showMenu(frame);
