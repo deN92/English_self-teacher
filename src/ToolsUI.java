@@ -9,6 +9,8 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
@@ -120,10 +122,8 @@ public class ToolsUI{
             }
         }
         else{
-            for(int i=0; i< table1.getRowCount(); i++){
+            for (int i = (int) spinner1.getValue() - 1; i < (int) spinner2.getValue(); i++){
                 table1.setValueAt(false, i, 0);
-            }
-            for(int i=0; i< table2.getRowCount(); i++){
                 table2.setValueAt(false, i, 0);
             }
         }
@@ -165,6 +165,9 @@ public class ToolsUI{
 
         Btn_Back.setEnabled(false);
         Btn_Next.setEnabled(false);
+        Btn_Words_up.setEnabled(false);
+        Btn_Words_down.setEnabled(false);
+
         lang = new Service.Language(service.current_path[1]);
         elements_name();
 
@@ -177,6 +180,7 @@ public class ToolsUI{
         spinner2.setModel(new SpinnerNumberModel(2, 2, large_numb, 1));
 
         scope_questions(false);
+
 
         Btn_Add.addActionListener(new ActionListener() {
             @Override
@@ -360,6 +364,15 @@ public class ToolsUI{
                         String val = table1.getValueAt(i, col).toString();
                         table1.setToolTipText(val);
                     }
+                    if(col == 0){
+                        if((boolean)table1.getValueAt(i, 0)) {
+                            Btn_Words_down.setEnabled(true);
+                            break;
+                        }
+                        else {
+                            Btn_Words_down.setEnabled(false);
+                        }
+                    }
                 }
             }
         });
@@ -402,6 +415,15 @@ public class ToolsUI{
                     if (row == i) {
                         String val = table2.getValueAt(i, col).toString();
                         table2.setToolTipText(val);
+                    }
+                    if(col == 0){
+                        if((boolean)table2.getValueAt(i, 0)) {
+                            Btn_Words_up.setEnabled(true);
+                            break;
+                        }
+                        else {
+                            Btn_Words_up.setEnabled(false);
+                        }
                     }
                 }
             }
@@ -501,6 +523,7 @@ public class ToolsUI{
                 if (jS1 == jS2) {
                     spinner2.setValue(jS1 + 1);
                 }
+
                 autochoice();
             }
         });
@@ -532,9 +555,31 @@ public class ToolsUI{
                 autochoice();
                 if(JCB_Scope_questions.isSelected()) {
                     scope_questions(true);
+                    Btn_Words_up.setEnabled(true);
+                    Btn_Words_down.setEnabled(true);
                 }
                 else{
                     scope_questions(false);
+
+                    for (int i = 0; i < table1.getRowCount(); i++) {
+                        if((boolean)table1.getValueAt(i, 0)) {
+                            Btn_Words_down.setEnabled(true);
+                            break;
+                        }
+                        else {
+                            Btn_Words_down.setEnabled(false);
+                        }
+                    }
+
+                    for (int i = 0; i < table2.getRowCount(); i++) {
+                        if((boolean)table2.getValueAt(i, 0)) {
+                            Btn_Words_up.setEnabled(true);
+                            break;
+                        }
+                        else {
+                            Btn_Words_up.setEnabled(false);
+                        }
+                    }
                 }
             }
         });
@@ -586,6 +631,10 @@ public class ToolsUI{
                     al_name.add(t1.getValueAt(row, getCurrentColumnIndex(2)).toString());
                     al_translate.add(t1.getValueAt(row, getCurrentColumnIndex(3)).toString());
                     al_indexes.add(row);
+//                    if(al_name.size() == 0){
+//                        Btn_Words_up.setEnabled(false);
+//                    }
+
                 }
             }
             int ldr_st = 0;
