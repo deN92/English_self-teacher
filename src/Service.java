@@ -144,43 +144,42 @@ public class Service{
             Object[][] list = new Object[2][];
 
             list[0] = new Object[]{
-                    new Object[] {"", "№", "Слово", "Переклад","С*", "П*"},
-                    new String[] {"№", "Слово", "Переклад","", "Відповідь"},
-                    "Вибір запитань", "Кількість запитань", "Вибір з таблиці: ", "В межах з:", "до", "Варіанти відповідей: ",
-                    new String[] {"Без варіантів", "Так"},
-                    "Підтвердити", "Наступне запитання", "Старт", "Результат",  "Відмінити тест",   "Правильно", "Помилки",
-                    "Повернутись до початку", "Налаштування", "Про програму", "Мова інтерфейсу", "Зміни", "Дизайн",
-                    "Додати", "Видалити", "Зберегти", "Крок назад", "Крок вперед", "Початк. стан",
-                    "Повідомлення", "Запитань не вибрано!", "Рядок ще не заповнено!", " було переміщено!",  " було видалено!",
-                    "Слова не видалено!", "Записи успішно збережено", "Записи не збережено!", " вже існує в таблиці ",
-                    "Детальніше про програму", "Перезапустіть програму будь-ласка"};
+                new Object[] {"", "№", "Слово", "Переклад","С*", "П*"},
+                new String[] {"№", "Слово", "Переклад","", "Відповідь"},
+                "Вибір запитань", "Кількість запитань", "Вибір з таблиці: ", "В межах з:", "до", "Варіанти відповідей: ",
+                new String[] {"Без варіантів", "Так"},
+                "Підтвердити", "Наступне запитання", "Старт", "Результат",  "Відмінити тест",   "Правильно", "Помилки",
+                "Повернутись до початку", "Запустити знову", "Прибрати правильні", "Налаштування", "Про програму",
+                "Мова інтерфейсу", "Зміни", "Дизайн", "Додати", "Видалити", "Зберегти", "Крок назад", "Крок вперед",
+                "Початк. стан", "Повідомлення", "Запитань не вибрано!", "Рядок ще не заповнено!", " було переміщено!",
+                " було видалено!", "Слова не видалено!", "Записи успішно збережено", "Записи не збережено!",
+                " вже існує в таблиці ", "Детальніше про програму", "Перезапустіть програму будь-ласка"};
 
             list[1] = new Object[]{
-                    new Object[] {"", "№", "Word", "Translate","W*", "T*"},
-                    new String[] {"№", "Word", "Translate","", "True answer"},
-                    "Choice questions", "Count questions", "Choice from table", "Scope with:", "to", "Answers options: ",
-                    new String[] {"No", "Yes"},
-                    "Ok", "Next", "Start", "Result", "Cancel test", "True answer", "False answer",
-                    "Return to start", "Settings","About", "Language", "Edit", "Design",
-                    "Add", "Del", "Save", "Back", "Next", "Reset",
-                    "Message", "Question is not selected!",
-                    "The line is not yet completed",  "Words have been repositioned", "Words have been removed",
-                    "Words are not removed", "Words success saved", "Words not saved", " Word already exists ",
-                    "Description", "Restart program please"};
+                new Object[] {"", "№", "Word", "Translate","W*", "T*"},
+                new String[] {"№", "Word", "Translate","", "True answer"},
+                "Choice questions", "Count questions", "Choice from table", "Scope with:", "to", "Answers options: ",
+                new String[] {"No", "Yes"},
+                "Ok", "Next", "Start", "Result", "Cancel test", "True answer", "False answer",
+                "Return to start", "Reset", "Clear true", "Settings","About", "Language", "Edit", "Design",
+                "Add", "Del", "Save", "Back", "Next", "Reset", "Message", "Question is not selected!",
+                "The line is not yet completed",  "Words have been repositioned", "Words have been removed",
+                "Words are not removed", "Words success saved", "Words not saved", " Word already exists ",
+                "Description", "Restart program please"};
 
             String[] str = {
-                    "TC_name", "TC_name2", "Lbl_Title_name",
-                    "RB_Count_questions_name", "RB_Choice_from_List_name", "RB_Scope_questions_name", "Lbl_sp2_to_sp3_name",
-                    "Lbl_Order_question_name", "CB_Elements_name",
-                    "Btn_Ok_name", "Btn_Next_question_name", "Btn_Start_test_name", "Lbl_Result_name",
-                    "Btn_Cancel_test", "Lbl_True_answers_name", "Lbl_False_answers_name",
-                    "Btn_Reset_start_test_name", "M_Settings_name", "M_About_name", "M_Lang_name", "MI_Edit_name", "MI_Design_name",
-                    "Btn_Add_name", "Btn_Del_name", "Btn_Save_name", "Btn_Back_step_name", "Btn_Next_step_name", "Btn_Reset_name",
-                    "OPM_Title", "OPM_Text_question_null",
-                    "OPM_Line_not_completed", "OPM_Words_repositioned", "OPM_Words_removed", "OPM_Words_not_removed", "OPM_Words_success_saved",
-                    "OPM_Words_not_saved", "OPM_Already_exists", "MI_Description", "OPM_Restart_program"
+                "TC_name", "TC_name2", "Lbl_Title_name",
+                "RB_Count_questions_name", "RB_Choice_from_List_name", "RB_Scope_questions_name", "Lbl_sp2_to_sp3_name",
+                "Lbl_Order_question_name", "CB_Elements_name",
+                "Btn_Ok_name", "Btn_Next_question_name", "Btn_Start_test_name", "Lbl_Result_name",
+                "Btn_Cancel_test",  "Lbl_True_answers_name", "Lbl_False_answers_name",
+                "Btn_Reset_start_test_name",  "Btn_Reset_test", "JCB_Clear_true_answers",
+                "M_Settings_name", "M_About_name", "M_Lang_name", "MI_Edit_name", "MI_Design_name",
+                "Btn_Add_name", "Btn_Del_name", "Btn_Save_name", "Btn_Back_step_name", "Btn_Next_step_name", "Btn_Reset_name",
+                "OPM_Title", "OPM_Text_question_null", "OPM_Line_not_completed", "OPM_Words_repositioned", "OPM_Words_removed",
+                "OPM_Words_not_removed", "OPM_Words_success_saved", "OPM_Words_not_saved", "OPM_Already_exists",
+                "MI_Description", "OPM_Restart_program"
             };
-
 
             for(int w=0; w< str.length; w++) {
                 jo_i18n.put(str[w], list[i][w]);
@@ -252,9 +251,6 @@ public class Service{
 
 
     private void array_content_words(String path, int list_numb) throws IOException {
-
-
-
         if(list_numb == 0){
             JSONObject start_list = new JSONObject();
             JSONArray words_studied = new JSONArray();

@@ -42,6 +42,10 @@ public class MainUI{
     private JTextField field_search1;
     private JTextField field_search2;
     private JButton Search_Ok;
+    private JButton Btn_Restart_test2;
+    private JCheckBox JCB_Clear_true_answers;
+    private JScrollPane s_pane_list1;
+    private JScrollPane s_pane_list2;
 
     private Service service;
     private Service.Language lang;
@@ -76,6 +80,8 @@ public class MainUI{
 
         Btn_Reset.setText(lang.SetLanguage("Btn_Cancel_test").toString());
         Btn_Reset2.setText(lang.SetLanguage("Btn_Cancel_test").toString());
+        Btn_Restart_test2.setText(lang.SetLanguage("Btn_Reset_test").toString());
+        JCB_Clear_true_answers.setText(lang.SetLanguage("JCB_Clear_true_answers").toString());
     }
 
     private void color_elements(){
@@ -112,12 +118,14 @@ public class MainUI{
         panel_result.setVisible(false);
         panel_test.setVisible(false);
         panel_test2.setVisible(false);
+        Btn_Restart_test2.setEnabled(false);
 
         boolean[] canEdit = {true, false, false, false, false, false};
         service.table(0, canEdit, "", "words_new");
         elements_name();
         table1.setModel(service.model[0]);
         table1.setSize(s_pane1.getSize().width, s_pane1.getSize().height);
+
         int[] table_column_widths = {25,35,230,230,0,0};
         for (int i = 0; i < 6; i++) {
             table1.getColumnModel().getColumn(i).setMaxWidth(table_column_widths[i]);
@@ -182,7 +190,7 @@ public class MainUI{
                     panel_option_questions.setVisible(false);
                     panel_test.setVisible(false);
                     panel_test2.setVisible(true);
-                    panel_test2.getTopLevelAncestor().setSize(720,400);
+                    panel_test2.getTopLevelAncestor().setSize(720,420);
 
                     DefaultTableModel dtm = new DefaultTableModel() {
                         String[] employee = (String[]) lang.SetLanguage("TC_name2");
@@ -351,7 +359,7 @@ public class MainUI{
                     Lbl_false_answers.setForeground(Color.red);
                     list1.setModel(model_answer_true);
                     list2.setModel(model_answer_false);
-                    panel_result.getTopLevelAncestor().setSize(720,400);
+                    panel_result.getTopLevelAncestor().setSize(720,360);
                 }
             }
         });
@@ -409,10 +417,12 @@ public class MainUI{
                 reset_start_test();
             }
         });
+        ArrayList<String> ast = new ArrayList<>();
         Btn_answer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                ArrayList<String> ast = new ArrayList<>();
+
+                Btn_Restart_test2.setEnabled(true);
 
                 if(table2.getColumnCount() == 3){
                     table2.addColumn(new TableColumn(3));
@@ -449,11 +459,130 @@ public class MainUI{
 
             }
         });
+
+        ArrayList<String> str_del_true = new ArrayList<>();
+
+        ArrayList<Integer> str_del_true_index = new ArrayList<>();
+        Btn_Restart_test2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                ast.clear();
+                Btn_answer.setEnabled(true);
+                Btn_Restart_test2.setEnabled(false);
+                boolean tf = false;
+                for(int i=0; i<table2.getRowCount(); i++) {
+                    if(table2.getValueAt(i, 3).toString().toLowerCase().contains("ic_answ_true_20x20.png")) {
+                        tf = true;
+                    }
+                }
+
+                if(JCB_Clear_true_answers.isSelected() && tf) {
+                    str_del_true.clear();
+                    str_del_true_index.clear();
+                    for (int i = 0; i < table2.getRowCount(); i++) {
+                        if (table2.getValueAt(i, 3).toString().toLowerCase().contains("ic_answ_true_20x20.png")) {
+                            str_del_true.add(table2.getValueAt(i, 1).toString());
+                        }
+                    }
+
+                    for (int i = 0; i < list_questions.size(); i++) {
+                        for (int j = 0; j < str_del_true.size(); j++) {
+                            if (list_questions.get(i).equals(str_del_true.get(j).toLowerCase())) {
+                                str_del_true_index.add(i);
+                            }
+                        }
+                    }
+
+                    int ldr_st = 0;
+
+                    for (int i = 0; i < str_del_true_index.size(); i++) {
+                        int ldr_value = str_del_true_index.get(i) - ldr_st;
+                        list_questions.remove(ldr_value);
+                        ldr_st++;
+                    }
+
+                }
+                long seed = System.nanoTime();
+                Collections.shuffle(list_questions, new Random(seed));
+                DefaultTableModel dtm = new DefaultTableModel() {
+                    String[] employee = (String[]) lang.SetLanguage("TC_name2");
+                    boolean[] canEdit2 = {false, false, true, false, false};
+                    @Override
+                    public int getColumnCount() {
+                        return 5;
+                    }
+
+                    @Override
+                    public int getRowCount(){
+                        return list_questions.size();
+                    }
+
+                    @Override
+                    public String getColumnName(int index) {
+                        return employee[index];
+                    }
+
+                    @Override
+                    public boolean isCellEditable(int rowIndex, int columnIndex) {
+                        return canEdit2[columnIndex];
+                    }
+
+                    @Override
+                    public Class<?> getColumnClass(int column){
+                        switch(column){
+                            case 0:
+                                return Integer.class;
+                            case 1:
+                                return String.class;
+                            case 2:
+                                return String.class;
+                            case 3:
+                                return ImageIcon.class;
+                            case 4:
+                                return String.class;
+                            default:
+                                return String.class;
+                        }
+                    }
+                };
+
+                table2.setModel(dtm);
+
+                for (int j = 0; j < list_questions.size(); j++) {
+                    for (int i = 0; i < table1.getRowCount(); i++) {
+                        if (table1.getValueAt(i, 2).toString().toLowerCase().equals(list_questions.get(j).toLowerCase())) {
+                            ast.add(table1.getValueAt(i, 3).toString());
+                        }
+                    }
+                    String value_current = ast.get(j).toLowerCase();
+
+                    table2.setValueAt(value_current, j, 4);
+                }
+
+                for(int i=0; i<list_questions.size(); i++) {
+                    dtm.setValueAt(i+1, i, 0);
+                    dtm.setValueAt(list_questions.get(i), i, 1);
+                    dtm.setValueAt("", i, 2);
+                }
+
+                table2.removeColumn(table2.getColumnModel().getColumn(4));
+                table2.removeColumn(table2.getColumnModel().getColumn(3));
+
+                table2.setSize(s_pane2.getSize().width, s_pane2.getSize().height);
+
+                for (int i = 0; i < 3; i++) {
+                    table2.getColumnModel().getColumn(i).setMaxWidth(table2_column_widths[i]);
+                }
+            }
+        });
+
         Btn_Reset2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 start_current_test();
                 reset_start_test();
+                list_questions.clear();
+                ast.clear();
             }
         });
         table2.addMouseListener(new MouseAdapter() {
