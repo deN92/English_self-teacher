@@ -13,6 +13,8 @@ public class Service{
     ArrayList<String> list_answers_all = new ArrayList<>();
     DefaultTableModel[] model = new DefaultTableModel[4];
     JSONArray ja_words;
+    JSONArray ja_words2;
+
     JSONObject jo_words;
     JSONObject[] jo_number_pair;
     String[] current_path = new String[2];
@@ -28,6 +30,8 @@ public class Service{
         }
 
         String str_words = content_file(current_path[0]);
+        ja_words2 = new JSONArray(new JSONObject(str_words).getJSONArray("words_type").toString());
+//        System.out.print(ja_words2.get(0));
 
         if(number == 2){
             str_words = ja_words_temp;
@@ -37,9 +41,20 @@ public class Service{
             jo_words = new JSONObject(str_words);
             ja_words = new JSONArray(jo_words.getJSONArray(lib).toString());
         }
-//        ja_words = ja_words.
+
         jo_number_pair = new JSONObject[ja_words.length()];
 
+        JSONObject jo_wt1 = (JSONObject) ja_words2.get(0);
+        JSONObject jo_wt2 = (JSONObject) ja_words2.get(1);
+
+        JSONObject jo_wtt = new JSONObject();
+        if(lib == "words_new"){
+            jo_wtt = (JSONObject) jo_wt1.get("words_new");
+
+        }
+        else if(lib == "words_studied"){
+            jo_wtt = (JSONObject) jo_wt2.get("words_studied");
+        }
 
         model[number] = new DefaultTableModel((Object[]) new Language(current_path[1]).SetLanguage("TC_name"), ja_words.length())
         {
@@ -54,8 +69,10 @@ public class Service{
                     case 3:
                         return String.class;
                     case 4:
-                        return ImageIcon.class;
+                        return String.class;
                     case 5:
+                        return ImageIcon.class;
+                    case 6:
                         return ImageIcon.class;
                     default:
                         return String.class;
@@ -67,7 +84,22 @@ public class Service{
             }
         };
 
+
+
+
         ImageIcon im = new ImageIcon("");
+
+        JCheckBoxMenuItem[] jcbmi = new JCheckBoxMenuItem[6];
+
+        jcbmi[0] = new JCheckBoxMenuItem("nn");
+        jcbmi[1] = new JCheckBoxMenuItem("vr");
+        jcbmi[2] = new JCheckBoxMenuItem("aj");
+        jcbmi[3] = new JCheckBoxMenuItem("av");
+        jcbmi[4] = new JCheckBoxMenuItem("pn");
+        jcbmi[5] = new JCheckBoxMenuItem("cj");
+
+
+
         for (int i = 0; i < ja_words.length(); i++) {
             jo_number_pair[i] = (JSONObject)ja_words.get(i);
             String key = jo_number_pair[i].names().getString(0);
@@ -78,8 +110,18 @@ public class Service{
             model[number].setValueAt(i+1, i, 1);
             model[number].setValueAt(key, i, 2);
             model[number].setValueAt(val, i, 3);
-            model[number].setValueAt(im, i, 4);
+            String wt_buffer = "";
+            for(int j=0; j<jcbmi.length;j++) {
+                JSONArray ja_wtt = (JSONArray) jo_wtt.get(jcbmi[j].getText());
+                for(int k=0; k< ja_wtt.length(); k++) {
+                    if((int)ja_wtt.get(k) == i) {
+                        wt_buffer += jcbmi[j].getText()+ " ";
+                        model[number].setValueAt(wt_buffer, i, 4);
+                    }
+                }
+            }
             model[number].setValueAt(im, i, 5);
+            model[number].setValueAt(im, i, 6);
         }
     }
 
@@ -144,7 +186,7 @@ public class Service{
             Object[][] list = new Object[2][];
 
             list[0] = new Object[]{
-                new Object[] {"", "№", "Слово", "Переклад","С*", "П*"},
+                new Object[] {"✔", "№", "Слово", "Переклад","Тип", "С*", "П*"},
                 new String[] {"№", "Слово", "Переклад","", "Відповідь"},
                 "Вибір запитань", "Кількість запитань", "Вибір з таблиці: ", "В межах з:", "до", "Варіанти відповідей: ",
                 new String[] {"Без варіантів", "Так"},
@@ -156,7 +198,7 @@ public class Service{
                 " вже існує в таблиці ", "Детальніше про програму", "Перезапустіть програму будь-ласка"};
 
             list[1] = new Object[]{
-                new Object[] {"", "№", "Word", "Translate","W*", "T*"},
+                new Object[] {"✓", "№", "Word", "Translate","Type","W*", "T*"},
                 new String[] {"№", "Word", "Translate","", "True answer"},
                 "Choice questions", "Count questions", "Choice from table", "Scope with:", "to", "Answers options: ",
                 new String[] {"No", "Yes"},
@@ -192,22 +234,41 @@ public class Service{
     }
 
 
-    public void wt_search(JTable tab, JTextField tf1, JTextField tf2){
+    public void wt_search(JTable tab, JTextField tf1, JTextField tf2, JTextField tf3){
         for(int i=0; i< tab.getRowCount(); i++){
-            String w = tab.getValueAt(i,2).toString().toLowerCase();
-            String wt = tab.getValueAt(i,3).toString().toLowerCase();
+            String s_name = tab.getValueAt(i,getCurrentColumnIndex("Word")).toString().toLowerCase();
+            String s_trans = tab.getValueAt(i,getCurrentColumnIndex("Translate")).toString().toLowerCase();
+            String s_type = tab.getValueAt(i,getCurrentColumnIndex("Type")).toString().toLowerCase();
 
             if(!tf1.getText().equals("")) {
-                if (w.contains(tf1.getText().toLowerCase())) {
-                    tab.changeSelection(i, 2, false, false);
+                if (s_name.contains(tf1.getText().toLowerCase())) {
+                    tab.changeSelection(i, getCurrentColumnIndex("Word"), true, false);
                 }
             }
-            if(!tf2.getText().equals("")) {
-                if (wt.contains(tf2.getText().toLowerCase())) {
-                    tab.changeSelection(i, 3, false, false);
+            else if(!tf2.getText().equals("")) {
+                if (s_trans.contains(tf2.getText().toLowerCase())) {
+                    tab.changeSelection(i, getCurrentColumnIndex("Translate"), true, false);
+                }
+            }
+            else if(!tf3.getText().equals("")) {
+                if (s_type.contains(tf3.getText().toLowerCase())) {
+                    tab.changeSelection(i, getCurrentColumnIndex("Type"), true, false);
                 }
             }
         }
+    }
+
+    public int getCurrentColumnIndex(String col_name) {
+        int current_col_index = 0;
+        String[] name_cols =  {"✓", "№", "Word", "Translate", "Type", "W*", "T*"};
+        Language lang = new Language(current_path[1]);
+//        String[] name_cols = (String[])lang.SetLanguage("TC_name");
+        for(int i=0; i<7; i++) {
+            if(col_name.toLowerCase().equals(name_cols[i].toLowerCase())) {
+                current_col_index = i;
+            }
+        }
+        return current_col_index;
     }
 
 
@@ -255,7 +316,8 @@ public class Service{
             JSONObject start_list = new JSONObject();
             JSONArray words_studied = new JSONArray();
             JSONArray words_new = new JSONArray();
-            JSONObject wt = new JSONObject();
+            JSONArray words_type = new JSONArray();
+
             String[] words =
                     {"quiet", "broke", "mistakes", "turn", "stay",
                             "mind", "explain", "calm", "still", "become"};
@@ -263,14 +325,38 @@ public class Service{
                     {"тихо", "зламати", "помилки", "поворот", "залишитись",
                             "дбати", "пояснювати", "спокійний", "до цих пір", "стати/відповідати"};
 
-            words_studied.put(new JSONObject().put("hello","привіт"));
-            words_studied.put(new JSONObject().put("this","цей"));
             for (int i = 0; i < 10; i++) {
                 words_new.put(new JSONObject().put(words[i], trans[i]));
             }
 
+            String[] awt = {"nn", "vr", "aj", "av", "pn", "cj"};
+            int[][] num1 = new int[10][];
+            int[][] num2 = new int[10][];
+
+            num1[0] = new int[]{0,2,3,4,5,7,8};
+            num1[1] = new int[]{2,3,4,5,6,7,9};
+            num1[2] = new int[]{1,7};
+            num1[3] = new int[]{0,1,8};
+            num1[4] = new int[]{};
+            num1[5] = new int[]{8};
+
+            for(int i=0; i<6; i++){
+                num2[i] = new int[]{};
+            }
+
+            JSONObject jo_wt1 = new JSONObject();
+            JSONObject jo_wt2 = new JSONObject();
+            for(int i=0; i<6;i++) {
+                jo_wt1.put(awt[i], num1[i]);
+                jo_wt2.put(awt[i], num2[i]);
+            }
+            words_type.put(new JSONObject().put("words_new", jo_wt1));
+            words_type.put(new JSONObject().put("words_studied", jo_wt2));
+
             start_list.put("words_studied", words_studied);
             start_list.put("words_new", words_new);
+            start_list.put("words_type", words_type);
+
             write_content_in_file(path, start_list);
         }
         else{
