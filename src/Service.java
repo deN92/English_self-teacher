@@ -3,24 +3,22 @@ import org.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Objects;
 
-public class Service{
+class Service{
 //    SetLanguage lang = new SetLanguage();
     ArrayList<String> list_questions_all = new ArrayList<>();
     ArrayList<String> list_answers_all = new ArrayList<>();
     DefaultTableModel[] model = new DefaultTableModel[4];
     JSONArray ja_words;
-    JSONArray ja_words2;
-
-    JSONObject jo_words;
     JSONObject[] jo_number_pair;
     String[] current_path = new String[2];
+    String[] name_cols =  {"✓", "№", "Word", "Translate", "Type", "W*", "T*"};
+    String[] word_types = {"nn", "vr", "aj", "av", "pn", "cj"};
 
-
-    public void table(int number, boolean[] canEdit, String ja_words_temp, String lib){
+    void table(int number, boolean[] canEdit, String lib){
         try {
             dir_vocabulary_file(0);
             dir_vocabulary_file(1);
@@ -30,15 +28,15 @@ public class Service{
         }
 
         String str_words = content_file(current_path[0]);
-        ja_words2 = new JSONArray(new JSONObject(str_words).getJSONArray("words_type").toString());
+        JSONArray ja_words2 = new JSONArray(new JSONObject(str_words).getJSONArray("words_type").toString());
 //        System.out.print(ja_words2.get(0));
 
         if(number == 2){
-            str_words = ja_words_temp;
+            str_words = "";
             ja_words = new JSONArray(str_words);
         }
         else {
-            jo_words = new JSONObject(str_words);
+            JSONObject jo_words = new JSONObject(str_words);
             ja_words = new JSONArray(jo_words.getJSONArray(lib).toString());
         }
 
@@ -48,11 +46,11 @@ public class Service{
         JSONObject jo_wt2 = (JSONObject) ja_words2.get(1);
 
         JSONObject jo_wtt = new JSONObject();
-        if(lib == "words_new"){
+        if(Objects.equals(lib, "words_new")){
             jo_wtt = (JSONObject) jo_wt1.get("words_new");
 
         }
-        else if(lib == "words_studied"){
+        else if(Objects.equals(lib, "words_studied")){
             jo_wtt = (JSONObject) jo_wt2.get("words_studied");
         }
 
@@ -84,21 +82,13 @@ public class Service{
             }
         };
 
-
-
-
         ImageIcon im = new ImageIcon("");
 
-        JCheckBoxMenuItem[] jcbmi = new JCheckBoxMenuItem[6];
+        JCheckBoxMenuItem[] jcbmi = new JCheckBoxMenuItem[word_types.length];
 
-        jcbmi[0] = new JCheckBoxMenuItem("nn");
-        jcbmi[1] = new JCheckBoxMenuItem("vr");
-        jcbmi[2] = new JCheckBoxMenuItem("aj");
-        jcbmi[3] = new JCheckBoxMenuItem("av");
-        jcbmi[4] = new JCheckBoxMenuItem("pn");
-        jcbmi[5] = new JCheckBoxMenuItem("cj");
-
-
+        for(int i=0; i<word_types.length;i++){
+            jcbmi[i] = new JCheckBoxMenuItem(word_types[i]);
+        }
 
         for (int i = 0; i < ja_words.length(); i++) {
             jo_number_pair[i] = (JSONObject)ja_words.get(i);
@@ -106,26 +96,26 @@ public class Service{
             String val = jo_number_pair[i].getString(key);
             list_questions_all.add(key);
             list_answers_all.add(val);
-            model[number].setValueAt(false, i, 0);
-            model[number].setValueAt(i+1, i, 1);
-            model[number].setValueAt(key, i, 2);
-            model[number].setValueAt(val, i, 3);
+            model[number].setValueAt(false, i, getCCI(""));
+            model[number].setValueAt(i+1, i, getCCI("№"));
+            model[number].setValueAt(key, i, getCCI("Word"));
+            model[number].setValueAt(val, i, getCCI("Translate"));
             String wt_buffer = "";
-            for(int j=0; j<jcbmi.length;j++) {
-                JSONArray ja_wtt = (JSONArray) jo_wtt.get(jcbmi[j].getText());
-                for(int k=0; k< ja_wtt.length(); k++) {
-                    if((int)ja_wtt.get(k) == i) {
-                        wt_buffer += jcbmi[j].getText()+ " ";
-                        model[number].setValueAt(wt_buffer, i, 4);
+            for (JCheckBoxMenuItem aJcbmi : jcbmi) {
+                JSONArray ja_wtt = (JSONArray) jo_wtt.get(aJcbmi.getText());
+                for (int k = 0; k < ja_wtt.length(); k++) {
+                    if ((int) ja_wtt.get(k) == i) {
+                        wt_buffer += aJcbmi.getText() + " ";
+                        model[number].setValueAt(wt_buffer, i, getCCI("Type"));
                     }
                 }
             }
-            model[number].setValueAt(im, i, 5);
-            model[number].setValueAt(im, i, 6);
+            model[number].setValueAt(im, i, getCCI("W*"));
+            model[number].setValueAt(im, i, getCCI("T*"));
         }
     }
 
-    public void dir_vocabulary_file(int file_type) throws IOException{
+    void dir_vocabulary_file(int file_type) throws IOException{
         String[] lsts = new String[2];
         lsts[0] = "Es-t_vocabulary.json";
         lsts[1] = "Es-t_settings.json";
@@ -138,7 +128,7 @@ public class Service{
         File win_file_C = new File(win_path_C);
         File ubuntu_file = new File(ubuntu_path);
 
-        if(OS.indexOf("windows") >= 0){
+        if(OS.contains("windows")){
             if(win_file_D.canExecute()){
                 current_path[file_type] = win_path_D;
             }
@@ -157,8 +147,8 @@ public class Service{
             }
         }
 
-        else if(OS.indexOf("nix") >= 0 ||
-                OS.indexOf("nux") >= 0 ||
+        else if(OS.contains("nix") ||
+                OS.contains("nux") ||
                 OS.indexOf("aix") > 0){
             if(ubuntu_file.canExecute()){
                 current_path[file_type] = ubuntu_path;
@@ -173,7 +163,7 @@ public class Service{
     final static class Language{
         JSONObject jo_i18n = new JSONObject();
 
-        public Language(String pth){
+        Language(String pth){
             JSONArray ja = new JSONArray(new Service().content_file(pth));
             JSONObject jo = ja.getJSONObject(0);
             String j1 = jo.names().getString(0);
@@ -228,40 +218,49 @@ public class Service{
             }
         }
 
-        public Object SetLanguage(String str){
+        Object SetLanguage(String str){
            return jo_i18n.get(str);
         }
     }
 
 
-    public void wt_search(JTable tab, JTextField tf1, JTextField tf2, JTextField tf3){
+    void wt_search(JTable tab, JTextField tf1, JTextField tf2, JTextField tf3){
         for(int i=0; i< tab.getRowCount(); i++){
-            String s_name = tab.getValueAt(i,getCurrentColumnIndex("Word")).toString().toLowerCase();
-            String s_trans = tab.getValueAt(i,getCurrentColumnIndex("Translate")).toString().toLowerCase();
-            String s_type = tab.getValueAt(i,getCurrentColumnIndex("Type")).toString().toLowerCase();
+            String s_name = tab.getValueAt(i,getCCI("Word")).toString().toLowerCase();
+            String s_trans = tab.getValueAt(i,getCCI("Translate")).toString().toLowerCase();
+            String s_type;
+            if(tab.getValueAt(i,getCCI("Type"))==null) {
+                s_type = null;
+            }
+            else{
+                s_type = tab.getValueAt(i, getCCI("Type")).toString().toLowerCase();
+            }
 
             if(!tf1.getText().equals("")) {
                 if (s_name.contains(tf1.getText().toLowerCase())) {
-                    tab.changeSelection(i, getCurrentColumnIndex("Word"), true, false);
+                    tab.changeSelection(i, getCCI("Word"), true, false);
                 }
             }
             else if(!tf2.getText().equals("")) {
                 if (s_trans.contains(tf2.getText().toLowerCase())) {
-                    tab.changeSelection(i, getCurrentColumnIndex("Translate"), true, false);
+                    tab.changeSelection(i, getCCI("Translate"), true, false);
                 }
             }
             else if(!tf3.getText().equals("")) {
-                if (s_type.contains(tf3.getText().toLowerCase())) {
-                    tab.changeSelection(i, getCurrentColumnIndex("Type"), true, false);
+                if(s_type != null) {
+                    if (s_type.contains(tf3.getText().toLowerCase())) {
+                        tab.changeSelection(i, getCCI("Type"), true, false);
+                    }
                 }
             }
         }
     }
 
-    public int getCurrentColumnIndex(String col_name) {
+//  getCCI
+    int getCCI(String col_name) {
         int current_col_index = 0;
-        String[] name_cols =  {"✓", "№", "Word", "Translate", "Type", "W*", "T*"};
-        Language lang = new Language(current_path[1]);
+
+//        Language lang = new Language(current_path[1]);
 //        String[] name_cols = (String[])lang.SetLanguage("TC_name");
         for(int i=0; i<7; i++) {
             if(col_name.toLowerCase().equals(name_cols[i].toLowerCase())) {
@@ -273,14 +272,14 @@ public class Service{
 
 
     final static class SetColor{
-        Service service = new Service();
+//        Service service = new Service();
         String val;
-        ArrayList<String> list_colors = new ArrayList<>();
+//        ArrayList<String> list_colors = new ArrayList<>();
         JSONArray ja_content_all;
         JSONObject jo_colors;
         JSONObject ja_colors;
 
-        public SetColor(String pth, String key) {
+        SetColor(String pth, String key) {
             String content_file = new Service().content_file(pth);
             ja_content_all = new JSONArray(content_file);
             jo_colors = ja_content_all.getJSONObject(1);
@@ -289,11 +288,10 @@ public class Service{
         }
     }
 
-
-    public String content_file(String pth){
-        String thisLine = null;
+    String content_file(String pth){
+        String thisLine;
         String str_words = "";
-        String val = "";
+//        String val = "";
         if(new File(pth).canExecute()){
             try{
                 // open input stream test.txt for reading purpose.
@@ -306,10 +304,8 @@ public class Service{
                 e.printStackTrace();
             }
         }
-
         return str_words;
     }
-
 
     private void array_content_words(String path, int list_numb) throws IOException {
         if(list_numb == 0){
@@ -329,7 +325,6 @@ public class Service{
                 words_new.put(new JSONObject().put(words[i], trans[i]));
             }
 
-            String[] awt = {"nn", "vr", "aj", "av", "pn", "cj"};
             int[][] num1 = new int[10][];
             int[][] num2 = new int[10][];
 
@@ -347,8 +342,8 @@ public class Service{
             JSONObject jo_wt1 = new JSONObject();
             JSONObject jo_wt2 = new JSONObject();
             for(int i=0; i<6;i++) {
-                jo_wt1.put(awt[i], num1[i]);
-                jo_wt2.put(awt[i], num2[i]);
+                jo_wt1.put(word_types[i], num1[i]);
+                jo_wt2.put(word_types[i], num2[i]);
             }
             words_type.put(new JSONObject().put("words_new", jo_wt1));
             words_type.put(new JSONObject().put("words_studied", jo_wt2));
@@ -381,16 +376,16 @@ public class Service{
         }
     }
 
-    public void write_content_in_file(String path, Object obj) throws IOException {
+    void write_content_in_file(String path, Object obj) throws IOException {
         try {
             Writer out = new BufferedWriter(new OutputStreamWriter(
                     new FileOutputStream(path), "windows-1251"));
             try {
-                if(obj.getClass().getName() == "org.json.JSONObject") {
+                if(Objects.equals(obj.getClass().getName(), "org.json.JSONObject")) {
                     JSONObject obj1 = (JSONObject) obj;
                     out.write(obj1.toString(2));
                 }
-                else if(obj.getClass().getName() == "org.json.JSONArray") {
+                else if(Objects.equals(obj.getClass().getName(), "org.json.JSONArray")) {
                     JSONArray obj1 = (JSONArray) obj;
                     out.write(obj1.toString(2));
                 }
