@@ -16,7 +16,7 @@ class Service{
     JSONObject[] jo_number_pair;
     String[] current_path = new String[2];
     String[] name_cols =  {"✓", "№", "Word", "Translate", "Type", "W*", "T*"};
-    String[] word_types = {"nn", "vr", "aj", "av", "pn", "cj"};
+    String[] word_types = {"nn", "vr", "aj", "av", "pn", "pp", "oth"};
 
     void table(int number, boolean[] canEdit, String lib){
         try {
@@ -325,23 +325,24 @@ class Service{
                 words_new.put(new JSONObject().put(words[i], trans[i]));
             }
 
-            int[][] num1 = new int[10][];
-            int[][] num2 = new int[10][];
+            int[][] num1 = new int[word_types.length][];
+            int[][] num2 = new int[word_types.length][];
 
             num1[0] = new int[]{0,2,3,4,5,7,8};
             num1[1] = new int[]{2,3,4,5,6,7,9};
             num1[2] = new int[]{1,7};
             num1[3] = new int[]{0,1,8};
             num1[4] = new int[]{};
-            num1[5] = new int[]{8};
+            num1[5] = new int[]{};
+            num1[6] = new int[]{8};
 
-            for(int i=0; i<6; i++){
+            for(int i=0; i<word_types.length; i++){
                 num2[i] = new int[]{};
             }
 
             JSONObject jo_wt1 = new JSONObject();
             JSONObject jo_wt2 = new JSONObject();
-            for(int i=0; i<6;i++) {
+            for(int i=0; i<word_types.length;i++) {
                 jo_wt1.put(word_types[i], num1[i]);
                 jo_wt2.put(word_types[i], num2[i]);
             }

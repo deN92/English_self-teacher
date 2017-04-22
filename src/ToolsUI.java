@@ -321,13 +321,13 @@ public class ToolsUI{
             }
         });
 
-        JCheckBoxMenuItem[] jcbmi = new JCheckBoxMenuItem[6];
+        JCheckBoxMenuItem[] jcbmi = new JCheckBoxMenuItem[service.word_types.length];
         for(int i=0; i<service.word_types.length; i++){
             jcbmi[i] = new JCheckBoxMenuItem(service.word_types[i]);
         }
 
         JPopupMenu menu_wt = new JPopupMenu();
-        for(int i=0; i<6; i++) {
+        for(int i=0; i<service.word_types.length; i++) {
             menu_wt.add(jcbmi[i]);
         }
 
@@ -412,7 +412,7 @@ public class ToolsUI{
 
         });
 
-        for(int k=0; k<6;k++){
+        for(int k=0; k<service.word_types.length;k++){
             jcbmi[k].addActionListener(actionEvent -> {
                 if(t1ort2.equals("table1")) {
                     word_type_from_combobox_to_table(jcbmi, table1, col1, row1);
@@ -652,7 +652,7 @@ public class ToolsUI{
         for (int j = 0; j < c_table.getRowCount(); j++) {
             if (c_col == 4) {
                 if (j ==  c_row) {
-                    for(int i=0; i<6; i++) {
+                    for(int i=0; i<service.word_types.length; i++) {
                         if (c_jcbmi[i].isSelected()) {
                             if(c_table.getValueAt(c_row, c_col)==null) {
                                 c_table.setValueAt("", c_row, c_col);
@@ -660,13 +660,13 @@ public class ToolsUI{
                             if (!c_table.getValueAt(c_row, c_col).toString().toLowerCase().contains
                                     (c_jcbmi[i].getText().toLowerCase())) {
                                 c_table.setValueAt(c_table.getValueAt(c_row, c_col).toString().toLowerCase() +
-                                        c_jcbmi[i].getText()+" ", j, 4);
+                                        c_jcbmi[i].getText()+" ", j, service.getCCI("Type"));
                             }
                         }
                         else if(!c_jcbmi[i].isSelected()){
                             if(c_table.getValueAt(c_row, c_col)!=null) {
                                 c_table.setValueAt(c_table.getValueAt(c_row, c_col).toString().toLowerCase().replace
-                                        (c_jcbmi[i].getText().toLowerCase()+" ", ""), j, 4);
+                                        (c_jcbmi[i].getText().toLowerCase()+" ", ""), j, service.getCCI("Type"));
                             }
                         }
                     }
@@ -679,7 +679,7 @@ public class ToolsUI{
         for (int i = 0; i < c_table.getRowCount(); i++) {
             if (c_col == service.getCCI("Type")) {
                 if (i == c_row) {
-                    for (int j = 0; j < 6; j++) {
+                    for (int j = 0; j < service.word_types.length; j++) {
                         if((c_table.getValueAt(c_row, service.getCCI("Type")) == null) ||
                            (Objects.equals(c_table.getValueAt(c_row, service.getCCI("Type")).toString(), "")))
                         {c_jcbmi[j].setSelected(false);}
