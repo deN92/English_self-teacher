@@ -8,14 +8,22 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 class Service{
-//    SetLanguage lang = new SetLanguage();
     ArrayList<String> list_questions_all = new ArrayList<>();
     ArrayList<String> list_answers_all = new ArrayList<>();
     DefaultTableModel[] model = new DefaultTableModel[4];
     JSONArray ja_words;
     JSONObject[] jo_number_pair;
     String[] current_path = new String[2];
-    String[] name_cols =  {"✓", "№", "Word", "Translate", "Type", "W*", "T*"};
+
+    String nc_word_en = "Word";
+    String nc_translate_en = "Translate";
+    String nc_type_en = "Type";
+
+    String nc_word_ua = "Слово";
+    String nc_translate_ua = "Переклад";
+//    String nc_type_ua = "Тип";
+
+    String[] name_cols =  {"✓", "№", nc_word_en, nc_translate_en, nc_type_en, "W*", "T*"};
     String[] word_types = {"nn", "vr", "aj", "av", "pn", "pp", "oth"};
 
     void table(int number, boolean[] canEdit, String lib){
@@ -29,7 +37,6 @@ class Service{
 
         String str_words = content_file(current_path[0]);
         JSONArray ja_words2 = new JSONArray(new JSONObject(str_words).getJSONArray("words_type").toString());
-//        System.out.print(ja_words2.get(0));
 
         if(number == 2){
             str_words = "";
@@ -116,13 +123,13 @@ class Service{
     }
 
     void dir_vocabulary_file(int file_type) throws IOException{
-        String[] lsts = new String[2];
-        lsts[0] = "Es-t_vocabulary.json";
-        lsts[1] = "Es-t_settings.json";
+        String[] lists = new String[2];
+        lists[0] = "Es-t_vocabulary.json";
+        lists[1] = "Es-t_settings.json";
         String OS = System.getProperty("os.name").toLowerCase();
-        String win_path_D = "D:\\"+ lsts[file_type] +"";
-        String win_path_C = "C:\\"+ lsts[file_type] +"";
-        String ubuntu_path = "/home/"+ lsts[file_type] +"";
+        String win_path_D = "D:\\"+ lists[file_type] +"";
+        String win_path_C = "C:\\"+ lists[file_type] +"";
+        String ubuntu_path = "/home/"+ lists[file_type] +"";
 
         File win_file_D = new File(win_path_D);
         File win_file_C = new File(win_path_C);
@@ -188,7 +195,7 @@ class Service{
                 " вже існує в таблиці ", "Детальніше про програму", "Перезапустіть програму будь-ласка"};
 
             list[1] = new Object[]{
-                new Object[] {"✓", "№", "Word", "Translate","Type","W*", "T*"},
+                new Service().name_cols,
                 new String[] {"№", "Word", "Translate","", "True answer"},
                 "Choice questions", "Count questions", "Choice from table", "Scope with:", "to", "Answers options: ",
                 new String[] {"No", "Yes"},
@@ -259,10 +266,7 @@ class Service{
 //  getCCI
     int getCCI(String col_name) {
         int current_col_index = 0;
-
-//        Language lang = new Language(current_path[1]);
-//        String[] name_cols = (String[])lang.SetLanguage("TC_name");
-        for(int i=0; i<7; i++) {
+        for(int i=0; i<name_cols.length; i++) {
             if(col_name.toLowerCase().equals(name_cols[i].toLowerCase())) {
                 current_col_index = i;
             }
@@ -393,13 +397,12 @@ class Service{
             } finally {
                 out.close();
             }
-            System.out.println("File saved!");
         }
-                    catch (Exception e) {
-                JOptionPane.showMessageDialog(
-                        null,
-                        new Language(current_path[1]).SetLanguage("OPM_Words_success_saved") + "| "+e.getMessage(), "Message",
-                        JOptionPane.INFORMATION_MESSAGE);
-            }
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(
+                null,
+                e.getMessage(), "Message",
+                JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 }
