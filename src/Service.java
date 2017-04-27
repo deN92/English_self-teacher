@@ -129,7 +129,7 @@ class Service{
         String OS = System.getProperty("os.name").toLowerCase();
         String win_path_D = "D:\\"+ lists[file_type] +"";
         String win_path_C = "C:\\"+ lists[file_type] +"";
-        String ubuntu_path = "/home/"+ lists[file_type] +"";
+        String ubuntu_path = lists[file_type] +"";
 
         File win_file_D = new File(win_path_D);
         File win_file_C = new File(win_path_C);
@@ -276,9 +276,9 @@ class Service{
 
 
     final static class SetColor{
-//        Service service = new Service();
+        Service service = new Service();
         String val;
-//        ArrayList<String> list_colors = new ArrayList<>();
+        ArrayList<String> list_colors = new ArrayList<>();
         JSONArray ja_content_all;
         JSONObject jo_colors;
         JSONObject ja_colors;
@@ -296,18 +296,18 @@ class Service{
         String thisLine;
         String str_words = "";
 //        String val = "";
-        if(new File(pth).canExecute()){
+//        if(new File(pth).canExecute()){
             try{
                 // open input stream test.txt for reading purpose.
                 BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(pth), "windows-1251"));
                 while ((thisLine = br.readLine()) != null) {
-                    str_words +=thisLine;
+                    str_words += thisLine;
                 }
             }
             catch(Exception e){
                 e.printStackTrace();
             }
-        }
+//        }
         return str_words;
     }
 
@@ -382,27 +382,29 @@ class Service{
     }
 
     void write_content_in_file(String path, Object obj) throws IOException {
-        try {
-            Writer out = new BufferedWriter(new OutputStreamWriter(
-                    new FileOutputStream(path), "windows-1251"));
+        File file =new File(path);
+        if (!file.exists()) {
             try {
-                if(Objects.equals(obj.getClass().getName(), "org.json.JSONObject")) {
-                    JSONObject obj1 = (JSONObject) obj;
-                    out.write(obj1.toString(2));
+
+                Writer out = new BufferedWriter(new OutputStreamWriter(
+                        new FileOutputStream(path), "windows-1251"));
+                try {
+                    if (Objects.equals(obj.getClass().getName(), "org.json.JSONObject")) {
+                        JSONObject obj1 = (JSONObject) obj;
+                        out.write(obj1.toString(2));
+                    } else if (Objects.equals(obj.getClass().getName(), "org.json.JSONArray")) {
+                        JSONArray obj1 = (JSONArray) obj;
+                        out.write(obj1.toString(2));
+                    }
+                } finally {
+                    out.close();
                 }
-                else if(Objects.equals(obj.getClass().getName(), "org.json.JSONArray")) {
-                    JSONArray obj1 = (JSONArray) obj;
-                    out.write(obj1.toString(2));
-                }
-            } finally {
-                out.close();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        e.getMessage(), "Message",
+                        JOptionPane.INFORMATION_MESSAGE);
             }
-        }
-        catch (Exception e) {
-            JOptionPane.showMessageDialog(
-                null,
-                e.getMessage(), "Message",
-                JOptionPane.INFORMATION_MESSAGE);
         }
     }
 }

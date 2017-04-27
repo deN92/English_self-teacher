@@ -60,7 +60,7 @@ public class MainUI {
     JScrollPane s_pane_list1;
     JScrollPane s_pane_list2;
     private JCheckBox JCB_Answers_show_hide;
-    JRadioButton[] rb = {RB_Option1, RB_Option2, RB_Option3, RB_Option4};
+    private JRadioButton[] rb = {RB_Option1, RB_Option2, RB_Option3, RB_Option4};
     private int columnValue = -1;
     private int columnNewValue = -1;
 
