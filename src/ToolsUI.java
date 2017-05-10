@@ -284,7 +284,7 @@ public class ToolsUI{
                 Writer out = new BufferedWriter(new OutputStreamWriter(
                         new FileOutputStream(service.current_path[0]), "windows-1251"));
                 try {
-                    out.write(final_ja_words.toString(1));
+                    out.write(final_ja_words.toString(2));
                 } finally {
                     out.close();
                 }

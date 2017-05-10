@@ -447,6 +447,16 @@
               </grid>
             </constraints>
           </hspacer>
+          <component id="c0157" class="javax.swing.JButton" binding="button2" default-binding="true">
+            <constraints>
+              <grid row="5" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <icon value="icons/bt_reload_25x25.png"/>
+              <margin top="2" left="2" bottom="2" right="2"/>
+              <text value=""/>
+            </properties>
+          </component>
         </children>
       </grid>
       <grid id="fe72c" binding="panel_result" layout-manager="GridLayoutManager" row-count="4" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">

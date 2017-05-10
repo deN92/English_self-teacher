@@ -60,6 +60,7 @@ public class MainUI {
     JScrollPane s_pane_list1;
     JScrollPane s_pane_list2;
     private JCheckBox JCB_Answers_show_hide;
+    private JButton button2;
     private JRadioButton[] rb = {RB_Option1, RB_Option2, RB_Option3, RB_Option4};
     private int columnValue = -1;
     private int columnNewValue = -1;
@@ -76,22 +77,13 @@ public class MainUI {
 
 //      Can edit column table1
         boolean[] canEdit = {true, false, false, false, false, false, false};
-
-        service.table(0, canEdit, "words_new");
-        elements_name();
-        table1.setModel(service.model[0]);
-        table1.setSize(s_pane1.getSize().width, s_pane1.getSize().height);
-
         int[] table_column_widths = {25, 35, 200, 200, 60, 0, 0};
-        for (int i = 0; i < table_column_widths.length; i++) {
-            table1.getColumnModel().getColumn(i).setMaxWidth(table_column_widths[i]);
-        }
 
+        load_data_table1(canEdit, table_column_widths);
+
+        table1.setSize(s_pane1.getSize().width, s_pane1.getSize().height);
+        elements_name();
         table2.getTableHeader().setReorderingAllowed(false);
-
-        table1.removeColumn(table1.getColumnModel().getColumn(5));
-        table1.removeColumn(table1.getColumnModel().getColumn(5));
-
         RB_Count_questions.setSelected(true);
         RB_Option1.setSelected(true);
 
@@ -620,6 +612,19 @@ public class MainUI {
         RB_Option3.addMouseListener(listener);
         RB_Option4.addMouseListener(listener);
         JCB_Answers_show_hide.addActionListener(actionEvent -> answers_show_hide());
+        button2.addActionListener(e -> {
+            load_data_table1(canEdit, table_column_widths);
+        });
+    }
+
+    private void load_data_table1(boolean[] current_canEdit, int[] current_table_column_widths){
+        service.table(0, current_canEdit, "words_new");
+        table1.setModel(service.model[0]);
+        for (int i = 0; i < current_table_column_widths.length; i++) {
+            table1.getColumnModel().getColumn(i).setMaxWidth(current_table_column_widths[i]);
+        }
+        table1.removeColumn(table1.getColumnModel().getColumn(5));
+        table1.removeColumn(table1.getColumnModel().getColumn(5));
     }
 
     private void answers_show_hide(){
