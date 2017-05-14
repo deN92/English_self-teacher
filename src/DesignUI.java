@@ -75,25 +75,9 @@ public class DesignUI{
             ja_final.put(new JSONObject().put("color", ja_color_create));
 
             try {
-                Writer out = new BufferedWriter(new OutputStreamWriter(
-                        new FileOutputStream(service.current_path[1]), "windows-1251"));
-                try {
-                    out.write(ja_final.toString(1));
-                } finally {
-                    out.close();
-                }
-
-                JOptionPane.showMessageDialog(
-                        null,
-                        lang.SetLanguage("OPM_Words_success_saved"), lang.SetLanguage("OPM_Title").toString(),
-                        JOptionPane.INFORMATION_MESSAGE);
-            }
-            catch (Exception e) {
-                JOptionPane.showMessageDialog(
-                        null,
-                        lang.SetLanguage("OPM_Words_not_saved") + "| "+e.getMessage(),
-                        lang.SetLanguage("OPM_Title").toString(),
-                        JOptionPane.INFORMATION_MESSAGE);
+                service.write_content_in_file(service.current_path[1], ja_final, "edit");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
     }

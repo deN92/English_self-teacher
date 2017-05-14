@@ -60,7 +60,7 @@ public class MainUI {
     JScrollPane s_pane_list1;
     JScrollPane s_pane_list2;
     private JCheckBox JCB_Answers_show_hide;
-    private JButton button2;
+    private JButton Btn_Reload_table1;
     private JRadioButton[] rb = {RB_Option1, RB_Option2, RB_Option3, RB_Option4};
     private int columnValue = -1;
     private int columnNewValue = -1;
@@ -87,9 +87,7 @@ public class MainUI {
         RB_Count_questions.setSelected(true);
         RB_Option1.setSelected(true);
 
-        spinner1.setModel(new SpinnerNumberModel(5, 1, service.ja_words.length(), 1));
-        spinner2.setModel(new SpinnerNumberModel(1, 1, service.ja_words.length() - 1, 1));
-        spinner3.setModel(new SpinnerNumberModel(2, 2, service.ja_words.length(), 1));
+
 
         select_parameter_enable(true, false, false);
         Service.Language lang = new Service.Language(service.current_path[1]);
@@ -612,7 +610,7 @@ public class MainUI {
         RB_Option3.addMouseListener(listener);
         RB_Option4.addMouseListener(listener);
         JCB_Answers_show_hide.addActionListener(actionEvent -> answers_show_hide());
-        button2.addActionListener(e -> {
+        Btn_Reload_table1.addActionListener(e -> {
             load_data_table1(canEdit, table_column_widths);
         });
     }
@@ -625,6 +623,9 @@ public class MainUI {
         }
         table1.removeColumn(table1.getColumnModel().getColumn(5));
         table1.removeColumn(table1.getColumnModel().getColumn(5));
+        spinner1.setModel(new SpinnerNumberModel(5, 1, service.ja_words.length(), 1));
+        spinner2.setModel(new SpinnerNumberModel(1, 1, service.ja_words.length() - 1, 1));
+        spinner3.setModel(new SpinnerNumberModel(2, 2, service.ja_words.length(), 1));
     }
 
     private void answers_show_hide(){
@@ -823,20 +824,10 @@ public class MainUI {
 
             menuItem1.addActionListener(actionEvent -> {
                 lang_turn_on("en");
-                JOptionPane.showMessageDialog(
-                        null,
-                        lang.SetLanguage("OPM_Restart_program").toString(),
-                        lang.SetLanguage("OPM_Title").toString(),
-                        JOptionPane.WARNING_MESSAGE);
             });
 
             menuItem2.addActionListener(actionEvent -> {
                 lang_turn_on("ua");
-                JOptionPane.showMessageDialog(
-                        null,
-                        lang.SetLanguage("OPM_Restart_program").toString(),
-                        lang.SetLanguage("OPM_Title").toString(),
-                        JOptionPane.WARNING_MESSAGE);
             });
 
             mi_description.addActionListener(actionEvent -> {
@@ -845,19 +836,24 @@ public class MainUI {
             });
         }
 
-         private void lang_turn_on(String lang){
+         private void lang_turn_on(String current_lang){
             String content_file = service.content_file(service.current_path[1]);
             JSONArray ja = new JSONArray(content_file);
             JSONArray ja_all = new JSONArray();
             JSONObject jo = ja.getJSONObject(1);
             JSONObject jo2 = new JSONObject();
-            jo2.put("lang", lang);
+            jo2.put("lang", current_lang);
 
             ja_all.put(jo2);
             ja_all.put(jo);
 
             try {
-                service.write_content_in_file(service.current_path[1], ja_all);
+                service.write_content_in_file(service.current_path[1], ja_all, "edit");
+                JOptionPane.showMessageDialog(
+                        null,
+                        lang.SetLanguage("OPM_Restart_program").toString(),
+                        lang.SetLanguage("OPM_Title").toString(),
+                        JOptionPane.WARNING_MESSAGE);
             } catch (IOException e) {
                 e.printStackTrace();
             }
