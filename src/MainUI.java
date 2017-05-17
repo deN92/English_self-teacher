@@ -663,9 +663,11 @@ public class MainUI {
     }
 
     private void color_elements(){
-        table1.setBackground(Color.decode(new Service.SetColor(service.current_path[1],"MainUI_Table_bg" ).val));
-        panel_option_questions.setBackground(Color.decode(new Service.SetColor(service.current_path[1],"MainUI_bg").val));
-        panel_test.setBackground(Color.decode(new Service.SetColor(service.current_path[1],"TestUI_bg" ).val));
+        panel_option_questions.setBackground(Color.decode(new Service.SetColor(service.current_path[1],"MainUI").val));
+        panel_test2.setBackground(Color.decode(new Service.SetColor(service.current_path[1],"TestUI 2").val));
+        panel_test.setBackground(Color.decode(new Service.SetColor(service.current_path[1],"TestUI 1(variants)" ).val));
+        table1.setBackground(Color.decode(new Service.SetColor(service.current_path[1],"MainUI Table" ).val));
+        table2.setBackground(Color.decode(new Service.SetColor(service.current_path[1],"TestUI 2 Table").val));
         RB_Count_questions.setBackground(panel_option_questions.getBackground());
         RB_Choice_from_List.setBackground(panel_option_questions.getBackground());
         CB_Scope_questions.setBackground(panel_option_questions.getBackground());
@@ -803,7 +805,7 @@ public class MainUI {
             // Create Menu objects to add to the MenuBar
             m_settings = new JMenu(lang.SetLanguage("M_Settings_name").toString());
             m_about = new JMenu(lang.SetLanguage("M_About_name").toString());
-            mi_edit = new JMenuItem(lang.SetLanguage("MI_Edit_name").toString());
+            mi_edit = new JMenuItem(lang.SetLanguage("MI_Vocabulary_name").toString());
             m_lang = new JMenu(lang.SetLanguage("M_Lang_name").toString());
             mi_design = new JMenuItem(lang.SetLanguage("MI_Design_name").toString());
 

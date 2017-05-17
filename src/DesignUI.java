@@ -5,20 +5,19 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-
 import java.io.*;
 
 public class DesignUI{
     private JPanel panel_design;
     private JTable table1;
-    private JButton button1;
+    private JButton Btn_Save_color;
     private JLabel l1;
     private final JColorChooser chooser = new JColorChooser();
     private DefaultTableModel model = new DefaultTableModel();
     private Service service;
-    private JSONObject ja_colors;
     private ImageIcon[] ii;
     private JSONArray ja_content_all;
+    private JSONArray ja_colors;
     private String[] str;
     private Service.Language lang;
 
@@ -32,7 +31,7 @@ public class DesignUI{
         String content_file = service.content_file(service.current_path[1]);
         ja_content_all = new JSONArray(content_file);
         JSONObject jo_colors = ja_content_all.getJSONObject(1);
-        ja_colors = jo_colors.getJSONObject(jo_colors.names().getString(0));
+        ja_colors = jo_colors.getJSONArray("color");
 
         table();
         table1.setModel(model);
@@ -65,10 +64,10 @@ public class DesignUI{
             }
         });
 
-        button1.addActionListener(actionEvent -> {
-            JSONObject ja_color_create = new JSONObject();
+        Btn_Save_color.addActionListener(actionEvent -> {
+            JSONArray ja_color_create = new JSONArray();
             for(int i=0;i<ja_colors.length();i++) {
-                ja_color_create.put(table1.getValueAt(i, 0).toString(), str[i]);
+                ja_color_create.put(i, new JSONObject().put(table1.getValueAt(i, 0).toString(), str[i]));
             }
             JSONArray ja_final = new JSONArray();
             ja_final.put(ja_content_all.getJSONObject(0));
@@ -76,6 +75,11 @@ public class DesignUI{
 
             try {
                 service.write_content_in_file(service.current_path[1], ja_final, "edit");
+                JOptionPane.showMessageDialog(
+                        null,
+                        lang.SetLanguage("OPM_Restart_program").toString(),
+                        lang.SetLanguage("OPM_Title").toString(),
+                        JOptionPane.WARNING_MESSAGE);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -109,8 +113,8 @@ public class DesignUI{
         str = new String[ja_colors.length()];
 
         for (int i = 0; i < ja_colors.length(); i++) {
-            String key = ja_colors.names().getString(i);
-            String val = ja_colors.getString(key);
+            String key = ja_colors.getJSONObject(i).names().getString(0);
+            String val = ja_colors.getJSONObject(i).getString(key);
             ii[i] = new ImageIcon();
             ii[i].setImage(paintComponent(Color.decode(val)));
             model.setValueAt(key, i, 0);

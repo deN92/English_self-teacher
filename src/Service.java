@@ -191,7 +191,7 @@ class Service{
                 "Підтвердити", "Наступне запитання",  "Результат", "Відмінити тест", "Правильно", "Помилки",
                 "Повернутись до початку", "Запустити знову", "Прибрати правильні",
 
-                "Налаштування", "Про програму", "Мова інтерфейсу", "Перезапустіть програму для змін", "Зміни", "Дизайн",
+                "Налаштування", "Про програму", "Мова інтерфейсу", "Перезапустіть програму для змін", "Словник", "Дизайн",
                 "Детальніше про програму",
 
                 "Перевірити наявність повторень", "Додати", "Видалити", "Зберегти", "Повідомлення",
@@ -208,7 +208,7 @@ class Service{
                 "Ok", "Next",  "Result", "Cancel test", "True answer", "False answer",
                 "Return to start", "Reset", "Clear true",
 
-                "Settings","About", "Language", "Restart program for changes", "Edit", "Design",
+                "Settings","About", "Language", "Restart program for changes", "Vocabulary", "Design",
                 "Description",
 
                 "Check for duplicates", "Add", "Del", "Save", "Message",
@@ -225,7 +225,7 @@ class Service{
                 "Btn_Ok_name", "Btn_Next_question_name",  "Lbl_Result_name", "Btn_Cancel_test", "Lbl_True_answers_name",
                 "Lbl_False_answers_name", "Btn_Reset_start_test_name",  "Btn_Reset_test", "JCB_Clear_true_answers",
 
-                "M_Settings_name", "M_About_name", "M_Lang_name", "OPM_Restart_program", "MI_Edit_name",
+                "M_Settings_name", "M_About_name", "M_Lang_name", "OPM_Restart_program", "MI_Vocabulary_name",
                 "MI_Design_name", "MI_Description",
 
                 "Btn_Duplicates_name", "Btn_Add_name", "Btn_Del_name", "Btn_Save_name", "OPM_Title",
@@ -294,15 +294,23 @@ class Service{
         String val;
         ArrayList<String> list_colors = new ArrayList<>();
         JSONArray ja_content_all;
+
         JSONObject jo_colors;
-        JSONObject ja_colors;
+        JSONArray ja_colors;
+        JSONObject jo_colors2;
 
         SetColor(String pth, String key) {
             String content_file = new Service().content_file(pth);
             ja_content_all = new JSONArray(content_file);
             jo_colors = ja_content_all.getJSONObject(1);
-            ja_colors = jo_colors.getJSONObject(jo_colors.names().getString(0));
-            val = ja_colors.getString(key);
+//            ja_colors = jo_colors.getJSONObject(jo_colors.names().getString(0));
+            ja_colors = jo_colors.getJSONArray("color");
+            for(int i=0; i<ja_colors.length(); i++){
+                if(Objects.equals(ja_colors.getJSONObject(i).names().get(0).toString(), key)){
+                    val = ja_colors.getJSONObject(i).get(key).toString();
+                }
+            }
+//            val = ja_colors.getString(key);
         }
     }
 
@@ -311,16 +319,16 @@ class Service{
         String str_words = "";
 //        String val = "";
 //        if(new File(pth).canExecute()){
-            try{
-                // open input stream test.txt for reading purpose.
-                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(pth), "windows-1251"));
-                while ((thisLine = br.readLine()) != null) {
-                    str_words += thisLine;
-                }
+        try{
+            // open input stream test.txt for reading purpose.
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(pth), "windows-1251"));
+            while ((thisLine = br.readLine()) != null) {
+                str_words += thisLine;
             }
-            catch(Exception e){
-                e.printStackTrace();
-            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
 //        }
         return str_words;
     }
@@ -378,19 +386,22 @@ class Service{
             JSONObject jo = new JSONObject();
             jo.put("lang","ua");
 
-            JSONObject jo2 = new JSONObject();
+            JSONArray ja_color_item = new JSONArray();
             JSONObject ja2 = new JSONObject();
-            ja2.put("MainUI_Table_bg","#CFB685");
-            ja2.put("ToolsUI_Table_bg","#CFB685");
-            ja2.put("MainUI_bg","#EEEEEE");
-            ja2.put("TestUI_bg","#EEEEEE");
-            ja2.put("ToolsUI_bg","#EEEEEE");
-            ja2.put("ColorsUI_bg","#EEEEEE");
+            JSONObject jo_colors_all = new JSONObject();
 
-            jo2.put("color", ja2);
+            ja_color_item.put(0, new JSONObject().put("MainUI","#EEEEEE"));
+            ja_color_item.put(1, new JSONObject().put("TestUI 1(variants)","#EEEEEE"));
+            ja_color_item.put(2, new JSONObject().put("TestUI 2","#EEEEEE"));
+            ja_color_item.put(3, new JSONObject().put("ToolsUI","#EEEEEE"));
+            ja_color_item.put(4, new JSONObject().put("MainUI Table","#CFB685"));
+            ja_color_item.put(5, new JSONObject().put("TestUI 2 Table","#CFB685"));
+            ja_color_item.put(6, new JSONObject().put("ToolsUI Table","#CFB685"));
+
+            jo_colors_all.put("color", ja_color_item);
 
             ob.put(jo);
-            ob.put(jo2);
+            ob.put(jo_colors_all);
             write_content_in_file(path, ob, "create");
         }
     }
@@ -403,12 +414,13 @@ class Service{
             write_content_in_file_details(obj, out);
             out.close();
         }
-        if(Objects.equals(code_write, "edit")){
-            Writer out = new BufferedWriter(new OutputStreamWriter(
-                    new FileOutputStream(path), "windows-1251"));
-            write_content_in_file_details(obj, out);
-            out.close();
-        }
+        else
+            if(Objects.equals(code_write, "edit")){
+                Writer out = new BufferedWriter(new OutputStreamWriter(
+                        new FileOutputStream(path), "windows-1251"));
+                write_content_in_file_details(obj, out);
+                out.close();
+            }
     }
 
     private void write_content_in_file_details(Object obj, Writer out){
