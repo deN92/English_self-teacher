@@ -167,7 +167,9 @@ public class MainUI {
         });
 
         Btn_Start_test.addActionListener(actionEvent -> {
+//            service.list_questions_all.
             long seed = System.nanoTime();
+//            Service service = new Service();
             String current_column_word = table1.getColumnName(service.getCCI(service.nc_word_en));
 //          Check count random questions
             if (RB_Count_questions.getModel().isSelected()) {
@@ -611,6 +613,7 @@ public class MainUI {
         RB_Option4.addMouseListener(listener);
         JCB_Answers_show_hide.addActionListener(actionEvent -> answers_show_hide());
         Btn_Reload_table1.addActionListener(e -> {
+            service.list_questions_all.clear();
             load_data_table1(canEdit, table_column_widths);
         });
     }
