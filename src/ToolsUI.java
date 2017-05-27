@@ -43,6 +43,8 @@ public class ToolsUI{
     private JTextField field_search13;
     private JTextField field_search23;
     private JButton Btn_Check_duplicates;
+    private JLabel Lbl_TSW_Count_Checked;
+    private JLabel Lbl_TNW_Count_Checked;
 
     private JSONArray[] ja_equal_words = new JSONArray[2];
     private JSONArray[] ja_equal_words2 = new JSONArray[2];
@@ -58,11 +60,11 @@ public class ToolsUI{
     private ArrayList<String>[]  table_list_delete_rows_translate = new ArrayList[2];
     private ArrayList<String>[]  table_list_delete_rows_word_type = new ArrayList[2];
     private ArrayList<Integer>[] table_list_delete_rows_indexes = new ArrayList[2];
-    private int row1 = 0;
-    private int col1 = 0;
-    private int row2 = 0;
-    private int col2 = 0;
-    private String t1ort2 = "none";
+
+    private MouseEvent evt_t1;
+    private MouseEvent evt_t2;
+    private JTable t1ort2 = null;
+    private JPopupMenu menu_wt = new JPopupMenu();
 
     ToolsUI(){
         tools_panel.setSize(640,630);
@@ -102,15 +104,12 @@ public class ToolsUI{
         JSONArray ob2 = new JSONArray();
         for(int i=0; i<table1.getRowCount(); i++){
             ob1.put(i, new JSONObject().put(table1.getValueAt(i, 2).toString(),
-                                            table1.getValueAt(i,3).toString()));
+                    table1.getValueAt(i,3).toString()));
         }
         for(int i=0; i<table2.getRowCount(); i++) {
             ob2.put(i, new JSONObject().put(table2.getValueAt(i, 2).toString(),
-                                            table2.getValueAt(i, 3).toString()));
+                    table2.getValueAt(i, 3).toString()));
         }
-
-        Btn_Words_up.setEnabled(false);
-        Btn_Words_down.setEnabled(false);
 
         lang = new Service.Language(service.current_path[1]);
         elements_name();
@@ -124,6 +123,9 @@ public class ToolsUI{
         spinner2.setModel(new SpinnerNumberModel(2, 2, large_numb, 1));
 
         scope_questions(false);
+
+        Btn_Words_up.setEnabled(false);
+        Btn_Words_down.setEnabled(false);
 
         DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
             Font font = new Font("TimesRoman", Font.PLAIN, 10);
@@ -140,6 +142,19 @@ public class ToolsUI{
         table1.getColumnModel().getColumn(service.getCCI(service.nc_type_en)).setCellRenderer(r);
         table2.getColumnModel().getColumn(service.getCCI(service.nc_type_en)).setCellRenderer(r);
 
+        Lbl_TSW_Count_Checked.setText("0");
+        Lbl_TNW_Count_Checked.setText("0");
+
+        JCheckBoxMenuItem[] jcbmi = new JCheckBoxMenuItem[service.word_types.length];
+        for(int i=0; i<service.word_types.length; i++){
+            jcbmi[i] = new JCheckBoxMenuItem(service.word_types[i]);
+        }
+
+
+        for(int i=0; i<service.word_types.length; i++) {
+            menu_wt.add(jcbmi[i]);
+        }
+
         Btn_Add.addActionListener(actionEvent -> {
             if(!table1.getValueAt(table1.getRowCount()-1, service.getCCI(service.nc_word_en)).equals("")){
                 DefaultTableModel model1 = (DefaultTableModel) table1.getModel();
@@ -152,10 +167,10 @@ public class ToolsUI{
             }
             else{
                 JOptionPane.showMessageDialog(
-                    null,
-                    lang.SetLanguage("OPM_Line_not_completed").toString(),
-                    lang.SetLanguage("OPM_Title").toString(),
-                    JOptionPane.WARNING_MESSAGE);
+                        null,
+                        lang.SetLanguage("OPM_Line_not_completed").toString(),
+                        lang.SetLanguage("OPM_Title").toString(),
+                        JOptionPane.WARNING_MESSAGE);
             }
         });
 
@@ -166,7 +181,7 @@ public class ToolsUI{
             ArrayList<String> list_delete_rows_names2 = new ArrayList<>();
             ArrayList<Integer> list_delete_rows_indexes2 = new ArrayList<>();
             int jp = JOptionPane.showConfirmDialog(null,
-                                                    lang.SetLanguage("OPM_Question_delete"),"",0);
+                    lang.SetLanguage("OPM_Question_delete"),"",0);
             if(jp ==  JOptionPane.YES_OPTION) {
                 try {
                     for (int i = 0; i < table1.getRowCount(); i++) {
@@ -174,7 +189,7 @@ public class ToolsUI{
                         int row = (int) table1.getValueAt(i, service.getCCI("№")) - 1;
                         if (checked) {
                             list_delete_rows_names.add(
-                                table1.getValueAt(row, service.getCCI(service.nc_word_en)).toString());
+                                    table1.getValueAt(row, service.getCCI(service.nc_word_en)).toString());
                             list_delete_rows_indexes.add(row);
                         }
                     }
@@ -184,7 +199,7 @@ public class ToolsUI{
                         int row = (int) table2.getValueAt(i, service.getCCI("№")) - 1;
                         if (checked) {
                             list_delete_rows_names2.add(
-                                table2.getValueAt(row, service.getCCI(service.nc_word_en)).toString());
+                                    table2.getValueAt(row, service.getCCI(service.nc_word_en)).toString());
                             list_delete_rows_indexes2.add(row);
                         }
                     }
@@ -300,38 +315,35 @@ public class ToolsUI{
             }
         });
 
-        JCheckBoxMenuItem[] jcbmi = new JCheckBoxMenuItem[service.word_types.length];
-        for(int i=0; i<service.word_types.length; i++){
-            jcbmi[i] = new JCheckBoxMenuItem(service.word_types[i]);
-        }
-
-        JPopupMenu menu_wt = new JPopupMenu();
-        for(int i=0; i<service.word_types.length; i++) {
-            menu_wt.add(jcbmi[i]);
-        }
-
         table1.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
                 super.mouseClicked(evt);
-                t1ort2 = "table1";
-
-                int row = table1.rowAtPoint(evt.getPoint());
-                int col = table1.columnAtPoint(evt.getPoint());
-
-                if(col == service.getCCI("W*")||col == service.getCCI("T*")){
-                    message_warning_ew(table1, evt, ja_equal_words[0], "W*");
-                    message_warning_ew(table1, evt, ja_equal_words2[0], "T*");
+                t1ort2 = table1;
+                mouse_events_in_tables(table1, evt);
+                if(table1.columnAtPoint(evt.getPoint()) == 0){
+                    update_count_checked_elements();
                 }
+            }
 
-                col1 = col;
-                row1 = row;
-
-                if (col == service.getCCI(service.nc_type_en)) {
-                    menu_wt.show(table1, (int) evt.getPoint().getX(), (int) evt.getPoint().getY());
+            @Override
+            public void mousePressed(MouseEvent evt) {
+                super.mousePressed(evt);
+                t1ort2 = table1;
+                mouse_events_in_tables(table1, evt);
+                if(table1.columnAtPoint(evt.getPoint()) == 0){
+                    update_count_checked_elements();
                 }
+            }
 
-                buttons_enable_tf(col1, row1, table1, Btn_Words_down);
+            @Override
+            public void mouseReleased(MouseEvent evt) {
+                super.mouseReleased(evt);
+                t1ort2 = table1;
+                mouse_events_in_tables(table1, evt);
+                if(table1.columnAtPoint(evt.getPoint()) == 0){
+                    update_count_checked_elements();
+                }
             }
         });
 
@@ -339,33 +351,44 @@ public class ToolsUI{
             @Override
             public void mouseClicked(MouseEvent evt) {
                 super.mouseClicked(evt);
-                t1ort2 = "table2";
-
-                int row = table2.rowAtPoint(evt.getPoint());
-                int col = table2.columnAtPoint(evt.getPoint());
-
-                message_warning_ew(table2, evt, ja_equal_words[1], "W*");
-                message_warning_ew(table2, evt, ja_equal_words2[1], "T*");
-
-                col2 = col;
-                row2 = row;
-
-                if (col == service.getCCI(service.nc_type_en)) {
-                    menu_wt.show(table2, (int) evt.getPoint().getX(), (int) evt.getPoint().getY());
+                t1ort2 = table2;
+                mouse_events_in_tables(table2, evt);
+                if(table2.columnAtPoint(evt.getPoint()) == 0){
+                    update_count_checked_elements();
                 }
+            }
 
-                buttons_enable_tf(col2, row2, table2, Btn_Words_up);
+            @Override
+            public void mousePressed(MouseEvent evt) {
+                super.mousePressed(evt);
+                t1ort2 = table2;
+                mouse_events_in_tables(table2, evt);
+                if(table2.columnAtPoint(evt.getPoint()) == 0){
+                    update_count_checked_elements();
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent evt) {
+                super.mouseReleased(evt);
+                t1ort2 = table2;
+                    mouse_events_in_tables(table2, evt);
+                if(table2.columnAtPoint(evt.getPoint()) == 0){
+                    update_count_checked_elements();
+                }
             }
         });
 
         menu_wt.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent popupMenuEvent) {
-                if(t1ort2.equals("table1")) {
-                    word_type_from_table_to_combobox(jcbmi, table1, col1, row1);
+                if(t1ort2.equals(table1)) {
+                    word_type_from_table_to_combobox(jcbmi, table1, table1.columnAtPoint(evt_t1.getPoint()),
+                                                                    table1.rowAtPoint(evt_t1.getPoint()));
                 }
-                if(t1ort2.equals("table2")) {
-                    word_type_from_table_to_combobox(jcbmi, table2, col2, row2);
+                else if(t1ort2.equals(table2)) {
+                    word_type_from_table_to_combobox(jcbmi, table2, table2.columnAtPoint(evt_t2.getPoint()),
+                                                                    table2.rowAtPoint(evt_t2.getPoint()));
                 }
             }
 
@@ -379,12 +402,14 @@ public class ToolsUI{
 
         for(int k=0; k<service.word_types.length;k++){
             jcbmi[k].addActionListener(actionEvent -> {
-                if(t1ort2.equals("table1")) {
-                    word_type_from_combobox_to_table(jcbmi, table1, col1, row1);
+                if(t1ort2.equals(table1)) {
+                    word_type_from_combobox_to_table(jcbmi, table1,
+                            table1.columnAtPoint(evt_t1.getPoint()), table1.rowAtPoint(evt_t1.getPoint()));
                 }
 
-                else if(t1ort2.equals("table2")) {
-                    word_type_from_combobox_to_table(jcbmi, table2, col2, row2);
+                else if(t1ort2.equals(table2)) {
+                    word_type_from_combobox_to_table(jcbmi, table2,
+                            table2.columnAtPoint(evt_t2.getPoint()), table2.rowAtPoint(evt_t2.getPoint()));
                 }
             });
         }
@@ -396,26 +421,22 @@ public class ToolsUI{
         Btn_Words_up.addActionListener(actionEvent -> {
             export_elem_from_tab_to_tab(table2, table1, 1);
             Btn_Words_up.setEnabled(false);
-            spinner1.setValue(1);
-            spinner2.setValue(2);
-            scope_questions(false);
-            JCB_Scope_questions.setSelected(false);
+            part_btn_words_updown();
+            Lbl_TSW_Count_Checked.setText(""+table_list_delete_rows_indexes[1].size());
         });
 
 //      Export elements from table1 to table2
         Btn_Words_down.addActionListener(actionEvent -> {
             export_elem_from_tab_to_tab(table1, table2, 0);
             Btn_Words_down.setEnabled(false);
-            spinner1.setValue(1);
-            spinner2.setValue(2);
-            scope_questions(false);
-            JCB_Scope_questions.setSelected(false);
+            part_btn_words_updown();
+            Lbl_TNW_Count_Checked.setText(""+table_list_delete_rows_indexes[0].size());
         });
 
         Btn_Search1.addActionListener(actionEvent -> service.wt_search(table1,
-                                                                       field_search11, field_search12, field_search13));
+                field_search11, field_search12, field_search13));
         Btn_Search2.addActionListener(actionEvent -> service.wt_search(table2,
-                                                                       field_search21, field_search22, field_search23));
+                field_search21, field_search22, field_search23));
 
         spinner1.addChangeListener(changeEvent -> {
             int jS1 = (int) spinner1.getValue();
@@ -424,60 +445,99 @@ public class ToolsUI{
                 spinner2.setValue(jS1 + 1);
             }
             spinner_choice_item_table();
+            part_scope_questions();
         });
 
         spinner2.addChangeListener(changeEvent -> {
-            if((int)spinner2.getValue() > service.ja_words.length()){
-                Btn_Words_down.setEnabled(false);
-            }else Btn_Words_down.setEnabled(true);
-
-            if((int)spinner2.getValue() > service2.ja_words.length()){
-                Btn_Words_up.setEnabled(false);
-            }else Btn_Words_up.setEnabled(true);
-
             int jS1 = (int) spinner1.getValue();
             int jS2 = (int) spinner2.getValue();
             if (jS1 == jS2) {
                 spinner1.setValue(jS2 - 1);
             }
             spinner_choice_item_table();
+            part_scope_questions();
         });
 
         JCB_Scope_questions.addActionListener(actionEvent -> {
             spinner_choice_item_table();
-            if(JCB_Scope_questions.isSelected()) {
-                scope_questions(true);
-                Btn_Words_up.setEnabled(true);
-                Btn_Words_down.setEnabled(true);
-            }
-            else{
-                scope_questions(false);
-
-                for (int i = 0; i < table1.getRowCount(); i++) {
-                    if((boolean)table1.getValueAt(i, 0)) {
-                        Btn_Words_down.setEnabled(true);
-                        break;
-                    }
-                    else {
-                        Btn_Words_down.setEnabled(false);
-                    }
-                }
-
-                for (int i = 0; i < table2.getRowCount(); i++) {
-                    if((boolean)table2.getValueAt(i, 0)) {
-                        Btn_Words_up.setEnabled(true);
-                        break;
-                    }
-                    else {
-                        Btn_Words_up.setEnabled(false);
-                    }
-                }
-            }
+            if(JCB_Scope_questions.isSelected()) {scope_questions(true);}
+            else{scope_questions(false);}
+            part_scope_questions();
         });
+
         Btn_Check_duplicates.addActionListener(e -> {
             wt_cols();
             add_warning_icon_to_col();
         });
+    }
+
+    private void part_btn_words_updown(){
+        spinner1.setValue(1);
+        spinner2.setValue(2);
+        table1.setValueAt(false,0,0);
+        table1.setValueAt(false,1,0);
+        table2.setValueAt(false,0,0);
+        table2.setValueAt(false,1,0);
+        part_scope_questions();
+        scope_questions(false);
+        JCB_Scope_questions.setSelected(false);
+    }
+
+    private void mouse_events_in_tables(JTable current_table, MouseEvent evt){
+        t1ort2 = current_table;
+        int n = 0;
+        if(t1ort2.equals(table1)) {
+            evt_t1 = evt;
+            n=0;
+        }
+        else if(t1ort2.equals(table2)) {
+            evt_t2 = evt;
+            n=1;
+        }
+
+        int col = current_table.columnAtPoint(evt.getPoint());
+
+        if(col == service.getCCI("W*")||col == service.getCCI("T*")){
+            message_warning_ew(current_table, evt, ja_equal_words[n], "W*");
+            message_warning_ew(current_table, evt, ja_equal_words2[n], "T*");
+        }
+
+        moving_checked_elements_to_arrays(current_table);
+
+        if(t1ort2.equals(table1)) {
+            buttons_enable_tf(evt_t1, current_table);
+        }
+        else if(t1ort2.equals(table2)) {
+            buttons_enable_tf(evt_t2, current_table);
+        }
+
+        if (col == service.getCCI(service.nc_type_en)) {
+            menu_wt.show(current_table, (int) evt.getPoint().getX(), (int) evt.getPoint().getY());
+        }
+    }
+
+    private void part_scope_questions(){
+        moving_checked_elements_to_arrays(table1);
+        moving_checked_elements_to_arrays(table2);
+        part_updating_count_checked_elements(Lbl_TNW_Count_Checked, 0, Btn_Words_down);
+        part_updating_count_checked_elements(Lbl_TSW_Count_Checked, 1, Btn_Words_up);
+    }
+
+    private void part_updating_count_checked_elements(JLabel c_label, int n, JButton c_button){
+        c_label.setText("" + table_list_delete_rows_indexes[n].size());
+        if(table_list_delete_rows_indexes[n].size()==0){
+            c_button.setEnabled(false);
+        }
+        else c_button.setEnabled(true);
+    }
+
+    private void update_count_checked_elements(){
+        if(t1ort2.equals(table1)) {
+            part_updating_count_checked_elements(Lbl_TNW_Count_Checked, 0, Btn_Words_down);
+        }
+        else if(t1ort2.equals(table2)) {
+            part_updating_count_checked_elements(Lbl_TSW_Count_Checked, 1, Btn_Words_up);
+        }
     }
 
     private void elements_name(){
@@ -542,8 +602,6 @@ public class ToolsUI{
                         int v1 = (int) c_table.getValueAt(i, col_num);
                         int v2 = (int) c_table.getValueAt(i + 1, col_num);
                         if (v2 - v1 != 1) {
-                            Btn_Words_down.setEnabled(false);
-                            Btn_Words_up.setEnabled(false);
                             Btn_Save.setEnabled(false);
                             Btn_Add.setEnabled(false);
                             Btn_Del.setEnabled(false);
@@ -568,7 +626,11 @@ public class ToolsUI{
         c_table.setCellSelectionEnabled(true);
     }
 
-    private void buttons_enable_tf(int c_col, int c_row, JTable c_table, JButton c_button_updown){
+    private void buttons_enable_tf(MouseEvent c_evt, JTable c_table){
+
+        int c_row = c_table.rowAtPoint(c_evt.getPoint());
+        int c_col = c_table.columnAtPoint(c_evt.getPoint());
+
         for (int i = 0; i < c_table.getRowCount(); i++) {
             if (c_row == i) {
                 String val;
@@ -579,21 +641,11 @@ public class ToolsUI{
                 }
                 c_table.setToolTipText(val);
             }
-            if(c_col == 0){
-                if((boolean)c_table.getValueAt(i, 0)) {
-                    c_button_updown.setEnabled(true);
-                    break;
-                }
-                else{ c_button_updown.setEnabled(false);}
-                table_header(c_table);
-            }
             if(i<c_table.getRowCount()-1) {
                 int v1 = (int) c_table.getValueAt(i, 1);
                 int v2 = (int) c_table.getValueAt(i + 1, 1);
 
                 if (v2 - v1 != 1) {
-                    Btn_Words_down.setEnabled(false);
-                    Btn_Words_up.setEnabled(false);
                     Btn_Save.setEnabled(false);
                     Btn_Add.setEnabled(false);
                     Btn_Del.setEnabled(false);
@@ -637,8 +689,8 @@ public class ToolsUI{
                         else if(!c_jcbmi[i].isSelected()){
                             if(c_table.getValueAt(c_row, c_col)!=null) {
                                 c_table.setValueAt(c_table.getValueAt(c_row, c_col).toString().toLowerCase().
-                                        replace(c_jcbmi[i].getText().toLowerCase()+" ", ""),
-                                                       j, service.getCCI(service.nc_type_en));
+                                                replace(c_jcbmi[i].getText().toLowerCase()+" ", ""),
+                                        j, service.getCCI(service.nc_type_en));
                             }
                         }
                     }
@@ -653,7 +705,7 @@ public class ToolsUI{
                 if (i == c_row) {
                     for (int j = 0; j < service.word_types.length; j++) {
                         if((c_table.getValueAt(c_row, service.getCCI(service.nc_type_en)) == null) ||
-                           (Objects.equals(c_table.getValueAt(c_row, service.getCCI(service.nc_type_en)).toString(), "")))
+                                (Objects.equals(c_table.getValueAt(c_row, service.getCCI(service.nc_type_en)).toString(), "")))
                         {c_jcbmi[j].setSelected(false);}
                         else if (c_table.getValueAt(c_row, service.getCCI(service.nc_type_en)).toString().toLowerCase().
                                 contains(c_jcbmi[j].getText().toLowerCase())){c_jcbmi[j].setSelected(true);}
@@ -664,7 +716,14 @@ public class ToolsUI{
         }
     }
 
-    private void export_elem_from_tab_to_tab(JTable t1, JTable t2, int n){
+    private void moving_checked_elements_to_arrays(JTable t1){
+        int n = 0;
+        if(t1 == table1){
+            n=0;
+        }
+        else if(t1 == table2){
+            n=1;
+        }
         table_list_delete_rows_names[n] = new ArrayList();
         table_list_delete_rows_translate[n] = new ArrayList();
         table_list_delete_rows_word_type[n] = new ArrayList();
@@ -685,7 +744,10 @@ public class ToolsUI{
                 table_list_delete_rows_indexes[n].add(row);
             }
         }
+    }
 
+    private void export_elem_from_tab_to_tab(JTable t1, JTable t2, int n){
+        moving_checked_elements_to_arrays(t1);
         int ldr_st = 0;
         for (Integer al_indexe : table_list_delete_rows_indexes[n]) {
             int ldr_value = al_indexe - ldr_st;
@@ -700,9 +762,9 @@ public class ToolsUI{
         for (int i = 0; i < table_list_delete_rows_indexes[n].size(); i++) {
             DefaultTableModel model = (DefaultTableModel) t2.getModel();
             model.addRow(new Object[]{false, t2.getRowCount() + 1, table_list_delete_rows_names[n].get(i),
-                                                                   table_list_delete_rows_translate[n].get(i),
-                                                                   table_list_delete_rows_word_type[n].get(i),
-                                                                   "", ""});
+                    table_list_delete_rows_translate[n].get(i),
+                    table_list_delete_rows_word_type[n].get(i),
+                    "", ""});
         }
 
         t2.changeSelection(t2.getRowCount() - 1, 0, false, false);
@@ -738,9 +800,9 @@ public class ToolsUI{
             ja_equal_words[i] = new JSONArray();
             ja_equal_words2[i] = new JSONArray();
             moving_equivalent_elements_to_array(list_val_from_col2[i], ja_equal_words[i], im,
-                                                   service.getCCI(service.nc_word_en),i);
+                    service.getCCI(service.nc_word_en),i);
             moving_equivalent_elements_to_array(list_val_from_col3[i], ja_equal_words2[i], im,
-                                                   service.getCCI(service.nc_translate_en),i);
+                    service.getCCI(service.nc_translate_en),i);
         }
 
         for(int i=0; i< table1.getRowCount()-1; i++){
@@ -762,7 +824,7 @@ public class ToolsUI{
     }
 
     private void moving_equivalent_elements_to_array(ArrayList<String> list_val_from_col, JSONArray current_ja_ee,
-                                    ImageIcon im, int c_col, int c_tab){
+                                                     ImageIcon im, int c_col, int c_tab){
         String tc = "";
         String tci = "";
         JTable tab = new JTable();
@@ -906,15 +968,15 @@ public class ToolsUI{
                     }
                     else if(col ==  service.getCCI(service.nc_word_en)){
                         export_content(targetRow, service.getCCI(service.nc_word_en),
-                                                  service.getCCI(service.nc_word_en));
+                                service.getCCI(service.nc_word_en));
                         export_content(targetRow, service.getCCI("W*"),
-                                                  service.getCCI("W*"));
+                                service.getCCI("W*"));
                     }
                     else if(col ==  service.getCCI(service.nc_translate_en)){
                         export_content(targetRow, service.getCCI(service.nc_translate_en),
-                                                  service.getCCI(service.nc_translate_en));
+                                service.getCCI(service.nc_translate_en));
                         export_content(targetRow, service.getCCI("T*"),
-                                                  service.getCCI("T*"));
+                                service.getCCI("T*"));
                     }
 
                     swapped = true;

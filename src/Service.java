@@ -202,7 +202,7 @@ class Service{
             list[1] = new Object[]{
                 new Service().name_cols,
                 new String[] {"№", "Word", "Translate","", "True answer"},
-                "Choice questions", "Count questions", "Choice from table", "Scope with:", "to", "Answers options: ",
+                "Choice questions", "Count questions", "Choice from table", "Scope from:", "to", "Answers options: ",
                 new String[] {"No", "Yes"}, "Start",
 
                 "Ok", "Next",  "Result", "Cancel test", "True answer", "False answer",
