@@ -17,7 +17,7 @@ import java.util.Random;
 public class MainUI {
     private JPanel main_panel;
     private JPanel panel_test, panel_option_questions, panel_result;
-    private JRadioButton RB_Option1, RB_Option2, RB_Option3, RB_Option4,
+    private JRadioButton RB_Option1, RB_Option2,
             RB_Count_questions, RB_Choice_from_List;
     private ButtonGroup group_test = new ButtonGroup();
 
@@ -30,26 +30,29 @@ public class MainUI {
     private JLabel Lbl_title;
     private JLabel Lbl_sp2_to_sp3;
     private JComboBox comboBox1;
-    private JButton button1;
+    private JButton Btn_Cancel_test3;
     private JLabel Lbl_Order_question;
-    private JButton Btn_Reset;
+    private JButton Btn_Cancel_test;
     private JPanel panel_test2;
     private JTable table2;
     private JButton Btn_answer;
-    private JButton Btn_Reset2;
+    private JButton Btn_Cancel_test2;
     private JScrollPane s_pane2;
     private JTextField field_search1;
     private JTextField field_search2;
     private JButton Search_Ok;
-    private JButton Btn_Restart_test2;
-    private JCheckBox JCB_Clear_true_answers;
+    private JButton Btn_Restart_test;
+    private JCheckBox CB_Clear_true_answers;
+    private JCheckBox CB_Clear_true_answers2;
     private JTextField field_search3;
     private JCheckBox CB_Scope_questions;
     private Service service;
+    private Service.Language lang;
     private ArrayList<String> list_questions;
     private ArrayList<String> list_answers;
     private DefaultListModel model_answer_true;
     private DefaultListModel model_answer_false;
+    private ArrayList<String> list_answer_false;
 
     private int n;
     private int answer_true;
@@ -61,7 +64,8 @@ public class MainUI {
     JScrollPane s_pane_list2;
     private JCheckBox JCB_Answers_show_hide;
     private JButton Btn_Reload_table1;
-    private JRadioButton[] rb = {RB_Option1, RB_Option2, RB_Option3, RB_Option4};
+    private JButton Btn_Restart_test2;
+    private JRadioButton[] rb = {RB_Option1, RB_Option2};
     private int columnValue = -1;
     private int columnNewValue = -1;
 
@@ -72,7 +76,7 @@ public class MainUI {
         panel_result.setVisible(false);
         panel_test.setVisible(false);
         panel_test2.setVisible(false);
-        Btn_Restart_test2.setEnabled(false);
+        Btn_Restart_test.setEnabled(false);
         CB_Scope_questions.setEnabled(false);
 
 //      Can edit column table1
@@ -90,11 +94,11 @@ public class MainUI {
 
 
         select_parameter_enable(true, false, false);
-        Service.Language lang = new Service.Language(service.current_path[1]);
+        lang = new Service.Language(service.current_path[1]);
         color_elements();
         comboBox1.setModel(new DefaultComboBoxModel((String[]) lang.SetLanguage("CB_Elements_name")));
 
-        JRadioButton[] rb = {RB_Option1, RB_Option2, RB_Option3, RB_Option4};
+        JRadioButton[] rb = {RB_Option1, RB_Option2};
 
         // Columns setReorderingAllowed disable
         table1.getColumnModel().addColumnModelListener(new TableColumnModelListener() {
@@ -236,49 +240,7 @@ public class MainUI {
                 panel_test2.setVisible(true);
                 panel_test2.getTopLevelAncestor().setSize(720, 420);
 
-                DefaultTableModel dtm = new DefaultTableModel() {
-                    String[] employee = (String[]) lang.SetLanguage("TC_name2");
-                    boolean[] canEdit2 = {false, false, true, false, false};
-
-                    @Override
-                    public int getColumnCount() {
-                        return 5;
-                    }
-
-                    @Override
-                    public int getRowCount() {
-                        return list_questions.size();
-                    }
-
-                    @Override
-                    public String getColumnName(int index) {
-                        return employee[index];
-                    }
-
-                    @Override
-                    public boolean isCellEditable(int rowIndex, int columnIndex) {
-                        return canEdit2[columnIndex];
-                    }
-
-                    @Override
-                    public Class<?> getColumnClass(int column) {
-                        switch (column) {
-                            case 0:
-                                return Integer.class;
-                            case 1:
-                                return String.class;
-                            case 2:
-                                return String.class;
-                            case 3:
-                                return ImageIcon.class;
-                            case 4:
-                                return String.class;
-                            default:
-                                return String.class;
-                        }
-                    }
-                };
-
+                DefaultTableModel dtm = forming_table_for_test();
                 table2.setModel(dtm);
 
                 for (int i = 0; i < list_questions.size(); i++) {
@@ -349,7 +311,7 @@ public class MainUI {
             }
 
 //          Check true/false answer
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 2; i++) {
                 group_test.add(rb[i]);
                 if (group_test.isSelected(rb[i].getModel())) {
                     if (rb[i].getText().equals(answer)) {
@@ -362,6 +324,7 @@ public class MainUI {
                         rb[i].setForeground(Color.RED);
                         answer_false++;
                         Lbl_Result.setText(lang.SetLanguage("Lbl_Result_name") + ": " + answer_true + "/" + answer_false);
+                        list_answer_false.add(Lbl_Question_test.getText());
                         model_answer_false.addElement(Lbl_Question_test.getText() + " - " + answer);
                     }
                 }
@@ -398,18 +361,22 @@ public class MainUI {
                 Lbl_true_answers.setForeground(Color.decode("#009926"));
                 Lbl_false_answers.setText("false: " + answer_false + "");
                 Lbl_false_answers.setForeground(Color.red);
+                if(answer_false == 0) {
+                    CB_Clear_true_answers2.setSelected(false);
+                    CB_Clear_true_answers2.setEnabled(false);
+                }
                 list1.setModel(model_answer_true);
                 list2.setModel(model_answer_false);
                 panel_result.getTopLevelAncestor().setSize(720, 360);
             }
         });
 
-        button1.addActionListener(actionEvent -> {
+        Btn_Cancel_test3.addActionListener(actionEvent -> {
             start_current_test();
             reset_start_test();
         });
 
-        Btn_Reset.addActionListener(actionEvent -> {
+        Btn_Cancel_test.addActionListener(actionEvent -> {
             start_current_test();
             reset_start_test();
         });
@@ -418,7 +385,7 @@ public class MainUI {
 
         Btn_answer.addActionListener(actionEvent -> {
 
-            Btn_Restart_test2.setEnabled(true);
+            Btn_Restart_test.setEnabled(true);
 
             if (table2.getColumnCount() == 3) {
                 table2.addColumn(new TableColumn(3));
@@ -456,10 +423,10 @@ public class MainUI {
         ArrayList<String> str_del_true = new ArrayList<>();
 
         ArrayList<Integer> str_del_true_index = new ArrayList<>();
-        Btn_Restart_test2.addActionListener(actionEvent -> {
+        Btn_Restart_test.addActionListener(actionEvent -> {
             ast.clear();
             Btn_answer.setEnabled(true);
-            Btn_Restart_test2.setEnabled(false);
+            Btn_Restart_test.setEnabled(false);
             boolean tf = false;
             for (int i = 0; i < table2.getRowCount(); i++) {
                 if (table2.getValueAt(i, 3).toString().toLowerCase().contains("ic_answ_true_20x20.png")) {
@@ -467,7 +434,7 @@ public class MainUI {
                 }
             }
 
-            if (JCB_Clear_true_answers.isSelected() && tf) {
+            if (CB_Clear_true_answers.isSelected() && tf) {
                 str_del_true.clear();
                 str_del_true_index.clear();
                 for (int i = 0; i < table2.getRowCount(); i++) {
@@ -497,48 +464,7 @@ public class MainUI {
 
             Collections.shuffle(list_questions, new Random(seed));
 
-            DefaultTableModel dtm = new DefaultTableModel() {
-                String[] employee = (String[]) lang.SetLanguage("TC_name2");
-                boolean[] canEdit2 = {false, false, true, false, false};
-
-                @Override
-                public int getColumnCount() {
-                    return 5;
-                }
-
-                @Override
-                public int getRowCount() {
-                    return list_questions.size();
-                }
-
-                @Override
-                public String getColumnName(int index) {
-                    return employee[index];
-                }
-
-                @Override
-                public boolean isCellEditable(int rowIndex, int columnIndex) {
-                    return canEdit2[columnIndex];
-                }
-
-                @Override
-                public Class<?> getColumnClass(int column) {
-                    switch (column) {
-                        case 0:
-                            return Integer.class;
-                        case 1:
-                            return String.class;
-                        case 2:
-                            return String.class;
-                        case 3:
-                            return ImageIcon.class;
-                        case 4:
-                            return String.class;
-                        default:
-                            return String.class;
-                    }
-                }
-            };
+            DefaultTableModel dtm = forming_table_for_test();
 
             table2.setModel(dtm);
 
@@ -569,7 +495,7 @@ public class MainUI {
             }
         });
 
-        Btn_Reset2.addActionListener(actionEvent -> {
+        Btn_Cancel_test2.addActionListener(actionEvent -> {
             start_current_test();
             reset_start_test();
             list_questions.clear();
@@ -596,7 +522,7 @@ public class MainUI {
             @Override
             public void mouseEntered(MouseEvent mouseEvent) {
                 super.mouseEntered(mouseEvent);
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < 2; i++) {
                     rb[i].setForeground(Color.BLACK);
                 }
             }
@@ -609,13 +535,102 @@ public class MainUI {
         };
         RB_Option1.addMouseListener(listener);
         RB_Option2.addMouseListener(listener);
-        RB_Option3.addMouseListener(listener);
-        RB_Option4.addMouseListener(listener);
+
         JCB_Answers_show_hide.addActionListener(actionEvent -> answers_show_hide());
         Btn_Reload_table1.addActionListener(e -> {
             service.list_questions_all.clear();
             load_data_table1(canEdit, table_column_widths);
         });
+        Btn_Restart_test2.addActionListener(e -> {
+
+            model_answer_true = new DefaultListModel();
+            model_answer_false = new DefaultListModel();
+            if(!CB_Clear_true_answers2.isSelected()) {
+                list_answer_false = new ArrayList<>();
+            }
+            n = 0;
+            answer_true = 0;
+            answer_false = 0;
+            sum2 = 0;
+            Lbl_Result.setText("");
+            panel_option_questions.setVisible(false);
+            panel_test.setVisible(true);
+            panel_result.setVisible(false);
+            Btn_choice_answer.setEnabled(true);
+            Btn_Next_question.setEnabled(false);
+            Btn_Next_question.setText(lang.SetLanguage("Btn_Next_question_name").toString());
+
+//              JRadioButton[] rb = {RB_Option1, RB_Option2, RB_Option3, RB_Option4};
+            JCB_Answers_show_hide.setSelected(true);
+            answers_show_hide();
+
+            panel_test.getTopLevelAncestor().setSize(720, 300);
+
+            if (list_questions.size() == table1.getRowCount()) {
+                list_questions.remove(table1.getRowCount() - 1);
+            }
+
+            if(CB_Clear_true_answers2.isSelected()){
+                list_questions.clear();
+                for(int i=0; i<list_answer_false.size(); i++){
+                    list_questions.add(list_answer_false.get(i));
+                }
+            }
+            long seed = System.nanoTime();
+            Collections.shuffle(list_questions, new Random(seed));
+            list_answer_false.clear();
+            creating_query(list_questions.get(n));
+
+
+
+        });
+    }
+
+    private DefaultTableModel forming_table_for_test(){
+        lang = new Service.Language(service.current_path[1]);
+        DefaultTableModel dtm = new DefaultTableModel() {
+            String[] employee = (String[]) lang.SetLanguage("TC_name2");
+            boolean[] canEdit2 = {false, false, true, false, false};
+
+            @Override
+            public int getColumnCount() {
+                return 5;
+            }
+
+            @Override
+            public int getRowCount() {
+                return list_questions.size();
+            }
+
+            @Override
+            public String getColumnName(int index) {
+                return employee[index];
+            }
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit2[columnIndex];
+            }
+
+            @Override
+            public Class<?> getColumnClass(int column) {
+                switch (column) {
+                    case 0:
+                        return Integer.class;
+                    case 1:
+                        return String.class;
+                    case 2:
+                        return String.class;
+                    case 3:
+                        return ImageIcon.class;
+                    case 4:
+                        return String.class;
+                    default:
+                        return String.class;
+                }
+            }
+        };
+        return dtm;
     }
 
     private void load_data_table1(boolean[] current_canEdit, int[] current_table_column_widths){
@@ -633,12 +648,12 @@ public class MainUI {
 
     private void answers_show_hide(){
         if(JCB_Answers_show_hide.isSelected()) {
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 2; i++) {
                 rb[i].setForeground(panel_test.getBackground());
             }
         }
         else{
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 2; i++) {
                 rb[i].setForeground(Color.BLACK);
             }
         }
@@ -657,12 +672,13 @@ public class MainUI {
         Btn_Start_test.setText(lang.SetLanguage("Btn_Start_test_name").toString());
         Lbl_true_answers.setText(lang.SetLanguage("Lbl_True_answers_name").toString());
         Lbl_false_answers.setText(lang.SetLanguage("Lbl_False_answers_name").toString());
-        button1.setText(lang.SetLanguage("Btn_Reset_start_test_name").toString());
-
-        Btn_Reset.setText(lang.SetLanguage("Btn_Cancel_test").toString());
-        Btn_Reset2.setText(lang.SetLanguage("Btn_Cancel_test").toString());
+        Btn_Cancel_test.setText(lang.SetLanguage("Btn_Cancel_test").toString());
+        Btn_Cancel_test2.setText(lang.SetLanguage("Btn_Cancel_test").toString());
+        Btn_Cancel_test3.setText(lang.SetLanguage("Btn_Cancel_test").toString());
+        Btn_Restart_test.setText(lang.SetLanguage("Btn_Reset_test").toString());
         Btn_Restart_test2.setText(lang.SetLanguage("Btn_Reset_test").toString());
-        JCB_Clear_true_answers.setText(lang.SetLanguage("JCB_Clear_true_answers").toString());
+        CB_Clear_true_answers.setText(lang.SetLanguage("CB_Clear_true_answers").toString());
+        CB_Clear_true_answers2.setText(lang.SetLanguage("CB_Clear_true_answers").toString());
     }
 
     private void color_elements(){
@@ -676,7 +692,7 @@ public class MainUI {
         CB_Scope_questions.setBackground(panel_option_questions.getBackground());
         Lbl_sp2_to_sp3.setBackground(panel_option_questions.getBackground());
 
-        JRadioButton[] rb = {RB_Option1, RB_Option2, RB_Option3, RB_Option4};
+        JRadioButton[] rb = {RB_Option1, RB_Option2};
         for (JRadioButton aRb : rb) {
             aRb.setBackground(panel_test.getBackground());
         }
@@ -687,6 +703,7 @@ public class MainUI {
         list_answers = new ArrayList<>();
         model_answer_true = new DefaultListModel();
         model_answer_false = new DefaultListModel();
+        list_answer_false = new ArrayList<>();
         n = 0;
         answer_true = 0;
         answer_false = 0;
@@ -737,14 +754,14 @@ public class MainUI {
             if (Btn_choice_answer.getModel().isEnabled()) {
                 Btn_Next_question.setEnabled(false);
             }
-            JRadioButton[] rb = {RB_Option1, RB_Option2, RB_Option3, RB_Option4};
-            for (int i = 0; i < 4; i++) {
+            JRadioButton[] rb = {RB_Option1, RB_Option2};
+            for (int i = 0; i < 2; i++) {
                 group_test.add(rb[i]);
             }
 
 //          select default answer
 //          group_test.setSelected(jRB_Count_questions.getModel(), true);
-            JRadioButton[] jRB_Options = {RB_Option1, RB_Option2, RB_Option3, RB_Option4};
+//            JRadioButton[] jRB_Options = {RB_Option1, RB_Option2};
             long seed = System.nanoTime();
             Lbl_Question_test.setText(n);
             list_answers.clear();
@@ -759,38 +776,22 @@ public class MainUI {
                 if(current_column_word.equals(service.nc_word_en) || current_column_word.equals(service.nc_word_ua)) {
                     if (question.equals(n)) {
                         list_answers.add(answer);
+                        break;
                     }
                 }
                 else if(current_column_word.equals(service.nc_translate_en) || current_column_word.equals(service.nc_translate_ua)){
                     if (answer.equals(n)) {
                         list_answers.add(question);
-                    }
-                }
-            }
-            for (int i = 0; i < service.ja_words.length(); i++) {
-                if(current_column_word.equals(service.nc_word_en) || current_column_word.equals(service.nc_word_ua)) {
-                    if (!(list_answers.get(0).equals(service.list_answers_all.get(i)))) {
-                        list_answers.add(service.list_answers_all.get(i));
-                    }
-                    if (list_answers.size() == 4) {
-                        break;
-                    }
-                }
-                else if(current_column_word.equals(service.nc_translate_en) || current_column_word.equals(service.nc_translate_ua)){
-                    if (!(list_answers.get(0).equals(service.list_questions_all.get(i)))) {
-                        list_answers.add(service.list_questions_all.get(i));
-                    }
-                    if (list_answers.size() == 4) {
                         break;
                     }
                 }
             }
-//          random elements in list
-            Collections.shuffle(list_answers, new Random(seed));
+
+            list_answers.add("Don't know");
 
 //          copying elements from list to radiobuttons
-            for (int i = 0; i < 4; i++) {
-                jRB_Options[i].setText(list_answers.get(i));
+            for (int i = 0; i < 2; i++) {
+                rb[i].setText(list_answers.get(i));
             }
         }
     }

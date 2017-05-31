@@ -189,7 +189,7 @@ class Service{
                 new String[] {"Без варіантів", "Так"}, "Старт",
 
                 "Підтвердити", "Наступне запитання",  "Результат", "Відмінити тест", "Правильно", "Помилки",
-                "Повернутись до початку", "Запустити знову", "Прибрати правильні",
+                "Відмінити тест", "Запустити знову", "Прибрати правильні",
 
                 "Налаштування", "Про програму", "Мова інтерфейсу", "Перезапустіть програму для змін", "Словник", "Дизайн",
                 "Детальніше про програму",
@@ -206,7 +206,7 @@ class Service{
                 new String[] {"No", "Yes"}, "Start",
 
                 "Ok", "Next",  "Result", "Cancel test", "True answer", "False answer",
-                "Return to start", "Reset", "Clear true",
+                "Cancel test", "Restart test", "Clear true",
 
                 "Settings","About", "Language", "Restart program for changes", "Vocabulary", "Design",
                 "Description",
@@ -223,7 +223,7 @@ class Service{
                 "Lbl_sp2_to_sp3_name", "Lbl_Order_question_name", "CB_Elements_name", "Btn_Start_test_name",
 
                 "Btn_Ok_name", "Btn_Next_question_name",  "Lbl_Result_name", "Btn_Cancel_test", "Lbl_True_answers_name",
-                "Lbl_False_answers_name", "Btn_Reset_start_test_name",  "Btn_Reset_test", "JCB_Clear_true_answers",
+                "Lbl_False_answers_name", "Btn_Cancel_test",  "Btn_Reset_test", "CB_Clear_true_answers",
 
                 "M_Settings_name", "M_About_name", "M_Lang_name", "OPM_Restart_program", "MI_Vocabulary_name",
                 "MI_Design_name", "MI_Description",
