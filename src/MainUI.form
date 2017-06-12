@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="main_panel" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="50" right="0"/>
     <constraints>
-      <xy x="26" y="20" width="773" height="1507"/>
+      <xy x="26" y="20" width="834" height="1557"/>
     </constraints>
     <properties>
       <maximumSize width="-1" height="-1"/>
@@ -15,7 +15,7 @@
     </clientProperties>
     <border type="none"/>
     <children>
-      <grid id="e7ec9" binding="panel_test" layout-manager="GridLayoutManager" row-count="8" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="e7ec9" binding="panel_test" layout-manager="GridLayoutManager" row-count="9" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
@@ -131,32 +131,38 @@
           </hspacer>
           <vspacer id="46fb2">
             <constraints>
-              <grid row="7" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false">
+              <grid row="8" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <minimum-size width="-1" height="40"/>
                 <preferred-size width="-1" height="40"/>
                 <maximum-size width="-1" height="40"/>
               </grid>
             </constraints>
           </vspacer>
-          <component id="a1386" class="javax.swing.JButton" binding="Btn_Cancel_test">
-            <constraints>
-              <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
-                <minimum-size width="120" height="-1"/>
-                <preferred-size width="120" height="-1"/>
-                <maximum-size width="120" height="-1"/>
-              </grid>
-            </constraints>
-            <properties>
-              <margin top="2" left="2" bottom="2" right="2"/>
-              <text value=""/>
-            </properties>
-          </component>
           <component id="daa84" class="javax.swing.JCheckBox" binding="JCB_Answers_show_hide">
             <constraints>
               <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <icon value="icons/ic_answers_visible_25x15.png"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="8bde9" class="javax.swing.JButton" binding="Btn_Cancel_test_variants">
+            <constraints>
+              <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <icon value="icons/bt_cancel_test_30x30.png"/>
+              <margin top="2" left="2" bottom="2" right="2"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="255c9" class="javax.swing.JButton" binding="Btn_go_to_written_test">
+            <constraints>
+              <grid row="7" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <label value=""/>
               <text value=""/>
             </properties>
           </component>
@@ -340,7 +346,7 @@
               <text value=""/>
             </properties>
           </component>
-          <component id="343e4" class="javax.swing.JLabel" binding="Lbl_Order_question">
+          <component id="343e4" class="javax.swing.JLabel" binding="Lbl_Type_test">
             <constraints>
               <grid row="13" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -446,7 +452,7 @@
           </component>
         </children>
       </grid>
-      <grid id="fe72c" binding="panel_result" layout-manager="GridLayoutManager" row-count="5" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="fe72c" binding="panel_result" layout-manager="GridLayoutManager" row-count="8" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
@@ -458,7 +464,7 @@
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="250" height="25"/>
-                <preferred-size width="250" height="25"/>
+                <preferred-size width="225" height="25"/>
                 <maximum-size width="250" height="25"/>
               </grid>
             </constraints>
@@ -478,42 +484,37 @@
               <text value="Label"/>
             </properties>
           </component>
-          <vspacer id="a6cac">
-            <constraints>
-              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
-                <minimum-size width="-1" height="15"/>
-                <preferred-size width="-1" height="15"/>
-                <maximum-size width="-1" height="15"/>
-              </grid>
-            </constraints>
-          </vspacer>
           <scrollpane id="568ac" binding="s_pane_list1">
             <constraints>
-              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <minimum-size width="-1" height="185"/>
-                <preferred-size width="-1" height="185"/>
-                <maximum-size width="-1" height="185"/>
+              <grid row="1" column="1" row-span="3" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="2" indent="0" use-parent-layout="false">
+                <minimum-size width="320" height="185"/>
+                <preferred-size width="320" height="185"/>
+                <maximum-size width="320" height="185"/>
               </grid>
             </constraints>
             <properties>
               <verticalScrollBarPolicy value="22"/>
             </properties>
+            <clientProperties>
+              <html.disable class="java.lang.Boolean" value="false"/>
+            </clientProperties>
             <border type="none"/>
             <children>
-              <component id="95b08" class="javax.swing.JList" binding="list1" default-binding="true">
+              <component id="904d5" class="javax.swing.JTable" binding="Tab_True_answers">
                 <constraints/>
-                <properties>
-                  <preferredSize width="0" height="0"/>
-                </properties>
+                <properties/>
+                <clientProperties>
+                  <html.disable class="java.lang.Boolean" value="false"/>
+                </clientProperties>
               </component>
             </children>
           </scrollpane>
           <scrollpane id="57201" binding="s_pane_list2">
             <constraints>
-              <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <minimum-size width="-1" height="185"/>
-                <preferred-size width="-1" height="185"/>
-                <maximum-size width="-1" height="185"/>
+              <grid row="1" column="3" row-span="3" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="2" indent="0" use-parent-layout="false">
+                <minimum-size width="320" height="185"/>
+                <preferred-size width="320" height="185"/>
+                <maximum-size width="320" height="185"/>
               </grid>
             </constraints>
             <properties>
@@ -521,7 +522,7 @@
             </properties>
             <border type="none"/>
             <children>
-              <component id="c6f2c" class="javax.swing.JList" binding="list2" default-binding="true">
+              <component id="a233c" class="javax.swing.JTable" binding="Tab_False_answers">
                 <constraints/>
                 <properties/>
               </component>
@@ -529,7 +530,7 @@
           </scrollpane>
           <hspacer id="83b3c">
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+              <grid row="1" column="0" row-span="3" col-span="1" vsize-policy="1" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="10" height="-1"/>
                 <preferred-size width="10" height="-1"/>
                 <maximum-size width="10" height="-1"/>
@@ -538,49 +539,106 @@
           </hspacer>
           <hspacer id="28c5f">
             <constraints>
-              <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false">
+              <grid row="1" column="4" row-span="3" col-span="1" vsize-policy="1" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="10" height="-1"/>
                 <preferred-size width="10" height="-1"/>
                 <maximum-size width="10" height="-1"/>
               </grid>
             </constraints>
           </hspacer>
-          <vspacer id="79c07">
+          <component id="cb6b9" class="javax.swing.JButton" binding="Btn_Words_right">
             <constraints>
-              <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <icon value="icons/bt_words_right_30x30.png"/>
+              <label value=""/>
+              <margin top="2" left="2" bottom="2" right="2"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="7ad7e" class="javax.swing.JButton" binding="Btn_Words_left">
+            <constraints>
+              <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <icon value="icons/bt_words_left_30x30.png"/>
+              <label value=""/>
+              <margin top="2" left="2" bottom="2" right="2"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <vspacer id="98329">
+            <constraints>
+              <grid row="5" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <minimum-size width="-1" height="15"/>
                 <preferred-size width="-1" height="15"/>
                 <maximum-size width="-1" height="15"/>
               </grid>
             </constraints>
           </vspacer>
-          <component id="bc943" class="javax.swing.JButton" binding="Btn_Restart_test2">
+          <component id="c494f" class="javax.swing.JButton" binding="Btn_Clear_answers">
+            <constraints>
+              <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <icon value="icons/bt_del_word_25x25.png"/>
+              <label value=""/>
+              <margin top="2" left="2" bottom="2" right="2"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="bc943" class="javax.swing.JButton" binding="Btn_Restart_test_variants">
+            <constraints>
+              <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <icon value="icons/bt_reload_test_30x30.png"/>
+              <margin top="2" left="2" bottom="2" right="2"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="6f349" class="javax.swing.JButton" binding="Btn_Words_moving_to_studied_words">
+            <constraints>
+              <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <icon value="icons/bt_words_down_30x30.png"/>
+              <margin top="2" left="2" bottom="2" right="2"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="a1386" class="javax.swing.JButton" binding="Btn_Cancel_test">
+            <constraints>
+              <grid row="7" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <icon value="icons/bt_cancel_test_30x30.png"/>
+              <margin top="2" left="2" bottom="2" right="2"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="c1cc" class="javax.swing.JCheckBox" binding="CB_ta_all_checking">
+            <constraints>
+              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <label value=""/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="95f07" class="javax.swing.JCheckBox" binding="CB_fa_all_checking">
             <constraints>
               <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value=""/>
-            </properties>
-          </component>
-          <component id="8bde9" class="javax.swing.JButton" binding="Btn_Cancel_test3">
-            <constraints>
-              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value=""/>
-            </properties>
-          </component>
-          <component id="e33fc" class="javax.swing.JCheckBox" binding="CB_Clear_true_answers2">
-            <constraints>
-              <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
+              <label value=""/>
               <text value=""/>
             </properties>
           </component>
         </children>
       </grid>
-      <grid id="dc4d7" binding="panel_test2" layout-manager="GridLayoutManager" row-count="7" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="dc4d7" binding="panel_test2" layout-manager="GridLayoutManager" row-count="8" column-count="9" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
@@ -588,14 +646,6 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="6404e" class="javax.swing.JButton" binding="Btn_answer">
-            <constraints>
-              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="5" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Ok"/>
-            </properties>
-          </component>
           <hspacer id="42c67">
             <constraints>
               <grid row="1" column="0" row-span="3" col-span="1" vsize-policy="1" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
@@ -607,38 +657,26 @@
           </hspacer>
           <hspacer id="6bccd">
             <constraints>
-              <grid row="1" column="4" row-span="3" col-span="1" vsize-policy="1" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false">
+              <grid row="1" column="8" row-span="3" col-span="1" vsize-policy="1" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="10" height="-1"/>
                 <preferred-size width="10" height="-1"/>
                 <maximum-size width="10" height="-1"/>
               </grid>
             </constraints>
           </hspacer>
-          <component id="8d857" class="javax.swing.JButton" binding="Btn_Cancel_test2">
+          <component id="8d857" class="javax.swing.JButton" binding="Btn_Cancel_written_test">
             <constraints>
-              <grid row="6" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
-                <minimum-size width="120" height="-1"/>
-                <preferred-size width="120" height="-1"/>
-                <maximum-size width="120" height="-1"/>
-              </grid>
+              <grid row="5" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <icon value="icons/bt_cancel_test_30x30.png"/>
               <margin top="2" left="2" bottom="2" right="2"/>
               <text value=""/>
             </properties>
           </component>
-          <vspacer id="e331c">
-            <constraints>
-              <grid row="5" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <minimum-size width="-1" height="25"/>
-                <preferred-size width="-1" height="25"/>
-                <maximum-size width="-1" height="25"/>
-              </grid>
-            </constraints>
-          </vspacer>
           <hspacer id="6c369">
             <constraints>
-              <grid row="0" column="1" row-span="1" col-span="3" vsize-policy="1" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="0" column="1" row-span="1" col-span="7" vsize-policy="1" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <minimum-size width="-1" height="15"/>
                 <preferred-size width="-1" height="15"/>
                 <maximum-size width="-1" height="15"/>
@@ -647,7 +685,7 @@
           </hspacer>
           <scrollpane id="a0236" binding="s_pane2">
             <constraints>
-              <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
+              <grid row="1" column="1" row-span="1" col-span="7" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="650" height="200"/>
                 <preferred-size width="650" height="200"/>
                 <maximum-size width="650" height="200"/>
@@ -668,32 +706,108 @@
           </scrollpane>
           <vspacer id="1eee">
             <constraints>
-              <grid row="2" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+              <grid row="2" column="1" row-span="1" col-span="7" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
                 <minimum-size width="-1" height="15"/>
                 <preferred-size width="-1" height="15"/>
                 <maximum-size width="-1" height="15"/>
               </grid>
             </constraints>
           </vspacer>
-          <component id="74075" class="javax.swing.JButton" binding="Btn_Restart_test">
+          <component id="f0cd0" class="javax.swing.JButton" binding="Btn_go_to_spoken_test">
             <constraints>
-              <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="7" column="1" row-span="1" col-span="7" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <label value=""/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="74075" class="javax.swing.JButton" binding="Btn_Restart_written_test">
+            <constraints>
+              <grid row="5" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <actionCommand value="Button"/>
+              <icon value="icons/bt_reload_test_30x30.png"/>
               <label value=""/>
               <margin top="2" left="2" bottom="2" right="2"/>
               <text value=""/>
             </properties>
           </component>
-          <component id="f9ae6" class="javax.swing.JCheckBox" binding="CB_Clear_true_answers">
+          <vspacer id="e331c">
             <constraints>
-              <grid row="4" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="4" column="1" row-span="1" col-span="7" vsize-policy="0" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <minimum-size width="-1" height="15"/>
+                <preferred-size width="-1" height="15"/>
+                <maximum-size width="-1" height="15"/>
+              </grid>
+            </constraints>
+          </vspacer>
+          <component id="6404e" class="javax.swing.JButton" binding="Btn_answer_for_written_test">
+            <constraints>
+              <grid row="3" column="1" row-span="1" col-span="7" vsize-policy="0" hsize-policy="0" anchor="1" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <label value=""/>
+              <margin top="2" left="2" bottom="2" right="2"/>
               <text value=""/>
             </properties>
           </component>
+          <component id="ab0b1" class="javax.swing.JButton" binding="Btn_Additionally">
+            <constraints>
+              <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <icon value="icons/bt_detail_result_30x30.png"/>
+              <margin top="2" left="2" bottom="2" right="2"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <hspacer id="c800d">
+            <constraints>
+              <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="7" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="260" height="-1"/>
+                <preferred-size width="260" height="-1"/>
+                <maximum-size width="260" height="-1"/>
+              </grid>
+            </constraints>
+          </hspacer>
+          <vspacer id="57e5e">
+            <constraints>
+              <grid row="6" column="1" row-span="1" col-span="7" vsize-policy="0" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <minimum-size width="-1" height="15"/>
+                <preferred-size width="-1" height="15"/>
+                <maximum-size width="-1" height="15"/>
+              </grid>
+            </constraints>
+          </vspacer>
+          <hspacer id="20801">
+            <constraints>
+              <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="4" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="15" height="-1"/>
+                <preferred-size width="15" height="-1"/>
+                <maximum-size width="15" height="-1"/>
+              </grid>
+            </constraints>
+          </hspacer>
+          <hspacer id="e9b0c">
+            <constraints>
+              <grid row="5" column="5" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="15" height="-1"/>
+                <preferred-size width="15" height="-1"/>
+                <maximum-size width="15" height="-1"/>
+              </grid>
+            </constraints>
+          </hspacer>
+          <hspacer id="e19f2">
+            <constraints>
+              <grid row="5" column="7" row-span="1" col-span="1" vsize-policy="1" hsize-policy="7" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="260" height="-1"/>
+                <preferred-size width="260" height="-1"/>
+                <maximum-size width="260" height="-1"/>
+              </grid>
+            </constraints>
+          </hspacer>
         </children>
       </grid>
     </children>

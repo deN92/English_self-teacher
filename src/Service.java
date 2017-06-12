@@ -36,7 +36,7 @@ class Service{
         }
 
         String str_words = content_file(current_path[0]);
-        JSONArray ja_words2 = new JSONArray(new JSONObject(str_words).getJSONArray("words_type").toString());
+        JSONObject ja_words2 = new JSONObject(str_words).getJSONObject("words_type");
 
         if(number == 2){
             str_words = "";
@@ -49,16 +49,13 @@ class Service{
 
         jo_number_pair = new JSONObject[ja_words.length()];
 
-        JSONObject jo_wt1 = (JSONObject) ja_words2.get(0);
-        JSONObject jo_wt2 = (JSONObject) ja_words2.get(1);
-
         JSONObject jo_wtt = new JSONObject();
         if(Objects.equals(lib, "words_new")){
-            jo_wtt = (JSONObject) jo_wt1.get("words_new");
+            jo_wtt = (JSONObject) ja_words2.get("words_new");
 
         }
         else if(Objects.equals(lib, "words_studied")){
-            jo_wtt = (JSONObject) jo_wt2.get("words_studied");
+            jo_wtt = (JSONObject) ja_words2.get("words_studied");
         }
 
         model[number] = new DefaultTableModel((Object[]) new Language(current_path[1]).SetLanguage("TC_name"), ja_words.length())
@@ -170,77 +167,93 @@ class Service{
     final static class Language{
         JSONObject jo_i18n = new JSONObject();
 
+
+        String strLang;
+
         Language(String pth){
             JSONArray ja = new JSONArray(new Service().content_file(pth));
             JSONObject jo = ja.getJSONObject(0);
             String j1 = jo.names().getString(0);
             String j2 = jo.getString(j1);
+            if(j2.equals("ua")){strLang = "ua";}
+            else if(j2.equals("en")){strLang = "en";}
+            else strLang = "en";
 
-            int i;
-            if(j2.equals("ua")){i = 0;}
-            else{ i = 1;}
+            jo_i18n = new JSONObject().put("uaen", new JSONObject().
+                put("TC_name", new JSONObject().put("ua", new Object[] {"✔", "№", "Слово", "Переклад", "Тип", "С*", "П*"}).
+                                                put("en", new Service().name_cols)).
+                put("TC_name2",new JSONObject().put("ua", new String[] {"№", "Слово", "Переклад", "", "Відповідь"}).
+                                                put("en", new String[] {"№", "Word", "Translate", "", "True answer"})).
+                put("Lbl_Title_name", new JSONObject().put("ua","Вибір запитань").put("en", "Choice questions")).
+                put("RB_Count_questions_name", new JSONObject().put("ua","Кількість запитань").
+                                                                put("en", "Count questions")).
+                put("RB_Choice_from_List_name", new JSONObject().put("ua","Вибір з таблиці: ").
+                                                                 put("en", "Choice from table")).
+                put("RB_Scope_questions_name", new JSONObject().put("ua","В межах з:").put("en", "Scope from:")).
+                put("Lbl_sp2_to_sp3_name", new JSONObject().put("ua","до").put("en", "to")).
+                put("Lbl_Type_test", new JSONObject().put("ua","Тип тесту: ").put("en", "Test type")).
+                put("CB_Elements_name", new JSONObject().put("en", new String[] {"Written", "Spoken"}).
+                                                         put("ua", new String[] {"Письмовий", "Усний"})).
+                put("Btn_Start_test_name", new JSONObject().put("ua","Старт").put("en", "Start")).
+                put("Btn_Ok_name", new JSONObject().put("ua","Підтвердити").put("en", "Ok")).
+                put("Btn_Next_question_name", new JSONObject().put("ua","Наступне запитання").put("en",  "Next")).
+                put("Lbl_Result_name", new JSONObject().put("ua","Результат").put("en", "Result")).
+                put("Btn_Cancel_test", new JSONObject().put("ua","Відмінити тест").put("en", "Cancel test")).
+                put("Lbl_True_answers_name", new JSONObject().put("ua","Правильно").put("en", "True answer")).
+                put("Lbl_False_answers_name", new JSONObject().put("ua","Помилки").put("en", "False answer")).
+                put("Btn_Reset_test", new JSONObject().put("ua","Запустити знову").put("en", "Restart test")).
+                put("OPM_Clear_true_answers", new JSONObject().put("ua","Прибрати правильні?").put("en", "Clear true?")).
+                put("Btn_go_to_written_test", new JSONObject().put("ua","Перейти до письмого тесту").
+                                                               put("en", "Go to written test")).
+                put("Btn_go_to_spoken_test", new JSONObject().put("ua","Перейти до усного тесту").
+                                                                put("en", "Go to spoken test")).
+                put("Btn_Choose_test", new JSONObject().put("ua","Виберіть тест").put("en", "Choose test")).
+                put("Btn_Additionally", new JSONObject().put("ua","Додатково").put("en", "Additionally")).
+                put("M_Settings_name", new JSONObject().put("ua","Налаштування").put("en", "Settings")).
+                put("M_About_name", new JSONObject().put("ua","Про програму").put("en", "About")).
+                put("M_Lang_name", new JSONObject().put("ua","Мова інтерфейсу").put("en", "Language")).
+                put("OPM_Restart_program", new JSONObject().put("ua","Перезапустіть програму для змін").
+                                                            put("en", "Restart program for changes")).
+                put("MI_Vocabulary_name", new JSONObject().put("ua","Словник").put("en", "Vocabulary")).
+                put("MI_Design_name", new JSONObject().put("ua","Дизайн").put("en", "Design")).
+                put("MI_Description", new JSONObject().put("ua","Детальніше про програму").put("en", "Description")).
+                put("Btn_Duplicates_name", new JSONObject().put("ua","Перевірити наявність повторень").
+                                                            put("en", "Check for duplicates")).
+                put("Btn_Add_name", new JSONObject().put("ua","Додати").put("en", "Add")).
+                put("Btn_Del_name", new JSONObject().put("ua","Видалити").put("en", "Del")).
+                put("Btn_Save_name", new JSONObject().put("ua","Зберегти").put("en", "Save")).
+                put("Btn_Moving_to_studied_words", new JSONObject().put("ua","Перемістити до вивчених слів").
+                                                                    put("en", "Move to the studied words")).
+                put("OPM_Title", new JSONObject().put("ua","Повідомлення").put("en", "Message")).
+                put("OPM_Text_question_null", new JSONObject().put("ua","Запитань не вибрано!").
+                                                               put("en", "Question is not selected!")).
+                put("OPM_Line_not_completed", new JSONObject().put("ua","Рядок ще не заповнено!").
+                                                               put("en", "The line is not yet completed")).
+                put("OPM_Are_you_sure", new JSONObject().put("ua","Ви впевнені?").put("en", "Are you sure?")).
 
-            Object[][] list = new Object[2][];
+                put("OPM_Title_removing", new JSONObject().put("ua","Видалення ").put("en", "Deleting ")).
+                put("OPM_Title_moving", new JSONObject().put("ua","Переміщення ").put("en", "Moving ")).
+                put("OPM_Words_repositioned", new JSONObject().put("ua"," було переміщено!").
+                                                               put("en", " Words have been repositioned")).
+                put("OPM_Clear_answers", new JSONObject().put("ua","Прибрати відмічені").put("en", "Clear marked")).
 
-            list[0] = new Object[]{
-                new Object[] {"✔", "№", "Слово", "Переклад","Тип", "С*", "П*"},
-                new String[] {"№", "Слово", "Переклад","", "Відповідь"},
-                "Вибір запитань", "Кількість запитань", "Вибір з таблиці: ", "В межах з:", "до", "Варіанти відповідей: ",
-                new String[] {"Без варіантів", "Так"}, "Старт",
-
-                "Підтвердити", "Наступне запитання",  "Результат", "Відмінити тест", "Правильно", "Помилки",
-                "Відмінити тест", "Запустити знову", "Прибрати правильні",
-
-                "Налаштування", "Про програму", "Мова інтерфейсу", "Перезапустіть програму для змін", "Словник", "Дизайн",
-                "Детальніше про програму",
-
-                "Перевірити наявність повторень", "Додати", "Видалити", "Зберегти", "Повідомлення",
-                "Запитань не вибрано!", "Рядок ще не заповнено!", " було переміщено!", "Ви впевнені?", "пункт(и)",
-                "було видалено!", "Слова не видалено!", "Записи успішно збережено",
-                "Записи не збережено!", " вже існує в таблиці "};
-
-            list[1] = new Object[]{
-                new Service().name_cols,
-                new String[] {"№", "Word", "Translate","", "True answer"},
-                "Choice questions", "Count questions", "Choice from table", "Scope from:", "to", "Answers options: ",
-                new String[] {"No", "Yes"}, "Start",
-
-                "Ok", "Next",  "Result", "Cancel test", "True answer", "False answer",
-                "Cancel test", "Restart test", "Clear true",
-
-                "Settings","About", "Language", "Restart program for changes", "Vocabulary", "Design",
-                "Description",
-
-                "Check for duplicates", "Add", "Del", "Save", "Message",
-                "Question is not selected!", "The line is not yet completed", "Words have been repositioned",
-                "Are you sure?", "item(s)", "have been removed", "Words are not removed", "Words success saved",
-                "Words not saved", " Word already exists "};
-
-            String[] str = {
-                "TC_name",
-                "TC_name2",
-                "Lbl_Title_name", "RB_Count_questions_name", "RB_Choice_from_List_name", "RB_Scope_questions_name",
-                "Lbl_sp2_to_sp3_name", "Lbl_Order_question_name", "CB_Elements_name", "Btn_Start_test_name",
-
-                "Btn_Ok_name", "Btn_Next_question_name",  "Lbl_Result_name", "Btn_Cancel_test", "Lbl_True_answers_name",
-                "Lbl_False_answers_name", "Btn_Cancel_test",  "Btn_Reset_test", "CB_Clear_true_answers",
-
-                "M_Settings_name", "M_About_name", "M_Lang_name", "OPM_Restart_program", "MI_Vocabulary_name",
-                "MI_Design_name", "MI_Description",
-
-                "Btn_Duplicates_name", "Btn_Add_name", "Btn_Del_name", "Btn_Save_name", "OPM_Title",
-                "OPM_Text_question_null", "OPM_Line_not_completed", "OPM_Words_repositioned", "OPM_Question_delete",
-                "OPM_Count_words", "OPM_Words_removed", "OPM_Words_not_removed", "OPM_Words_success_saved",
-                "OPM_Words_not_saved", "OPM_Already_exists"
-            };
-
-            for(int w=0; w< str.length; w++) {
-                jo_i18n.put(str[w], list[i][w]);
-            }
+                put("CB_Checking_all", new JSONObject().put("ua","Позначити всі").put("en", "Сhecking all")).
+                put("OPM_Clear_answers", new JSONObject().put("ua","Видалити відмічені").put("en", "Clear marked")).
+                put("OPM_Items", new JSONObject().put("ua"," ел. ").put("en", " item(s)")).
+                put("OPM_Words_removed", new JSONObject().put("ua","було видалено!").
+                                                          put("en", "have been removed")).
+                put("OPM_Words_not_removed", new JSONObject().put("ua","Слова не видалено!").
+                                                              put("en", "Words are not removed")).
+                put("OPM_Words_success_saved", new JSONObject().put("ua","Записи успішно збережено").
+                                                                put("en","Words success saved")).
+                put("OPM_Words_not_saved", new JSONObject().put("ua","Записи не збережено!").
+                                                            put("en", "Words not saved")).
+                put("OPM_Already_exist", new JSONObject().put("ua","вже існує в таблиці").
+                                                          put("en", "Word already exists")));
         }
 
         Object SetLanguage(String str){
-           return jo_i18n.get(str);
+           return jo_i18n.getJSONObject("uaen").getJSONObject(str).get(strLang);
         }
     }
 
@@ -329,7 +342,6 @@ class Service{
         catch(Exception e){
             e.printStackTrace();
         }
-//        }
         return str_words;
     }
 
@@ -338,7 +350,7 @@ class Service{
             JSONObject start_list = new JSONObject();
             JSONArray words_studied = new JSONArray();
             JSONArray words_new = new JSONArray();
-            JSONArray words_type = new JSONArray();
+            JSONObject words_type = new JSONObject();
 
             String[] words =
                     {"quiet", "broke", "mistakes", "turn", "stay",
@@ -372,8 +384,8 @@ class Service{
                 jo_wt1.put(word_types[i], num1[i]);
                 jo_wt2.put(word_types[i], num2[i]);
             }
-            words_type.put(new JSONObject().put("words_new", jo_wt1));
-            words_type.put(new JSONObject().put("words_studied", jo_wt2));
+            words_type.put("words_new", jo_wt1);
+            words_type.put("words_studied", jo_wt2);
 
             start_list.put("words_studied", words_studied);
             start_list.put("words_new", words_new);

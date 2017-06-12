@@ -18,8 +18,8 @@ import java.util.TreeSet;
 public class ToolsUI{
     JScrollPane s_pane1;
     JScrollPane s_pane2;
-    private JTable table1;
-    private JTable table2;
+    JTable table1;
+    JTable table2;
     private JButton Btn_Add, Btn_Del, Btn_Save;
     private JPanel tools_panel, panel_right, panel_table;
     public JPanel panel_settings;
@@ -66,7 +66,7 @@ public class ToolsUI{
     private JTable t1ort2 = null;
     private JPopupMenu menu_wt = new JPopupMenu();
 
-    ToolsUI(){
+    ToolsUI(ArrayList list_checked_indexes){
         tools_panel.setSize(640,630);
         tools_panel.setMaximumSize(new Dimension(640,630));
         tools_panel.setMinimumSize(new Dimension(640,630));
@@ -103,12 +103,12 @@ public class ToolsUI{
         JSONArray ob1 = new JSONArray();
         JSONArray ob2 = new JSONArray();
         for(int i=0; i<table1.getRowCount(); i++){
-            ob1.put(i, new JSONObject().put(table1.getValueAt(i, 2).toString(),
-                    table1.getValueAt(i,3).toString()));
+            ob1.put(i, new JSONObject().put(table1.getValueAt(i, service.getCCI("Word")).toString(),
+                                            table1.getValueAt(i, service.getCCI("Translate")).toString()));
         }
         for(int i=0; i<table2.getRowCount(); i++) {
-            ob2.put(i, new JSONObject().put(table2.getValueAt(i, 2).toString(),
-                    table2.getValueAt(i, 3).toString()));
+            ob2.put(i, new JSONObject().put(table2.getValueAt(i, service.getCCI("Word")).toString(),
+                                            table2.getValueAt(i, service.getCCI("Translate")).toString()));
         }
 
         lang = new Service.Language(service.current_path[1]);
@@ -126,6 +126,8 @@ public class ToolsUI{
 
         Btn_Words_up.setEnabled(false);
         Btn_Words_down.setEnabled(false);
+
+
 
         DefaultTableCellRenderer r = new DefaultTableCellRenderer() {
             Font font = new Font("TimesRoman", Font.PLAIN, 10);
@@ -150,6 +152,15 @@ public class ToolsUI{
             jcbmi[i] = new JCheckBoxMenuItem(service.word_types[i]);
         }
 
+        table_list_delete_rows_names[0] = new ArrayList();
+        if(list_checked_indexes.size() !=0) {
+            for (int i = 0; i < list_checked_indexes.size(); i++) {
+                table1.setValueAt(true, (int) list_checked_indexes.get(i), 0);
+                table_list_delete_rows_names[0].add(table1.getValueAt((int)list_checked_indexes.get(i), 2).toString());
+            }
+            Lbl_TNW_Count_Checked.setText(list_checked_indexes.size() + "");
+            Btn_Words_down.setEnabled(true);
+        }
 
         for(int i=0; i<service.word_types.length; i++) {
             menu_wt.add(jcbmi[i]);
@@ -181,7 +192,8 @@ public class ToolsUI{
             ArrayList<String> list_delete_rows_names2 = new ArrayList<>();
             ArrayList<Integer> list_delete_rows_indexes2 = new ArrayList<>();
             int jp = JOptionPane.showConfirmDialog(null,
-                    lang.SetLanguage("OPM_Question_delete"),"",0);
+                    lang.SetLanguage("OPM_Are_you_sure"),
+                    lang.SetLanguage("OPM_Title_removing").toString(),0);
             if(jp ==  JOptionPane.YES_OPTION) {
                 try {
                     for (int i = 0; i < table1.getRowCount(); i++) {
@@ -228,7 +240,7 @@ public class ToolsUI{
                     if (list_delete_rows_names.size() != 0) {
                         JOptionPane.showMessageDialog(
                                 null,
-                                ""+ list_delete_rows_names.size() +"pos: " +
+                                ""+ list_delete_rows_names.size() + lang.SetLanguage("OPM_Items") +
                                         list_delete_rows_names + " " + lang.SetLanguage("OPM_Words_removed"),
                                 lang.SetLanguage("OPM_Title").toString(),
                                 JOptionPane.INFORMATION_MESSAGE);
@@ -236,7 +248,7 @@ public class ToolsUI{
                     if (list_delete_rows_names2.size() != 0) {
                         JOptionPane.showMessageDialog(
                                 null,
-                                ""+ list_delete_rows_names.size() +" pos: " +
+                                ""+ list_delete_rows_names2.size() + lang.SetLanguage("OPM_Items") +
                                         list_delete_rows_names2 + " " + lang.SetLanguage("OPM_Words_removed"),
                                 lang.SetLanguage("OPM_Title").toString(),
                                 JOptionPane.INFORMATION_MESSAGE);
@@ -245,7 +257,7 @@ public class ToolsUI{
                     JOptionPane.showMessageDialog(
                             null,
                             lang.SetLanguage("OPM_Words_not_removed") + "| " + e.getMessage(),
-                            lang.SetLanguage("OPM_Title").toString(),
+                            lang.SetLanguage("OPM_Title_removing").toString(),
                             JOptionPane.INFORMATION_MESSAGE);
                 }
             }
@@ -255,7 +267,7 @@ public class ToolsUI{
             JSONObject final_ja_words = new JSONObject();
             JSONArray ja_words_new = new JSONArray();
             JSONArray ja_words_studied = new JSONArray();
-            JSONArray ja_words_type = new JSONArray();
+            JSONObject jo_words_type = new JSONObject();
             JSONObject jo_wt1 = new JSONObject();
             JSONObject jo_wt2 = new JSONObject();
 
@@ -296,12 +308,12 @@ public class ToolsUI{
                 }
             }
 
-            ja_words_type.put(0, new JSONObject().put("words_new", jo_wt1));
-            ja_words_type.put(1, new JSONObject().put("words_studied", jo_wt2));
+            jo_words_type.put("words_new", jo_wt1);
+            jo_words_type.put("words_studied", jo_wt2);
 
             final_ja_words.put("words_studied", ja_words_studied);
             final_ja_words.put("words_new", ja_words_new);
-            final_ja_words.put("words_type", ja_words_type);
+            final_ja_words.put("words_type", jo_words_type);
 
             try {
                 service.write_content_in_file(service.current_path[0], final_ja_words, "edit");
@@ -419,18 +431,30 @@ public class ToolsUI{
 
 //      Export elements from table2 to table1
         Btn_Words_up.addActionListener(actionEvent -> {
-            export_elem_from_tab_to_tab(table2, table1, 1);
-            Btn_Words_up.setEnabled(false);
-            part_btn_words_updown();
-            Lbl_TSW_Count_Checked.setText(""+table_list_delete_rows_indexes[1].size());
+            int jp = JOptionPane.showConfirmDialog(null,
+                    lang.SetLanguage("OPM_Are_you_sure")+"\n"+
+                            lang.SetLanguage("OPM_Title_moving")+table_list_delete_rows_names[1],
+                            lang.SetLanguage("OPM_Title_moving").toString()+"...",0);
+            if(jp ==  JOptionPane.YES_OPTION) {
+                export_elem_from_tab_to_tab(table2, table1, 1);
+                Btn_Words_up.setEnabled(false);
+                part_btn_words_updown();
+                Lbl_TSW_Count_Checked.setText(""+table_list_delete_rows_indexes[1].size());
+            }
         });
 
 //      Export elements from table1 to table2
         Btn_Words_down.addActionListener(actionEvent -> {
-            export_elem_from_tab_to_tab(table1, table2, 0);
-            Btn_Words_down.setEnabled(false);
-            part_btn_words_updown();
-            Lbl_TNW_Count_Checked.setText(""+table_list_delete_rows_indexes[0].size());
+            int jp = JOptionPane.showConfirmDialog(null,
+                    lang.SetLanguage("OPM_Are_you_sure")+"\n"+
+                            lang.SetLanguage("OPM_Title_moving")+table_list_delete_rows_names[0],
+                        lang.SetLanguage("OPM_Title_moving").toString()+"...",0);
+            if(jp ==  JOptionPane.YES_OPTION) {
+                export_elem_from_tab_to_tab(table1, table2, 0);
+                Btn_Words_down.setEnabled(false);
+                part_btn_words_updown();
+                Lbl_TNW_Count_Checked.setText("" + table_list_delete_rows_indexes[0].size());
+            }
         });
 
         Btn_Search1.addActionListener(actionEvent -> service.wt_search(table1,
@@ -566,27 +590,27 @@ public class ToolsUI{
     private void spinner_choice_item_table(){
         if(JCB_Scope_questions.isSelected()) {
             for (int i = 0; i < table1.getRowCount(); i++) {
-                table1.setValueAt(false, i, 0);
+                table1.setValueAt(false, i, service.getCCI("✔"));
             }
             for (int i = 0; i < table2.getRowCount(); i++) {
-                table2.setValueAt(false, i, 0);
+                table2.setValueAt(false, i, service.getCCI("✔"));
             }
             for (int i = (int) spinner1.getValue() - 1; i < (int) spinner2.getValue(); i++) {
                 if (table1.getRowCount() > (int) spinner2.getValue() - 1) {
-                    table1.setValueAt(true, i, 0);
+                    table1.setValueAt(true, i, service.getCCI("✔"));
                 }
                 if (table2.getRowCount() > (int) spinner2.getValue() - 1) {
-                    table2.setValueAt(true, i, 0);
+                    table2.setValueAt(true, i, service.getCCI("✔"));
                 }
             }
         }
         else{
             for (int i = (int) spinner1.getValue() - 1; i < (int) spinner2.getValue(); i++){
                 if(table1.getRowCount()>0) {
-                    table1.setValueAt(false, i, 0);
+                    table1.setValueAt(false, i, service.getCCI("✔"));
                 }
                 if(table2.getRowCount()>0) {
-                    table2.setValueAt(false, i, 0);
+                    table2.setValueAt(false, i, service.getCCI("✔"));
                 }
             }
         }
@@ -1120,9 +1144,9 @@ public class ToolsUI{
         }
     }
 
-    void showFrame() {
+    void showFrame(ArrayList list_checked_indexes) {
         JFrame frame = new JFrame("ToolsUI");
-        frame.setContentPane(new ToolsUI().tools_panel);
+        frame.setContentPane(new ToolsUI(list_checked_indexes).tools_panel);
         frame.setResizable(false);
         frame.pack();
         frame.setVisible(true);
