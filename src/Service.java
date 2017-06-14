@@ -248,6 +248,11 @@ class Service{
                                                                 put("en","Words success saved")).
                 put("OPM_Words_not_saved", new JSONObject().put("ua","Записи не збережено!").
                                                             put("en", "Words not saved")).
+                put("Btn_Answers_all", new JSONObject().put("ua","Показати всі відповіді").
+                                                        put("en", "Show answers all")).
+                put("OPM_Minimum_5_words",
+                        new JSONObject().put("ua","Ви повинні мати мінімум 5 нових слів для запуску тестів").
+                                         put("en", "You must have minimum 5 new words for run tests")).
                 put("OPM_Already_exist", new JSONObject().put("ua","вже існує в таблиці").
                                                           put("en", "Word already exists")));
         }

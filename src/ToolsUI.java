@@ -237,11 +237,23 @@ public class ToolsUI{
                         table2.setValueAt(i + 1, i, 1);
                     }
 
+                    ArrayList<String> list_delete_limit = new ArrayList<>();
+                    ArrayList<String> list_delete_limit2 = new ArrayList<>();
+
+                    if(list_delete_rows_names.size() <10){
+                        list_delete_limit = list_delete_rows_names;
+                    } else{
+                        list_delete_limit.clear();}
+                    if(list_delete_rows_names2.size() <10){
+                        list_delete_limit2 = list_delete_rows_names2;
+                    } else{
+                        list_delete_limit2.clear();}
+
                     if (list_delete_rows_names.size() != 0) {
                         JOptionPane.showMessageDialog(
                                 null,
                                 ""+ list_delete_rows_names.size() + lang.SetLanguage("OPM_Items") +
-                                        list_delete_rows_names + " " + lang.SetLanguage("OPM_Words_removed"),
+                                        list_delete_limit + " " + lang.SetLanguage("OPM_Words_removed"),
                                 lang.SetLanguage("OPM_Title").toString(),
                                 JOptionPane.INFORMATION_MESSAGE);
                     }
@@ -249,7 +261,7 @@ public class ToolsUI{
                         JOptionPane.showMessageDialog(
                                 null,
                                 ""+ list_delete_rows_names2.size() + lang.SetLanguage("OPM_Items") +
-                                        list_delete_rows_names2 + " " + lang.SetLanguage("OPM_Words_removed"),
+                                        list_delete_limit2 + " " + lang.SetLanguage("OPM_Words_removed"),
                                 lang.SetLanguage("OPM_Title").toString(),
                                 JOptionPane.INFORMATION_MESSAGE);
                     }
@@ -264,6 +276,13 @@ public class ToolsUI{
         });
 
         Btn_Save.addActionListener(actionEvent -> {
+            if(table1.getRowCount()<5){
+                JOptionPane.showMessageDialog(
+                        null,
+                        lang.SetLanguage("OPM_Minimum_5_words").toString(),
+                        lang.SetLanguage("OPM_Title").toString(),
+                        JOptionPane.WARNING_MESSAGE);
+            }
             JSONObject final_ja_words = new JSONObject();
             JSONArray ja_words_new = new JSONArray();
             JSONArray ja_words_studied = new JSONArray();
@@ -433,7 +452,8 @@ public class ToolsUI{
         Btn_Words_up.addActionListener(actionEvent -> {
             int jp = JOptionPane.showConfirmDialog(null,
                     lang.SetLanguage("OPM_Are_you_sure")+"\n"+
-                            lang.SetLanguage("OPM_Title_moving")+table_list_delete_rows_names[1],
+                            lang.SetLanguage("OPM_Title_moving")+table_list_delete_rows_names[1].size() +
+                            " " + lang.SetLanguage("OPM_Items"),
                             lang.SetLanguage("OPM_Title_moving").toString()+"...",0);
             if(jp ==  JOptionPane.YES_OPTION) {
                 export_elem_from_tab_to_tab(table2, table1, 1);
@@ -447,7 +467,8 @@ public class ToolsUI{
         Btn_Words_down.addActionListener(actionEvent -> {
             int jp = JOptionPane.showConfirmDialog(null,
                     lang.SetLanguage("OPM_Are_you_sure")+"\n"+
-                            lang.SetLanguage("OPM_Title_moving")+table_list_delete_rows_names[0],
+                            lang.SetLanguage("OPM_Title_moving")+table_list_delete_rows_names[0].size() +
+                            " " + lang.SetLanguage("OPM_Items"),
                         lang.SetLanguage("OPM_Title_moving").toString()+"...",0);
             if(jp ==  JOptionPane.YES_OPTION) {
                 export_elem_from_tab_to_tab(table1, table2, 0);
@@ -493,15 +514,32 @@ public class ToolsUI{
             wt_cols();
             add_warning_icon_to_col();
         });
+
+        if(table1.getRowCount()<5){
+            JOptionPane.showMessageDialog(
+                    null,
+                    lang.SetLanguage("OPM_Minimum_5_words").toString(),
+                    lang.SetLanguage("OPM_Title").toString(),
+                    JOptionPane.WARNING_MESSAGE);
+        }
     }
 
     private void part_btn_words_updown(){
         spinner1.setValue(1);
         spinner2.setValue(2);
-        table1.setValueAt(false,0,0);
-        table1.setValueAt(false,1,0);
-        table2.setValueAt(false,0,0);
-        table2.setValueAt(false,1,0);
+        if(table1.getRowCount()>0) {
+            table1.setValueAt(false, 0, 0);
+        }
+        if(table1.getRowCount()>1) {
+            table1.setValueAt(false, 1, 0);
+        }
+        if(table2.getRowCount()>0) {
+            table2.setValueAt(false, 0, 0);
+        }
+        if(table2.getRowCount()>1) {
+            table2.setValueAt(false, 1, 0);
+        }
+
         part_scope_questions();
         scope_questions(false);
         JCB_Scope_questions.setSelected(false);
@@ -794,9 +832,11 @@ public class ToolsUI{
         t2.changeSelection(t2.getRowCount() - 1, 0, false, false);
 
         try {
+
             JOptionPane.showMessageDialog(
                     null,
-                    table_list_delete_rows_names[n] + " " + lang.SetLanguage("OPM_Words_repositioned"),
+                    table_list_delete_rows_names[n].size() + " " +  lang.SetLanguage("OPM_Items") +
+                            lang.SetLanguage("OPM_Words_repositioned"),
                     lang.SetLanguage("OPM_Title").toString(),
                     JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception e) {

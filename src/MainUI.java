@@ -11,9 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
+import java.util.*;
 
 public class MainUI {
     private JPanel main_panel;
@@ -60,18 +58,16 @@ public class MainUI {
 
     private JSONObject jo_list_answer_true;
     private JSONObject jo_list_answer_false;
+    private JSONObject jo_list_answer_null;
 
     private int number_question;
-    private int answer_true;
-    private int answer_false;
-    private int sum2;
     private int[] table2_column_widths = {25, 200, 200, 23, 200, 0, 0};
 
     JScrollPane s_pane_list1;
     JScrollPane s_pane_list2;
     private JCheckBox JCB_Answers_show_hide;
     private JButton Btn_Reload_table1;
-    private JButton Btn_Restart_test_variants;
+    private JButton Btn_Restart_tests;
     private JButton Btn_go_to_written_test;
     private JButton Btn_go_to_spoken_test;
     private JTable Tab_True_answers;
@@ -83,6 +79,9 @@ public class MainUI {
     private JButton Btn_Additionally;
     private JCheckBox CB_ta_all_checking;
     private JCheckBox CB_fa_all_checking;
+    private JButton Btn_All_answers_for_written_test;
+    private JSlider Sld_Count_questions;
+    private JButton Btn_Restart_spoken_test;
     private JRadioButton[] rb = {RB_Option1, RB_Option2};
     private int columnValue = -1;
     private int columnNewValue = -1;
@@ -269,11 +268,13 @@ public class MainUI {
                     JCB_Answers_show_hide.setSelected(true);
                     answers_show_hide();
 
-                    panel_test.getTopLevelAncestor().setSize(720, 300);
+                    panel_test.getTopLevelAncestor().setSize(720, 340);
 
                     if (list_questions.size() == table1.getRowCount()) {
                         list_questions.remove(table1.getRowCount() - 1);
                     }
+
+                    slider();
                     creating_query(list_questions.get(number_question));
                 }
             }
@@ -314,31 +315,56 @@ public class MainUI {
                 if (group_test.isSelected(rb[i].getModel())) {
                     if (rb[i].getText().equals(answer)) {
                         Lbl_Result.setForeground(Color.decode("#009926"));
-                        answer_true++;
-                        Lbl_Result.setText(lang.SetLanguage("Lbl_Result_name") + ": " + answer_true + "/" + answer_false);
-                        jo_list_answer_true.put(Lbl_Question_test.getText(), rb[0].getText());
+                        if(jo_list_answer_true.length()>0){
+                            if(!jo_list_answer_true.names().get(jo_list_answer_true.length()-1).
+                                    equals(Lbl_Question_test.getText())) {
+                                jo_list_answer_true.put(Lbl_Question_test.getText(), rb[0].getText());
+                            }
+                        } else{jo_list_answer_true.put(Lbl_Question_test.getText(), rb[0].getText());}
+                        if(jo_list_answer_true.length()>0 && jo_list_answer_false.length()>0) {
+                            for(int j =0; j<jo_list_answer_false.length();j++) {
+                                if (jo_list_answer_false.names().get(j).equals(Lbl_Question_test.getText())) {
+                                    jo_list_answer_false.remove(Lbl_Question_test.getText());
+                                }
+                            }
+                        }
+                        Lbl_Result.setText(lang.SetLanguage("Lbl_Result_name") + ": " + jo_list_answer_true.length() + "/" + jo_list_answer_false.length());
                     } else {
                         Lbl_Result.setForeground(Color.RED);
                         rb[i].setForeground(Color.RED);
-                        answer_false++;
-                        Lbl_Result.setText(lang.SetLanguage("Lbl_Result_name") + ": " + answer_true + "/" + answer_false);
-                        jo_list_answer_false.put(Lbl_Question_test.getText(), rb[0].getText());
+                        if(jo_list_answer_false.length()>0) {
+                            if (!jo_list_answer_false.names().get(jo_list_answer_false.length()-1).
+                                    equals(Lbl_Question_test.getText())) {
+                                jo_list_answer_false.put(Lbl_Question_test.getText(), rb[0].getText());
+                            }
+                        }
+                        else{
+                            jo_list_answer_false.put(Lbl_Question_test.getText(), rb[0].getText());
+                        }
+                        if(jo_list_answer_true.length()>0 && jo_list_answer_false.length()>0) {
+                            for(int j =0; j<jo_list_answer_true.length();j++) {
+                                if (jo_list_answer_true.names().get(j).equals(Lbl_Question_test.getText())) {
+                                    jo_list_answer_true.remove(Lbl_Question_test.getText());
+                                }
+                            }
+                        }
+                        Lbl_Result.setText(lang.SetLanguage("Lbl_Result_name") + ": " + jo_list_answer_true.length() + "/" + jo_list_answer_false.length());
                     }
                 }
                 if (rb[i].getText().equals(answer)) {
                     rb[i].setForeground(Color.decode("#009926"));
                 }
             }
-            Btn_choice_answer.setEnabled(false);
+//            Btn_choice_answer.setEnabled(false);
             Btn_Next_question.setEnabled(true);
 
 //          +1 completed question
-            sum2++;
 
 //          check list_questions size == current number question from list
-            if (list_questions.size() == sum2) {
+            if (list_questions.size() == number_question+1) {
 //              next_question rename to result
                 Btn_Next_question.setText(lang.SetLanguage("Lbl_Result_name").toString());
+                Btn_go_to_written_test.setEnabled(false);
             }
         });
 
@@ -348,7 +374,9 @@ public class MainUI {
                 Btn_choice_answer.setEnabled(true);
                 Lbl_Result.setText("");
                 answers_show_hide();
+                Sld_Count_questions.setValue(number_question);
                 creating_query(list_questions.get(number_question));
+                slider();
             }
             if (Btn_Next_question.getText().equals(lang.SetLanguage("Lbl_Result_name"))) {
                 panel_test.setVisible(false);
@@ -358,10 +386,55 @@ public class MainUI {
             }
         });
 
-
-
         Btn_answer_for_written_test.addActionListener(actionEvent -> {
+            Btn_go_to_spoken_test.setEnabled(false);
+            for (int i = 0; i < 5; i++) {
+                table2.getColumnModel().getColumn(i).setMaxWidth(table2_column_widths[i]);
+            }
 
+            URL url1 = ToolsUI.class.getResource("/icons/ic_answ_true_20x20.png");
+            URL url2 = ToolsUI.class.getResource("/icons/ic_answ_false_20x20.png");
+            ImageIcon ii_true = new ImageIcon(url1);
+            ImageIcon ii_false = new ImageIcon(url2);
+            jo_list_answer_true = new JSONObject();
+            jo_list_answer_false = new JSONObject();
+            jo_list_answer_null = new JSONObject();
+            for (int j = 0; j < list_questions.size(); j++) {
+                for (int i = 0; i < table1.getRowCount(); i++) {
+                    if (table1.getValueAt(i, service.getCCI(service.nc_word_en)).toString().toLowerCase().
+                            equals(list_questions.get(j).toLowerCase())) {
+                        list_current_answers.add(table1.getValueAt(i, service.getCCI(service.nc_translate_en)).toString());
+                    }
+                }
+
+                String question = table2.getValueAt(j, 1).toString().toLowerCase();
+                String answer = table2.getValueAt(j, 2).toString().toLowerCase();
+                String value_current = list_current_answers.get(j).toLowerCase();
+
+
+                if(!answer.equals("")) {
+                    if (answer.contains(value_current) || value_current.contains(answer)) {
+                        table2.setValueAt(ii_true, j, service.getCCI(service.nc_translate_en));
+                        jo_list_answer_true.put(question, value_current);
+                    } else if(!answer.contains(value_current) && !value_current.contains(answer)){
+                        table2.setValueAt(ii_false, j, service.getCCI(service.nc_translate_en));
+                        jo_list_answer_false.put(question, value_current);
+                    }
+                    table2.setValueAt(value_current, j, 4);
+                }
+                else{
+                    jo_list_answer_null.put(question, value_current);
+                }
+
+            }
+            for(int i=0; i<table2.getRowCount(); i++){
+                if(table2.getValueAt(i,4).toString().equals("")){
+                    Btn_go_to_spoken_test.setEnabled(true);
+                }
+            }
+        });
+
+        Btn_All_answers_for_written_test.addActionListener(e -> {
             list_current_answers = new ArrayList<>();
             jo_list_answer_false = new JSONObject();
             jo_list_answer_true = new JSONObject();
@@ -402,9 +475,10 @@ public class MainUI {
                 }
 
                 table2.setValueAt(value_current, j, service.getCCI("Type"));
-
             }
+            Btn_go_to_spoken_test.setEnabled(false);
         });
+
 
         ArrayList<String> str_del_true = new ArrayList<>();
         ArrayList<Integer> str_del_true_index = new ArrayList<>();
@@ -415,9 +489,11 @@ public class MainUI {
             Btn_Additionally.setEnabled(false);
             boolean tf = false;
             for (int i = 0; i < table2.getRowCount(); i++) {
-                if (table2.getValueAt(i, 3).toString().toLowerCase().contains("ic_answ_true_20x20.png")) {
-                    tf = true;
-                }
+                try {
+                    if (table2.getValueAt(i, 3).toString().toLowerCase().contains("ic_answ_true_20x20.png")) {
+                        tf = true;
+                    }
+                }catch (Exception ex){}
             }
 
             if (tf) {
@@ -427,9 +503,11 @@ public class MainUI {
                     str_del_true.clear();
                     str_del_true_index.clear();
                     for (int i = 0; i < table2.getRowCount(); i++) {
-                        if (table2.getValueAt(i, 3).toString().toLowerCase().contains("ic_answ_true_20x20.png")) {
-                            str_del_true.add(table2.getValueAt(i, 1).toString());
-                        }
+                        try {
+                            if (table2.getValueAt(i, 3).toString().toLowerCase().contains("ic_answ_true_20x20.png")) {
+                                str_del_true.add(table2.getValueAt(i, 1).toString());
+                            }
+                        }catch (Exception ex){}
                     }
 
                     for (int i = 0; i < list_questions.size(); i++) {
@@ -463,9 +541,60 @@ public class MainUI {
             }
         });
 
+        Btn_Restart_spoken_test.addActionListener(e -> {
+            long seed = System.nanoTime();
+            Collections.shuffle(list_questions, new Random(seed));
+            spoken_test();
+            slider();
+        });
+
+        Btn_Restart_tests.addActionListener(e -> {
+            JPanel panel = new JPanel();
+            ButtonGroup bg = new ButtonGroup();
+            JRadioButton rb1 = new JRadioButton(lang.SetLanguage("Btn_go_to_spoken_test").toString());
+            JRadioButton rb2 = new JRadioButton(lang.SetLanguage("Btn_go_to_written_test").toString());
+            rb1.setSelected(true);
+            bg.add(rb1);
+            bg.add(rb2);
+            panel.add(rb1);
+            panel.add(rb2);
+
+            int jp = JOptionPane.showOptionDialog(null, panel,
+                    lang.SetLanguage("Btn_Choose_test").toString(), JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.QUESTION_MESSAGE, null, null, null);
+
+            if(jp ==  JOptionPane.YES_OPTION) {
+
+                list_questions.clear();
+
+                if(jo_list_answer_true.length()>0) {
+                    for (int i = 0; i < jo_list_answer_true.names().length(); i++) {
+                        list_questions.add(jo_list_answer_true.names().getString(i));
+                    }
+                }
+                if(jo_list_answer_false.length()>0) {
+                    for (int i = 0; i < jo_list_answer_false.names().length(); i++) {
+                        list_questions.add(jo_list_answer_false.names().getString(i));
+                    }
+                }
+
+                if (rb1.isSelected()) {
+                    spoken_test();
+                } else if (rb2.isSelected()) {
+                    panel_result.setVisible(false);
+                    jo_list_answer_true = new JSONObject();
+                    jo_list_answer_false = new JSONObject();
+                    written_test();
+                    //            ast.clear();
+                }
+            }
+            slider();
+        });
+
         Btn_Cancel_test_variants.addActionListener(actionEvent -> {
             start_current_test();
             reset_start_test();
+            list_questions.clear();
         });
 
         Btn_Cancel_written_test.addActionListener(actionEvent -> {
@@ -584,77 +713,18 @@ public class MainUI {
             }
         });
 
-        Btn_Restart_test_variants.addActionListener(e -> {
-
-            JPanel panel = new JPanel();
-            ButtonGroup bg = new ButtonGroup();
-            JRadioButton rb1 = new JRadioButton(lang.SetLanguage("Btn_go_to_spoken_test").toString());
-            JRadioButton rb2 = new JRadioButton(lang.SetLanguage("Btn_go_to_written_test").toString());
-            rb1.setSelected(true);
-            bg.add(rb1);
-            bg.add(rb2);
-            panel.add(rb1);
-            panel.add(rb2);
-
-            int jp = JOptionPane.showOptionDialog(null, panel,
-                    lang.SetLanguage("Btn_Choose_test").toString(), JOptionPane.OK_CANCEL_OPTION,
-                    JOptionPane.QUESTION_MESSAGE, null, null, null);
-
-            if(jp ==  JOptionPane.YES_OPTION) {
-                if (rb1.isSelected()) {
-                    number_question = 0;
-                    answer_true = 0;
-                    answer_false = 0;
-                    sum2 = 0;
-                    Lbl_Result.setText("");
-                    panel_option_questions.setVisible(false);
-                    panel_test.setVisible(true);
-                    panel_result.setVisible(false);
-                    Btn_choice_answer.setEnabled(true);
-                    Btn_Next_question.setEnabled(false);
-                    Btn_Next_question.setText(lang.SetLanguage("Btn_Next_question_name").toString());
-
-                    JCB_Answers_show_hide.setSelected(true);
-                    answers_show_hide();
-
-                    panel_test.getTopLevelAncestor().setSize(720, 300);
-
-                    if (list_questions.size() == table1.getRowCount()) {
-                        list_questions.remove(table1.getRowCount() - 1);
-                    }
-
-                    long seed = System.nanoTime();
-                    Collections.shuffle(list_questions, new Random(seed));
-                    jo_list_answer_false = new JSONObject();
-                    jo_list_answer_true = new JSONObject();
-                    creating_query(list_questions.get(number_question));
-                } else if (rb2.isSelected()) {
-                    panel_result.setVisible(false);
-                    written_test();
-      //            ast.clear();
-                }
-            }
-        });
-
         Btn_go_to_written_test.addActionListener(e -> {
             panel_test.setVisible(false);
             written_test();
         });
 
         Btn_go_to_spoken_test.addActionListener(e -> {
-            panel_test2.setVisible(false);
-
-            if(jo_list_answer_true.length()>0){
-                int jp = JOptionPane.showConfirmDialog(null,
-                        lang.SetLanguage("OPM_Clear_true_answers").toString(),"",0);
-                if(jp ==  JOptionPane.YES_OPTION) {
-                    list_questions.clear();
-                    for (int i = 0; i < jo_list_answer_false.length(); i++) {
-                        list_questions.add(jo_list_answer_false.names().getString(i));
-                    }
-                }
+            if (list_questions.size() == table1.getRowCount()) {
+                list_questions.remove(table1.getRowCount() - 1);
             }
-
+            slider();
+            number_question = 0;
+            panel_test2.setVisible(false);
             panel_option_questions.setVisible(false);
             panel_test.setVisible(true);
             panel_result.setVisible(false);
@@ -665,21 +735,53 @@ public class MainUI {
             JCB_Answers_show_hide.setSelected(true);
             answers_show_hide();
 
-            panel_test.getTopLevelAncestor().setSize(720, 300);
+            panel_test.getTopLevelAncestor().setSize(720, 320);
 
-            if (list_questions.size() == table1.getRowCount()) {
-                list_questions.remove(table1.getRowCount() - 1);
-            }
-
-            number_question = 0;
-            answer_true = 0;
-            answer_false = 0;
-            sum2 = 0;
-            Lbl_Result.setText("");
-            creating_query(list_questions.get(number_question));
+            URL url1 = ToolsUI.class.getResource("/icons/ic_answ_true_20x20.png");
+            URL url2 = ToolsUI.class.getResource("/icons/ic_answ_false_20x20.png");
+            ImageIcon ii_true = new ImageIcon(url1);
+            ImageIcon ii_false = new ImageIcon(url2);
 
             jo_list_answer_false = new JSONObject();
             jo_list_answer_true = new JSONObject();
+            jo_list_answer_null = new JSONObject();
+            ArrayList<String> temp_list = new ArrayList<>();
+            for(int i=0; i< table2.getRowCount(); i++){
+                try {
+                    if (table2.getValueAt(i, 3).toString().contains(ii_true.toString())) {
+                        jo_list_answer_true.put(table2.getValueAt(i, 1).toString(),
+                                table2.getValueAt(i, 4).toString());
+                    } else if (table2.getValueAt(i, 3).toString().contains(ii_false.toString())) {
+                        jo_list_answer_false.put(table2.getValueAt(i, 1).toString(),
+                                table2.getValueAt(i, 4).toString());
+                    }
+
+                    if(table2.getValueAt(i, 3).toString().length()>0) {
+                        number_question++;
+                        temp_list.add(table2.getValueAt(i, 1).toString());
+                    }
+                }catch (Exception ignored){}
+            }
+
+
+            for(int i=0; i< table2.getRowCount(); i++) {
+                for(int j=0; j< temp_list.size(); j++) {
+                    if(!temp_list.contains(table2.getValueAt(i, 1).toString())) {
+                        temp_list.add(table2.getValueAt(i, 1).toString());
+                    }
+                }
+            }
+
+            if(temp_list.size()>0) {
+                list_questions = temp_list;
+            }
+
+//            number_question = 0;
+//            answer_true = 0;
+//            answer_false = 0;
+//            sum2 = 0;
+            Lbl_Result.setText("");
+            creating_query(list_questions.get(number_question));
         });
 
         Btn_Words_moving_to_studied_words.addActionListener(e -> {
@@ -715,6 +817,7 @@ public class MainUI {
             ToolsUI toolsUI = new ToolsUI(table_list_delete_rows_indexes);
             toolsUI.showFrame(table_list_delete_rows_indexes);
         });
+
         Btn_Clear_answers.addActionListener(e -> {
             int jp = JOptionPane.showConfirmDialog(null,
                     lang.SetLanguage("OPM_Are_you_sure"),
@@ -746,14 +849,6 @@ public class MainUI {
                 Btn_Words_right.setEnabled(false);
                 Btn_Words_left.setEnabled(false);
                 Btn_Clear_answers.setEnabled(false);
-                list_questions.clear();
-
-                for (int i = 0; i < jo_list_answer_true.names().length(); i++) {
-                    list_questions.add(jo_list_answer_true.names().getString(i));
-                }
-                for (int i = 0; i < jo_list_answer_false.names().length(); i++) {
-                    list_questions.add(jo_list_answer_false.names().getString(i));
-                }
             }
         });
 
@@ -796,6 +891,64 @@ public class MainUI {
         });
     }
 
+    private void slider(){
+        Sld_Count_questions.setPaintTicks(true);
+        Sld_Count_questions.repaint();
+
+        Sld_Count_questions.setPaintLabels(true);
+        Sld_Count_questions.setLabelTable(null);
+
+        if(list_questions.size()<20){
+            Sld_Count_questions.setMajorTickSpacing(1);
+            Sld_Count_questions.setMinorTickSpacing(1);
+        }
+        else if(list_questions.size()>20 && 50>list_questions.size()){
+            Sld_Count_questions.setMajorTickSpacing(2);
+            Sld_Count_questions.setMinorTickSpacing(2);
+        }
+        else if(list_questions.size()>=50 && list_questions.size()<300) {
+            for (int i = list_questions.size(); i >= 50; i--) {
+                if (i % 50 == 0) {
+                    int mj = (int) Math.round(i * 0.1);
+                    Sld_Count_questions.setMajorTickSpacing(mj);
+                }
+                if (i % 25 == 0) {
+                    int mn = (int) Math.round(i * 0.1);
+                    Sld_Count_questions.setMinorTickSpacing(mn);
+                }
+            }
+        }
+        else if(list_questions.size()>=300 && list_questions.size()<1000){
+            for(int i=list_questions.size(); i>=300;i--) {
+                if (i % 100 == 0) {
+                    int mj = (int) Math.round(i * 0.1);
+                    Sld_Count_questions.setMajorTickSpacing(mj);
+                }
+                if(i % 50 ==0){
+                    int mn = (int) Math.round(i * 0.1);
+                    Sld_Count_questions.setMinorTickSpacing(mn);
+                }
+            }
+        }else{
+            for(int i=list_questions.size(); i>=1000;i--) {
+                if (i % 500 == 0) {
+                    int pro = (int) Math.round(i * 0.1);
+                    Sld_Count_questions.setMajorTickSpacing(pro);
+                }
+                if(i % 250 ==0){
+                    int mn = (int) Math.round(i * 0.1);
+                    Sld_Count_questions.setMinorTickSpacing(mn);
+                }
+            }
+        }
+
+        Sld_Count_questions.setEnabled(false);
+        Sld_Count_questions.setValue(number_question+1);
+        Sld_Count_questions.setMinimum(0);
+        Sld_Count_questions.setMaximum(list_questions.size());
+        Sld_Count_questions.setToolTipText(number_question+"/"+list_questions.size());
+    }
+
     private void all_checked_in_tab_tf(JTable c_table, boolean tf){
         for(int i=0; i<c_table.getRowCount(); i++){
             c_table.setValueAt(tf, i, service.getCCI("✓"));
@@ -803,6 +956,8 @@ public class MainUI {
     }
 
     private void detail_result(){
+        CB_fa_all_checking.setSelected(false);
+        CB_ta_all_checking.setSelected(false);
         Lbl_true_answers.setText("true: " + jo_list_answer_true.length() + "");
         Lbl_true_answers.setForeground(Color.decode("#009926"));
         Lbl_false_answers.setText("false: " + jo_list_answer_false.length() + "");
@@ -810,7 +965,7 @@ public class MainUI {
         Btn_Words_right.setEnabled(false);
         Btn_Words_left.setEnabled(false);
 
-        if(answer_true == 0) {
+        if(jo_list_answer_true.length() == 0) {
             Btn_Clear_answers.setEnabled(false);
             Btn_Words_moving_to_studied_words.setEnabled(false);
         }
@@ -940,13 +1095,39 @@ public class MainUI {
         }
     }
 
+    private void spoken_test(){
+        number_question = 0;
+        Lbl_Result.setText("");
+        panel_option_questions.setVisible(false);
+        panel_test.setVisible(true);
+        panel_result.setVisible(false);
+        Btn_choice_answer.setEnabled(true);
+        Btn_Next_question.setEnabled(false);
+        Btn_Next_question.setText(lang.SetLanguage("Btn_Next_question_name").toString());
+
+        JCB_Answers_show_hide.setSelected(true);
+        answers_show_hide();
+
+        panel_test.getTopLevelAncestor().setSize(720, 320);
+
+        if (list_questions.size() == table1.getRowCount()) {
+            list_questions.remove(table1.getRowCount() - 1);
+        }
+
+        long seed = System.nanoTime();
+        Collections.shuffle(list_questions, new Random(seed));
+        jo_list_answer_false = new JSONObject();
+        jo_list_answer_true = new JSONObject();
+        creating_query(list_questions.get(number_question));
+    }
+
     private void written_test(){
         list_current_answers = new ArrayList<>();
         panel_option_questions.setVisible(false);
         panel_test.setVisible(false);
         Btn_Additionally.setEnabled(false);
         panel_test2.setVisible(true);
-        panel_test2.getTopLevelAncestor().setSize(720, 450);
+        panel_test2.getTopLevelAncestor().setSize(720, 480);
 
         boolean[] canEdit2 = {false, false, true, false, false};
         dtm = new DefaultTableModel((Object[])lang.SetLanguage("TC_name2"), list_questions.size()) {
@@ -977,18 +1158,43 @@ public class MainUI {
 
         table2.setModel(dtm);
 
+        URL url1 = ToolsUI.class.getResource("/icons/ic_answ_true_20x20.png");
+        URL url2 = ToolsUI.class.getResource("/icons/ic_answ_false_20x20.png");
+        ImageIcon ii_true = new ImageIcon(url1);
+        ImageIcon ii_false = new ImageIcon(url2);
+
         for (int i = 0; i < list_questions.size(); i++) {
             dtm.setValueAt(i + 1, i, 0);
             dtm.setValueAt(list_questions.get(i), i, 1);
             dtm.setValueAt("", i, 2);
-        }
+            dtm.setValueAt(null, i, 3);
+            dtm.setValueAt("", i, 4);
 
-        table2.removeColumn(table2.getColumnModel().getColumn(4));
-        table2.removeColumn(table2.getColumnModel().getColumn(3));
+            if(jo_list_answer_true.length()!=0){
+                for(int j=0; j<jo_list_answer_true.length(); j++) {
+                    if (list_questions.get(i).equals(jo_list_answer_true.names().get(j).toString())) {
+                        dtm.setValueAt(i + 1, i, 0);
+                        dtm.setValueAt(list_questions.get(i), i, 1);
+                        dtm.setValueAt(jo_list_answer_true.getString(list_questions.get(i)), i, 2);
+                        dtm.setValueAt(ii_true, i, 3);
+                        dtm.setValueAt(jo_list_answer_true.getString(list_questions.get(i)), i, 4);
+                    }
+                }
+                for(int j=0; j<jo_list_answer_false.length(); j++) {
+                    if (list_questions.get(i).equals(jo_list_answer_false.names().get(j).toString())) {
+                        dtm.setValueAt(i + 1, i, 0);
+                        dtm.setValueAt(list_questions.get(i), i, 1);
+                        dtm.setValueAt("", i, 2);
+                        dtm.setValueAt(ii_false, i, 3);
+                        dtm.setValueAt(jo_list_answer_false.getString(list_questions.get(i)), i, 4);
+                    }
+                }
+            }
+        }
 
         table2.setSize(s_pane2.getSize().width, s_pane2.getSize().height);
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 5; i++) {
             table2.getColumnModel().getColumn(i).setMaxWidth(table2_column_widths[i]);
         }
     }
@@ -1036,7 +1242,7 @@ public class MainUI {
         Btn_Cancel_written_test.setToolTipText(lang.SetLanguage("Btn_Cancel_test").toString());
         Btn_Cancel_test_variants.setToolTipText(lang.SetLanguage("Btn_Cancel_test").toString());
         Btn_Restart_written_test.setToolTipText(lang.SetLanguage("Btn_Reset_test").toString());
-        Btn_Restart_test_variants.setToolTipText(lang.SetLanguage("Btn_Reset_test").toString());
+        Btn_Restart_tests.setToolTipText(lang.SetLanguage("Btn_Reset_test").toString());
         Btn_answer_for_written_test.setText(lang.SetLanguage("Lbl_Result_name").toString());
         Btn_Additionally.setToolTipText(lang.SetLanguage("Btn_Additionally").toString());
         Btn_go_to_spoken_test.setText(lang.SetLanguage("Btn_go_to_spoken_test").toString());
@@ -1045,6 +1251,7 @@ public class MainUI {
         Btn_Words_moving_to_studied_words.setToolTipText(lang.SetLanguage("Btn_Moving_to_studied_words").toString());
         CB_ta_all_checking.setText(lang.SetLanguage("CB_Checking_all").toString());
         CB_fa_all_checking.setText(lang.SetLanguage("CB_Checking_all").toString());
+        Btn_All_answers_for_written_test.setText(lang.SetLanguage("Btn_Answers_all").toString());
     }
 
     private void color_elements(){
@@ -1069,10 +1276,8 @@ public class MainUI {
         list_answers = new ArrayList<>();
         jo_list_answer_true = new JSONObject();
         jo_list_answer_false = new JSONObject();
+        jo_list_answer_null = new JSONObject();
         number_question = 0;
-        answer_true = 0;
-        answer_false = 0;
-        sum2 = 0;
         Lbl_Result.setText("");
     }
 
@@ -1246,8 +1451,13 @@ public class MainUI {
      }
 
     public static void main(String[] args) {
-        MainUI window = new MainUI();
-        window.showFrame();
+        try {
+            MainUI window = new MainUI();
+            window.showFrame();
+        }catch (Exception ex){
+            ToolsUI toolsUI = new ToolsUI(new ArrayList<>());
+            toolsUI.showFrame(new ArrayList<>());
+        }
     }
 
     private void showFrame() {
