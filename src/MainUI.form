@@ -60,13 +60,15 @@
           </component>
           <component id="f34cc" class="javax.swing.JLabel" binding="Lbl_Result">
             <constraints>
-              <grid row="3" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false">
-                <minimum-size width="120" height="-1"/>
-                <preferred-size width="120" height="-1"/>
-                <maximum-size width="120" height="-1"/>
+              <grid row="3" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="2" fill="1" indent="0" use-parent-layout="false">
+                <minimum-size width="200" height="-1"/>
+                <preferred-size width="200" height="-1"/>
+                <maximum-size width="200" height="-1"/>
               </grid>
             </constraints>
             <properties>
+              <horizontalAlignment value="0"/>
+              <horizontalTextPosition value="11"/>
               <text value="Label"/>
             </properties>
           </component>
@@ -149,7 +151,7 @@
           </component>
           <component id="8bde9" class="javax.swing.JButton" binding="Btn_Cancel_test_variants">
             <constraints>
-              <grid row="8" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="8" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <icon value="icons/bt_cancel_test_30x30.png"/>
@@ -169,9 +171,9 @@
           <vspacer id="6cbc7">
             <constraints>
               <grid row="2" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <minimum-size width="-1" height="5"/>
-                <preferred-size width="-1" height="5"/>
-                <maximum-size width="-1" height="5"/>
+                <minimum-size width="-1" height="10"/>
+                <preferred-size width="-1" height="10"/>
+                <maximum-size width="-1" height="10"/>
               </grid>
             </constraints>
           </vspacer>

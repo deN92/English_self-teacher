@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 
 public class DescriptionUI {
     private JPanel panel_main;
@@ -6,7 +7,7 @@ public class DescriptionUI {
     private JLabel label1;
     private JLabel label2;
 
-    DescriptionUI(){
+    DescriptionUI() {
         String str = "English self-teacher 2017";
         label1.setText(str);
         label2.setText("Author: Denys Slyusarchuk");
@@ -20,4 +21,5 @@ public class DescriptionUI {
         frame.pack();
         frame.setVisible(true);
     }
+
 }

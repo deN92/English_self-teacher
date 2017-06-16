@@ -7,7 +7,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
-public class DesignUI{
+public class DesignUI {
     private JPanel panel_design;
     private JTable table1;
     private JButton Btn_Save_color;
@@ -21,7 +21,7 @@ public class DesignUI{
     private String[] str;
     private Service.Language lang;
 
-    DesignUI(){
+    DesignUI() {
         service = new Service();
         try {
             service.dir_vocabulary_file(1);
@@ -35,7 +35,7 @@ public class DesignUI{
 
         table();
         table1.setModel(model);
-        int[] table_column_widths = {150,150};
+        int[] table_column_widths = {150, 150};
         for (int i = 0; i < 2; i++) {
             table1.getColumnModel().getColumn(i).setMaxWidth(table_column_widths[i]);
         }
@@ -54,7 +54,7 @@ public class DesignUI{
                 chooser.getSelectionModel().addChangeListener(arg0 -> {
                     Color color = chooser.getColor();
                     ii[trw.row].setImage(paintComponent(color));
-                    str[trw.row] = "#"+Integer.toHexString(color.getRGB()).substring(2);
+                    str[trw.row] = "#" + Integer.toHexString(color.getRGB()).substring(2);
                     table1.getModel().setValueAt(ii[trw.row], trw.row, col);
                 });
 
@@ -66,7 +66,7 @@ public class DesignUI{
 
         Btn_Save_color.addActionListener(actionEvent -> {
             JSONArray ja_color_create = new JSONArray();
-            for(int i=0;i<ja_colors.length();i++) {
+            for (int i = 0; i < ja_colors.length(); i++) {
                 ja_color_create.put(i, new JSONObject().put(table1.getValueAt(i, 0).toString(), str[i]));
             }
             JSONArray ja_final = new JSONArray();
@@ -86,15 +86,14 @@ public class DesignUI{
         });
     }
 
-    class TempRowCol{
+    class TempRowCol {
         int row;
     }
 
-    private void table(){
-        model = new DefaultTableModel(new Object[] {"Name", "Color"}, ja_colors.length())
-        {
-            public Class<?> getColumnClass(int column){
-                switch(column){
+    private void table() {
+        model = new DefaultTableModel(new Object[]{"Name", "Color"}, ja_colors.length()) {
+            public Class<?> getColumnClass(int column) {
+                switch (column) {
                     case 0:
                         return String.class;
                     case 1:
@@ -103,7 +102,9 @@ public class DesignUI{
                         return String.class;
                 }
             }
+
             boolean[] canEdit = {false, false};
+
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit[columnIndex];
             }

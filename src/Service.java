@@ -7,7 +7,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
-class Service{
+public class Service{
     ArrayList<String> list_questions_all = new ArrayList<>();
     ArrayList<String> list_answers_all = new ArrayList<>();
     DefaultTableModel[] model = new DefaultTableModel[4];
