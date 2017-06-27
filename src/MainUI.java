@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class MainUI {
@@ -37,7 +38,6 @@ public class MainUI {
 
     private JTextField field_search1;
     private JTextField field_search2;
-    private JTextField field_search3;
 
     private JButton Btn_choice_answer, Btn_Next_question, Btn_Start_test;
     private JButton Btn_Cancel_test_variants;
@@ -106,8 +106,8 @@ public class MainUI {
         CB_Scope_questions.setEnabled(false);
 
 //      Can edit column table1
-        boolean[] canEdit = {true, false, false, false, false, false, false};
-        int[] table_column_widths = {25, 35, 200, 200, 60, 0, 0};
+        boolean[] canEdit = {true, false, false, false, false, false, false, false};
+        int[] table_column_widths = {25, 35, 200, 200, 60, 0, 0, 0};
 
         load_data_table1(canEdit, table_column_widths);
 
@@ -125,6 +125,8 @@ public class MainUI {
         JRadioButton[] rb = {RB_Option1, RB_Option2};
         Btn_Words_moving_to_studied_words.setEnabled(false);
         Btn_Clear_answers.setEnabled(false);
+
+
 
         // Columns setReorderingAllowed disable
         table1.getColumnModel().addColumnModelListener(new TableColumnModelListener() {
@@ -590,6 +592,10 @@ public class MainUI {
 
             Collections.shuffle(list_questions, new Random(seed));
 
+            jo_list_answer_true = new JSONObject();
+            jo_list_answer_false = new JSONObject();
+            jo_list_answer_null = new JSONObject();
+
             written_test();
 
             table2.setSize(s_pane2.getSize().width, s_pane2.getSize().height);
@@ -683,7 +689,8 @@ public class MainUI {
             }
         });
 
-        Search_Ok.addActionListener(actionEvent -> service.wt_search(table1, field_search1, field_search2, field_search3));
+        Search_Ok.addActionListener(actionEvent -> service.find_name_translate(table1, field_search1, field_search2));
+
         MouseAdapter listener = new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent mouseEvent) {
@@ -1083,7 +1090,7 @@ public class MainUI {
         if (list_questions.size() < 20) {
             Sld_Count_questions.setMajorTickSpacing(1);
             Sld_Count_questions.setMinorTickSpacing(1);
-        } else if (list_questions.size() > 20 && 50 > list_questions.size()) {
+        } else if (list_questions.size() >= 20 && 50 > list_questions.size()) {
             Sld_Count_questions.setMajorTickSpacing(2);
             Sld_Count_questions.setMinorTickSpacing(2);
         } else if (list_questions.size() >= 50 && list_questions.size() < 300) {
@@ -1388,6 +1395,7 @@ public class MainUI {
         for (int i = 0; i < current_table_column_widths.length; i++) {
             table1.getColumnModel().getColumn(i).setMaxWidth(current_table_column_widths[i]);
         }
+        table1.removeColumn(table1.getColumnModel().getColumn(5));
         table1.removeColumn(table1.getColumnModel().getColumn(5));
         table1.removeColumn(table1.getColumnModel().getColumn(5));
         spinner1.setModel(new SpinnerNumberModel(5, 1, service.ja_words.length(), 1));

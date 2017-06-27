@@ -4,8 +4,23 @@ import org.json.JSONObject;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.*;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.DateFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Service{
     ArrayList<String> list_questions_all = new ArrayList<>();
@@ -23,7 +38,7 @@ public class Service{
     String nc_translate_ua = "Переклад";
 //    String nc_type_ua = "Тип";
 
-    String[] name_cols =  {"✓", "№", nc_word_en, nc_translate_en, nc_type_en, "W*", "T*"};
+    String[] name_cols =  {"✓", "№", nc_word_en, nc_translate_en, nc_type_en, "W*", "T*", "Date"};
     String[] word_types = {"nn", "vr", "aj", "av", "pn", "pp", "oth"};
 
     void table(int number, boolean[] canEdit, String lib){
@@ -38,6 +53,8 @@ public class Service{
         String str_words = content_file(current_path[0]);
         JSONObject ja_words2 = new JSONObject(str_words).getJSONObject("words_type");
 
+        JSONObject ja_words3 = new JSONObject(str_words).getJSONObject("words_date");
+
         if(number == 2){
             str_words = "";
             ja_words = new JSONArray(str_words);
@@ -50,12 +67,15 @@ public class Service{
         jo_number_pair = new JSONObject[ja_words.length()];
 
         JSONObject jo_wtt = new JSONObject();
+        JSONObject jo_wtt2 = new JSONObject();
+
         if(Objects.equals(lib, "words_new")){
             jo_wtt = (JSONObject) ja_words2.get("words_new");
-
+            jo_wtt2 = (JSONObject) ja_words3.get("words_new");
         }
         else if(Objects.equals(lib, "words_studied")){
             jo_wtt = (JSONObject) ja_words2.get("words_studied");
+            jo_wtt2 = (JSONObject) ja_words3.get("words_studied");
         }
 
         model[number] = new DefaultTableModel((Object[]) new Language(current_path[1]).SetLanguage("TC_name"), ja_words.length())
@@ -76,6 +96,8 @@ public class Service{
                         return ImageIcon.class;
                     case 6:
                         return ImageIcon.class;
+                    case 7:
+                        return Date.class;
                     default:
                         return String.class;
                 }
@@ -93,6 +115,8 @@ public class Service{
         for(int i=0; i<word_types.length;i++){
             jcbmi[i] = new JCheckBoxMenuItem(word_types[i]);
         }
+
+
 
         for (int i = 0; i < ja_words.length(); i++) {
             jo_number_pair[i] = (JSONObject)ja_words.get(i);
@@ -116,6 +140,49 @@ public class Service{
             }
             model[number].setValueAt(im, i, getCCI("W*"));
             model[number].setValueAt(im, i, getCCI("T*"));
+
+
+            for(int j =0; j< jo_wtt2.length(); j++) {
+                String key_date = jo_wtt2.names().get(j).toString();
+                JSONArray ja_data = jo_wtt2.getJSONArray(key_date);
+                for(int k =0;k<ja_data.length();k++) {
+                    if ((int) ja_data.get(k) == i) {
+                        model[number].setValueAt(getFormattingDate(key_date), i, getCCI("Date"));
+                    }
+                }
+            }
+        }
+    }
+
+    private Date getFormattingDate(String str) {
+
+
+
+        Locale locale = new Locale("en", "UK");
+        DateFormatSymbols dateFormatSymbols = new DateFormatSymbols(locale);
+        dateFormatSymbols.setWeekdays(new String[]{
+//            "Unused",
+//            "Sun Sunday",
+//            "Mon Monday",
+//            "Tue Tuesday",
+//            "Wed Wednesday",
+//            "Thu Thursday",
+//            "Fri Friday",
+//            "Sat Saturday"
+        });
+
+        String pattern = "E MMM dd HH:mm:ss z yyyy";
+//        String pattern = "dd.MM.yyyy, HH:mm";
+        try {
+            DateTimeFormatter qwe = DateTimeFormatter.ofPattern(pattern, Locale.UK);
+            SimpleDateFormat sdf = new SimpleDateFormat(pattern, dateFormatSymbols);
+//            LocalDateTime dt = LocalDateTime.parse(str, qwe);
+//            Date date = Date.from(dt.atZone(ZoneId.systemDefault()).toInstant());
+            Date date2 = sdf.parse(str);
+            return date2;
+        } catch (ParseException ex) {
+            System.out.print(ex);
+            return null;
         }
     }
 
@@ -180,7 +247,8 @@ public class Service{
             else strLang = "en";
 
             jo_i18n = new JSONObject().put("uaen", new JSONObject().
-                put("TC_name", new JSONObject().put("ua", new Object[] {"✔", "№", "Слово", "Переклад", "Тип", "С*", "П*"}).
+                put("TC_name", new JSONObject().put("ua", new Object[] {"✔", "№", "Слово", "Переклад",
+                                                                        "Тип", "С*", "П*", "Дата"}).
                                                 put("en", new Service().name_cols)).
                 put("TC_name2",new JSONObject().put("ua", new String[] {"№", "Слово", "Переклад", "", "Відповідь"}).
                                                 put("en", new String[] {"№", "Word", "Translate", "", "True answer"})).
@@ -250,9 +318,21 @@ public class Service{
                                                             put("en", "Words not saved")).
                 put("Btn_Answers_all", new JSONObject().put("ua","Показати всі відповіді").
                                                         put("en", "Show answers all")).
+                put("Btn_Table_common", new JSONObject().put("ua","Перейти до загальних слів").
+                                                         put("en", "Go to common words")).
+                put("Btn_Table_IT", new JSONObject().put("ua","Перейти до IT слів").
+                                                     put("en", "Go to IT words")).
+                put("CB_Words_type",new JSONObject().put("ua", new String[] {"Імен.", "Дієсл.", "Прикм.",
+                                                                            "Присл.", "Займ.", "Прийм.", "Інше"}).
+                                                     put("en", new String[] {"Noun", "Verb", "Adject.",
+                                                                            "Adverb", "Pronoun", "Preposit.", "Oth."})).
+                put("Btn_Exchange_positions", new JSONObject().put("ua","Поміняти місцями").
+                                                               put("en", "Exchange positions")).
                 put("OPM_Minimum_5_words",
                         new JSONObject().put("ua","Ви повинні мати мінімум 5 нових слів для запуску тестів").
                                          put("en", "You must have minimum 5 new words for run tests")).
+                put("RB_All_matches", new JSONObject().put("ua", "Усі співпадіння").put("en", "All matches")).
+                put("RB_Only_words", new JSONObject().put("ua", "Тільки слова").put("en", "Only words")).
                 put("OPM_Already_exist", new JSONObject().put("ua","вже існує в таблиці").
                                                           put("en", "Word already exists")));
         }
@@ -262,33 +342,57 @@ public class Service{
         }
     }
 
+    void find_name_translate(JTable c_table, JTextField c_tf1, JTextField c_tf2){
+        if(!c_tf1.getText().equals("") || !c_tf2.getText().equals("")) {
+            JPanel panel = new JPanel();
+            ButtonGroup bg = new ButtonGroup();
+            JRadioButton rb1 = new JRadioButton(new Language(current_path[1]).SetLanguage("RB_All_matches").toString());
+            JRadioButton rb2 = new JRadioButton(new Language(current_path[1]).SetLanguage("RB_Only_words").toString());
+            rb1.setSelected(true);
+            bg.add(rb1);
+            bg.add(rb2);
+            panel.add(rb1);
+            panel.add(rb2);
 
-    void wt_search(JTable tab, JTextField tf1, JTextField tf2, JTextField tf3){
+            int jp = JOptionPane.showOptionDialog(null, panel,
+                    new Language(current_path[1]).SetLanguage("Btn_Choose_test").toString(), JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.QUESTION_MESSAGE, null, null, null);
+            if (jp == JOptionPane.YES_OPTION) {
+                if (rb1.isSelected()) {
+                    wt_search(c_table, c_tf1, c_tf2, "M");
+                } else if (rb2.isSelected()) {
+                    wt_search(c_table, c_tf1, c_tf2, "W");
+                }
+            }
+        }
+    }
+
+    void wt_search(JTable tab, JTextField tf1, JTextField tf2, String find_type){
         for(int i=0; i< tab.getRowCount(); i++){
             String s_name = tab.getValueAt(i,getCCI("Word")).toString().toLowerCase();
             String s_trans = tab.getValueAt(i,getCCI("Translate")).toString().toLowerCase();
-            String s_type;
-            if(tab.getValueAt(i,getCCI("Type"))==null) {
-                s_type = null;
-            }
-            else{
-                s_type = tab.getValueAt(i, getCCI("Type")).toString().toLowerCase();
-            }
 
             if(!tf1.getText().equals("")) {
-                if (s_name.contains(tf1.getText().toLowerCase())) {
-                    tab.changeSelection(i, getCCI("Word"), true, false);
+                if(find_type.equals("M")) {
+                    if (s_name.contains(tf1.getText().toLowerCase())) {
+                        tab.changeSelection(i, getCCI("Word"), true, false);
+                    }
+                }
+                else if(find_type.equals("W")) {
+                    if (s_name.equals(tf1.getText().toLowerCase())) {
+                        tab.changeSelection(i, getCCI("Word"), true, false);
+                    }
                 }
             }
             else if(!tf2.getText().equals("")) {
-                if (s_trans.contains(tf2.getText().toLowerCase())) {
-                    tab.changeSelection(i, getCCI("Translate"), true, false);
+                if(find_type.equals("M")) {
+                    if (s_trans.contains(tf2.getText().toLowerCase())) {
+                        tab.changeSelection(i, getCCI("Translate"), true, false);
+                    }
                 }
-            }
-            else if(!tf3.getText().equals("")) {
-                if(s_type != null) {
-                    if (s_type.contains(tf3.getText().toLowerCase())) {
-                        tab.changeSelection(i, getCCI("Type"), true, false);
+                else if(find_type.equals("W")) {
+                    if (s_trans.equals(tf2.getText().toLowerCase())) {
+                        tab.changeSelection(i, getCCI("Translate"), true, false);
                     }
                 }
             }
@@ -358,10 +462,10 @@ public class Service{
             JSONObject words_type = new JSONObject();
 
             String[] words =
-                    {"quiet", "broke", "mistakes", "turn", "stay",
+                    {"quiet", "broke/broke out", "mistake", "turn", "stay",
                             "mind", "explain", "calm", "still", "become"};
             String[] trans =
-                    {"тихо", "зламати", "помилки", "поворот", "залишитись",
+                    {"тихо", "зламати/виламати", "помилка", "поворот", "залишитись",
                             "дбати", "пояснювати", "спокійний", "до цих пір", "стати/відповідати"};
 
             for (int i = 0; i < 10; i++) {
