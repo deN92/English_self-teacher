@@ -43,6 +43,7 @@ public class ToolsUI {
     private ArrayList<String>[] table_list_delete_rows_names = new ArrayList[2];
     private ArrayList<String>[] table_list_delete_rows_translate = new ArrayList[2];
     private ArrayList<String>[] table_list_delete_rows_word_type = new ArrayList[2];
+    private ArrayList<Date>[] table_list_delete_rows_word_date = new ArrayList[2];
     private ArrayList<Integer>[] table_list_delete_rows_indexes = new ArrayList[2];
 
     private MouseEvent evt_t1, evt_t2;
@@ -52,13 +53,15 @@ public class ToolsUI {
     private TableRowSorter<DefaultTableModel> sorter2;
     private String reg1 = "";
     private int[] table_column_widths = {20, 32, 185, 185, 70, 20, 20, 53};
+    private JTable[] tables_array = {table1, table2};
+
 
     ToolsUI(ArrayList list_checked_indexes) {
         tools_panel.setSize(715, 710);
         tools_panel.setMaximumSize(new Dimension(715, 700));
         tools_panel.setMinimumSize(new Dimension(715, 700));
         tools_panel.setPreferredSize(new Dimension(715, 700));
-        boolean[] canEdit = {true, false, true, true, false, false, false, true};
+        boolean[] canEdit = {true, false, true, true, false, false, false, false};
         service = new Service[3];
         service[0] = new Service();
         service[1] = new Service();
@@ -161,9 +164,9 @@ public class ToolsUI {
         Btn_Add.addActionListener(actionEvent -> {
             if (!table1.getValueAt(table1.getRowCount() - 1, service[0].getCCI(service[0].nc_word_en)).equals("")) {
                 DefaultTableModel model1 = (DefaultTableModel) table1.getModel();
-                model1.addRow(new Object[]{false, table1.getRowCount() + 1, "", "", "", "", ""});
+                model1.addRow(new Object[]{false, table1.getRowCount() + 1, "", "", "", "", "", new Date()});
 
-                for (int i = 0; i < 6; i++) {
+                for (int i = 0; i < table_column_widths.length; i++) {
                     table1.getColumnModel().getColumn(i).setMaxWidth(table_column_widths[i]);
                 }
                 table1.changeSelection(table1.getRowCount() - 1, 0, false, false);
@@ -177,92 +180,25 @@ public class ToolsUI {
         });
 
         Btn_Del.addActionListener(actionEvent -> {
-            ArrayList<String> list_delete_rows_names = new ArrayList<>();
-            ArrayList<Integer> list_delete_rows_indexes = new ArrayList<>();
-
-            ArrayList<String> list_delete_rows_names2 = new ArrayList<>();
-            ArrayList<Integer> list_delete_rows_indexes2 = new ArrayList<>();
             int jp = JOptionPane.showConfirmDialog(null,
                     lang.SetLanguage("OPM_Are_you_sure"),
                     lang.SetLanguage("OPM_Title_removing").toString(), 0);
             if (jp == JOptionPane.YES_OPTION) {
                 try {
-                    for (int i = 0; i < table1.getRowCount(); i++) {
-                        Boolean checked = Boolean.valueOf(table1.getValueAt(i, service[0].getCCI("✓")).toString());
-                        int row = (int) table1.getValueAt(i, service[0].getCCI("№")) - 1;
-                        if (checked) {
-                            list_delete_rows_names.add(
-                                    table1.getValueAt(row, service[0].getCCI(service[0].nc_word_en)).toString());
-                            list_delete_rows_indexes.add(row);
-                        }
+                    Boolean t1 = false;
+                    Boolean t2 = false;
+                    for(int i=0; i< table1.getRowCount();i++){
+                        Boolean c = (Boolean) table1.getValueAt(i, service[0].getCCI("✓"));
+                        if(c){ t1 = true;}
                     }
-
-                    for (int i = 0; i < table2.getRowCount(); i++) {
-                        Boolean checked = Boolean.valueOf(table2.getValueAt(i, service[0].getCCI("✓")).toString());
-                        int row = (int) table2.getValueAt(i, service[0].getCCI("№")) - 1;
-                        if (checked) {
-                            list_delete_rows_names2.add(
-                                    table2.getValueAt(row, service[0].getCCI(service[0].nc_word_en)).toString());
-                            list_delete_rows_indexes2.add(row);
-                        }
+                    for(int i=0; i< table2.getRowCount();i++){
+                        Boolean c = (Boolean) table2.getValueAt(i, service[0].getCCI("✓"));
+                        if(c){ t2 = true;}
                     }
-                    int ldr_st = 0;
-                    int ldr_st2 = 0;
-
-                    for (Integer list_delete_rows_indexe : list_delete_rows_indexes) {
-                        int ldr_value = list_delete_rows_indexe - ldr_st;
-                        ((DefaultTableModel) table1.getModel()).removeRow(ldr_value);
-                        ldr_st++;
-                    }
-
-                    for (Integer aList_delete_rows_indexes2 : list_delete_rows_indexes2) {
-                        int ldr_value2 = aList_delete_rows_indexes2 - ldr_st2;
-                        ((DefaultTableModel) table2.getModel()).removeRow(ldr_value2);
-                        ldr_st2++;
-                    }
-
-                    for (int i = 0; i < table1.getRowCount(); i++) {
-                        table1.setValueAt(i + 1, i, 1);
-                    }
-                    for (int i = 0; i < table2.getRowCount(); i++) {
-                        table2.setValueAt(i + 1, i, 1);
-                    }
-
-                    ArrayList<String> list_delete_limit = new ArrayList<>();
-                    ArrayList<String> list_delete_limit2 = new ArrayList<>();
-
-                    if (list_delete_rows_names.size() < 10) {
-                        list_delete_limit = list_delete_rows_names;
-                    } else {
-                        list_delete_limit.clear();
-                    }
-                    if (list_delete_rows_names2.size() < 10) {
-                        list_delete_limit2 = list_delete_rows_names2;
-                    } else {
-                        list_delete_limit2.clear();
-                    }
-
-                    if (list_delete_rows_names.size() != 0) {
-                        JOptionPane.showMessageDialog(
-                                null,
-                                "" + list_delete_rows_names.size() + lang.SetLanguage("OPM_Items") +
-                                        list_delete_limit + " " + lang.SetLanguage("OPM_Words_removed"),
-                                lang.SetLanguage("OPM_Title").toString(),
-                                JOptionPane.INFORMATION_MESSAGE);
-                    }
-
-                    if (list_delete_rows_names2.size() != 0) {
-                        JOptionPane.showMessageDialog(
-                                null,
-                                "" + list_delete_rows_names2.size() + lang.SetLanguage("OPM_Items") +
-                                        list_delete_limit2 + " " + lang.SetLanguage("OPM_Words_removed"),
-                                lang.SetLanguage("OPM_Title").toString(),
-                                JOptionPane.INFORMATION_MESSAGE);
-                    }
-
-                    Lbl_TNW_Count_Checked.setText(0+"");
-                    Lbl_TSW_Count_Checked.setText(0+"");
-                } catch (Exception e) {
+                    if(t1){ delete_elements(0);}
+                    if(t2){ delete_elements(1);}
+                }
+                catch (Exception e) {
                     JOptionPane.showMessageDialog(
                             null,
                             lang.SetLanguage("OPM_Words_not_removed") + "| " + e.getMessage(),
@@ -299,101 +235,68 @@ public class ToolsUI {
             add_warning_icon_to_col(false);
 
             JSONObject final_ja_words = new JSONObject();
-            JSONArray ja_words_new = new JSONArray();
-            JSONArray ja_words_studied = new JSONArray();
+
+            JSONArray[] ja_words_new_studied = new JSONArray[2];
+            JSONObject[] jo_words_type_new_studied = new JSONObject[2];
+            JSONObject[] jo_words_date_new_studied = new JSONObject[2];
 
             JSONObject jo_words_date = new JSONObject();
             JSONObject jo_words_type = new JSONObject();
 
-            JSONObject jo_words_type_new = new JSONObject();
-            JSONObject jo_words_type_studied = new JSONObject();
-            JSONObject jo_words_date_new = new JSONObject();
-            JSONObject jo_words_date_studied = new JSONObject();
+            ArrayList<String>[] list_unique_date = new ArrayList[2];
 
-            ArrayList<String>[] ard = new ArrayList[2];
-            ard[0] = new ArrayList<>();
-            ard[1] = new ArrayList<>();
+            String[] str_words_new_studied = {"words_new", "words_studied"};
+            String[] str_words_type_date = {"words_type", "words_date"};
 
-            for (int i = 0; i < table2.getRowCount(); i++) {
-                String key = table2.getValueAt(i, service[0].getCCI(service[0].nc_word_en)).toString();
-                String val = table2.getValueAt(i, service[0].getCCI(service[0].nc_translate_en)).toString();
-                ja_words_studied.put(i, new JSONObject().put(key, val));
+            for(int n=0; n<tables_array.length; n++){
+                ja_words_new_studied[n] = new JSONArray();
+                jo_words_date_new_studied[n] = new JSONObject();
+                jo_words_type_new_studied[n] = new JSONObject();
+                list_unique_date[n] = new ArrayList<>();
+
+                for (int i = 0; i < tables_array[n].getRowCount(); i++) {
+                    String key = tables_array[n].getValueAt(i, service[0].getCCI(service[0].nc_word_en)).toString();
+                    String val = tables_array[n].getValueAt(i, service[0].getCCI(service[0].nc_translate_en)).toString();
+                    ja_words_new_studied[n].put(i, new JSONObject().put(key, val));
+                    for (String anAwt : service[0].word_types) {
+                        if (tables_array[n].getValueAt(i, service[0].getCCI(service[0].nc_type_en)) != null) {
+                            if (tables_array[n].getValueAt(i, service[0].getCCI(service[0].nc_type_en)).toString().toLowerCase().
+                                    contains(anAwt.toLowerCase())) {
+                                jo_words_type_new_studied[n].append(anAwt.toLowerCase(), i);
+                            }
+                        }
+                    }
+
+                    try {
+                        String key_date = tables_array[n].getValueAt(i, service[0].getCCI("Date")).toString();
+                        if (!list_unique_date[n].contains(key_date)) {
+                            list_unique_date[n].add(key_date);
+                        }
+
+                        for (String anAwt : list_unique_date[n]) {
+                            if (tables_array[n].getValueAt(i, service[0].getCCI("Date")).toString().contains(anAwt)) {
+                                jo_words_date_new_studied[n].append(anAwt, i);
+                            }
+                        }
+                    }
+                    catch (Exception ex) {
+                        jo_words_date_new_studied[n].append(new Date().toString(), i);
+                    }
+                }
                 for (String anAwt : service[0].word_types) {
-                    if (table2.getValueAt(i, service[0].getCCI(service[0].nc_type_en)) != null) {
-                        if (table2.getValueAt(i, service[0].getCCI(service[0].nc_type_en)).toString().toLowerCase().
-                                contains(anAwt.toLowerCase())) {
-                            jo_words_type_studied.append(anAwt.toLowerCase(), i);
-                        }
+                    if (!jo_words_type_new_studied[n].has(anAwt)) {
+                        jo_words_type_new_studied[n].append(anAwt, -1);
                     }
                 }
-
-                try {
-                    String key_date = table2.getValueAt(i, service[0].getCCI("Date")).toString();
-                    if (!ard[1].contains(key_date)) {
-                        ard[1].add(key_date);
-                    }
-
-                    for (String anAwt : ard[1]) {
-                        if (table2.getValueAt(i, service[0].getCCI("Date")).toString().contains(anAwt)) {
-                            jo_words_date_studied.append(anAwt, i);
-                        }
-                    }
-                }
-                catch (Exception ex) {
-                    jo_words_date_studied.append(new Date().toString(), i);
-                }
+                jo_words_type.put(str_words_new_studied[n], jo_words_type_new_studied[n]);
+                jo_words_date.put(str_words_new_studied[n], jo_words_date_new_studied[n]);
             }
 
-            for (int i = 0; i < table1.getRowCount(); i++) {
-                String key = table1.getValueAt(i, service[0].getCCI(service[0].nc_word_en)).toString();
-                String val = table1.getValueAt(i, service[0].getCCI(service[0].nc_translate_en)).toString();
-                ja_words_new.put(i, new JSONObject().put(key, val));
-                for (String anAwt : service[0].word_types) {
-                    if (table1.getValueAt(i, service[0].getCCI(service[0].nc_type_en)) != null) {
-                        if (table1.getValueAt(i, service[0].getCCI(service[0].nc_type_en)).toString().toLowerCase().
-                                contains(anAwt.toLowerCase())) {
-                            jo_words_type_new.append(anAwt.toLowerCase(), i);
-                        }
-                    }
-                }
+            final_ja_words.put(str_words_type_date[0], jo_words_type);
+            final_ja_words.put(str_words_type_date[1], jo_words_date);
 
-                try {
-                    String key_date_not_null = table1.getValueAt(i, service[0].getCCI("Date")).toString();
-                    if (!ard[0].contains(key_date_not_null)) {
-                        ard[0].add(key_date_not_null);
-                    }
-
-                    for (String anAwt : ard[0]) {
-                        if (table1.getValueAt(i, service[0].getCCI("Date")).toString().contains(anAwt)) {
-                            jo_words_date_new.append(anAwt, i);
-                        }
-                    }
-                }
-                catch (Exception ex) {
-                    jo_words_date_new.append(new Date().toString(), i);
-                }
-            }
-
-            for (String anAwt : service[0].word_types) {
-                if (!jo_words_type_studied.has(anAwt)) {
-                    jo_words_type_studied.append(anAwt, -1);
-                }
-                if (!jo_words_type_new.has(anAwt)) {
-                    jo_words_type_new.append(anAwt, -1);
-                }
-            }
-
-            jo_words_type.put("words_new", jo_words_type_new);
-            jo_words_type.put("words_studied", jo_words_type_studied);
-
-
-            jo_words_date.put("words_new", jo_words_date_new);
-            jo_words_date.put("words_studied", jo_words_date_studied);
-
-            final_ja_words.put("words_date", jo_words_date);
-            final_ja_words.put("words_studied", ja_words_studied);
-            final_ja_words.put("words_new", ja_words_new);
-            final_ja_words.put("words_type", jo_words_type);
+            final_ja_words.put(str_words_new_studied[0], ja_words_new_studied[0]);
+            final_ja_words.put(str_words_new_studied[1], ja_words_new_studied[1]);
 
             try {
                 service[0].write_content_in_file(service[0].current_path[0], final_ja_words, "edit");
@@ -511,16 +414,13 @@ public class ToolsUI {
             });
         }
 
-//        table_row_export_enable(table1);
-//        table_row_export_enable(table2);
-
 //      Export elements from table2 to table1
         Btn_Words_up.addActionListener(actionEvent -> {
             int jp = JOptionPane.showConfirmDialog(null,
                     lang.SetLanguage("OPM_Are_you_sure") + "\n" +
                             lang.SetLanguage("OPM_Title_moving") + table_list_delete_rows_names[1].size() +
                             " " + lang.SetLanguage("OPM_Items"),
-                    lang.SetLanguage("OPM_Title_moving").toString() + "...", 0);
+                    lang.SetLanguage("OPM_Title_moving").toString() + "...", JOptionPane.YES_NO_OPTION);
             if (jp == JOptionPane.YES_OPTION) {
                 export_elem_from_tab_to_tab(table2, table1, 1);
                 Btn_Words_up.setEnabled(false);
@@ -535,7 +435,7 @@ public class ToolsUI {
                     lang.SetLanguage("OPM_Are_you_sure") + "\n" +
                             lang.SetLanguage("OPM_Title_moving") + table_list_delete_rows_names[0].size() +
                             " " + lang.SetLanguage("OPM_Items"),
-                    lang.SetLanguage("OPM_Title_moving").toString() + "...", 0);
+                    lang.SetLanguage("OPM_Title_moving").toString() + "...", JOptionPane.YES_NO_OPTION);
             if (jp == JOptionPane.YES_OPTION) {
                 export_elem_from_tab_to_tab(table1, table2, 0);
                 Btn_Words_down.setEnabled(false);
@@ -622,6 +522,58 @@ public class ToolsUI {
         });
     }
 
+    private void delete_elements(int n) {
+        ArrayList<String>[] list_delete_rows_names = new ArrayList[2];
+        ArrayList<Integer>[] list_delete_rows_indexes = new ArrayList[2];
+        ArrayList<String>[] list_delete_limit = new ArrayList[2];
+
+        int[] ldr_st = {0,0};
+        list_delete_rows_names[n] = new ArrayList<>();
+        list_delete_rows_indexes[n] = new ArrayList<>();
+        list_delete_limit[n] = new ArrayList<>();
+        for (int i = 0; i < tables_array[n].getRowCount(); i++) {
+            Boolean checked = Boolean.valueOf(tables_array[n].getValueAt(i, service[0].getCCI("✓")).toString());
+            int row = (int) tables_array[n].getValueAt(i, service[0].getCCI("№")) - 1;
+            if (checked) {
+                list_delete_rows_names[n].add(
+                        tables_array[n].getValueAt(row, service[0].getCCI(service[0].nc_word_en)).toString());
+                list_delete_rows_indexes[n].add(row);
+            }
+        }
+
+        for (Integer list_delete_rows_indexe :
+                convert_current_index(table_list_delete_rows_names[n], tables_array[n])) {
+            int ldr_value = list_delete_rows_indexe - ldr_st[n];
+            ((DefaultTableModel) tables_array[n].getModel()).removeRow(ldr_value);
+            ldr_st[n]++;
+        }
+
+        for (int i = 0; i < tables_array[n].getRowCount(); i++) {
+            tables_array[n].setValueAt(i + 1, i, 1);
+        }
+
+//      true/false visible names elements in messages
+        if (list_delete_rows_names[n].size() < 10) {
+            list_delete_limit[n] = list_delete_rows_names[n];
+        }
+
+        Lbl_TNW_Count_Checked.setText(0+"");
+        Lbl_TSW_Count_Checked.setText(0+"");
+
+        if (list_delete_rows_names[n].size() != 0) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "" + list_delete_rows_names[n].size() + lang.SetLanguage("OPM_Items") +
+                            list_delete_limit[n] + " " + lang.SetLanguage("OPM_Words_removed"),
+                    lang.SetLanguage("OPM_Title").toString(),
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        list_delete_rows_names[n].clear();
+        list_delete_rows_indexes[n].clear();
+        list_delete_limit[n].clear();
+    }
+
     private void current_row(int index1, int index2, JTable c_table){
         Object[] obj = new Object[service[0].name_cols.length];
         Object[] obj_temp = new Object[service[0].name_cols.length];
@@ -647,29 +599,6 @@ public class ToolsUI {
             }
         }
     }
-
-//    private void find_name_translate(JTable c_table, JTextField c_tf1, JTextField c_tf2){
-//        JPanel panel = new JPanel();
-//        ButtonGroup bg = new ButtonGroup();
-//        JRadioButton rb1 = new JRadioButton(lang.SetLanguage("RB_All_matches").toString());
-//        JRadioButton rb2 = new JRadioButton(lang.SetLanguage("RB_Only_words").toString());
-//        rb1.setSelected(true);
-//        bg.add(rb1);
-//        bg.add(rb2);
-//        panel.add(rb1);
-//        panel.add(rb2);
-//
-//        int jp = JOptionPane.showOptionDialog(null, panel,
-//                lang.SetLanguage("Btn_Choose_test").toString(), JOptionPane.OK_CANCEL_OPTION,
-//                JOptionPane.QUESTION_MESSAGE, null, null, null);
-//        if (jp == JOptionPane.YES_OPTION) {
-//            if (rb1.isSelected()) {
-//                service[0].wt_search(c_table, c_tf1, c_tf2, "M");
-//            } else if (rb2.isSelected()) {
-//                service[0].wt_search(c_table, c_tf1, c_tf2, "W");
-//            }
-//        }
-//    }
 
     private void ordering_type_words(){
         Boolean[] cb_words_type_selected = {CB_Word_type_nn.isSelected(), CB_Word_type_vr.isSelected(),
@@ -866,51 +795,9 @@ public class ToolsUI {
                 for(int i=0; i<c_table.getRowCount(); i++){
                     c_table.setValueAt(i+1, i, service[0].getCCI("№"));
                 }
-                int col_num = service[0].getCCI("Data");
-//                if(col_num == c_table.columnAtPoint(e.getPoint())){
-//                    for (int i = 0; i < c_table.getRowCount(); i++) {
-//                        c_table.setValueAt(getJavaDate(c_table.getValueAt(i,col_num).toString()), i, col_num);
-//                    }
-//                }
-//                for (int i = 0; i < c_table.getRowCount(); i++) {
-//                    if (i < c_table.getRowCount() - 1) {
-//                        int v1 = (int) c_table.getValueAt(i, col_num);
-//                        int v2 = (int) c_table.getValueAt(i + 1, col_num);
-//                        if (v2 - v1 != 1) {
-//                            Btn_Save.setEnabled(false);
-//                            Btn_Add.setEnabled(false);
-//                            Btn_Del.setEnabled(false);
-//                            break;
-//                        } else {
-//                            Btn_Add.setEnabled(true);
-//                            Btn_Del.setEnabled(true);
-//                            Btn_Save.setEnabled(true);
-//                        }
-//                    }
-//                }
             }
         });
     }
-
-//        private Date getJavaDate(String s) {
-//        try {
-//            DateFormat sdf = new SimpleDateFormat("dd.MM.yy");
-//            Date d = sdf.parse(s);
-//            return d;
-//
-//        } catch (ParseException ex) {
-//            System.out.print(ex);
-//            return null;
-//        }
-//    }
-
-//    private void table_row_export_enable(JTable c_table) {
-//        c_table.setDragEnabled(true);
-//        c_table.setDropMode(DropMode.USE_SELECTION);
-//        c_table.setTransferHandler(new TransferHelper());
-//        c_table.setRowSelectionAllowed(false);
-//        c_table.setCellSelectionEnabled(true);
-//    }
 
     private void buttons_enable_tf(MouseEvent c_evt, JTable c_table) {
 
@@ -1010,32 +897,41 @@ public class ToolsUI {
         } else if (t1 == table2) {
             n = 1;
         }
-        table_list_delete_rows_names[n] = new ArrayList();
-        table_list_delete_rows_translate[n] = new ArrayList();
-        table_list_delete_rows_word_type[n] = new ArrayList();
-        table_list_delete_rows_indexes[n] = new ArrayList();
+        table_list_delete_rows_names[n] = new ArrayList<>();
+        table_list_delete_rows_translate[n] = new ArrayList<>();
+        table_list_delete_rows_word_type[n] = new ArrayList<>();
+        table_list_delete_rows_word_date[n] = new ArrayList<>();
+        table_list_delete_rows_indexes[n] = new ArrayList<>();
 
         for (int i = 0; i < t1.getRowCount(); i++) {
-
-            Boolean checked = Boolean.valueOf(t1.getValueAt(i, 0).toString());
+            Boolean checked = Boolean.valueOf(t1.getValueAt(i, service[0].getCCI("✓")).toString());
             int row = (int) t1.getValueAt(i, 1) - 1;
             if (checked) {
-                table_list_delete_rows_names[n].add(t1.getValueAt(row, 2).toString());
-                table_list_delete_rows_translate[n].add(t1.getValueAt(row, 3).toString());
+                table_list_delete_rows_names[n].add(t1.getValueAt(row, service[0].getCCI("Word")).toString());
+                table_list_delete_rows_translate[n].
+                        add(t1.getValueAt(row, service[0].getCCI("Translate")).toString());
                 if (t1.getValueAt(row, 4) == null) {
                     table_list_delete_rows_word_type[n].add("");
                 } else
-                    table_list_delete_rows_word_type[n].add(t1.getValueAt(row, 4).toString());
+                    table_list_delete_rows_word_type[n].
+                            add(t1.getValueAt(row, service[0].getCCI("Type")).toString());
                 table_list_delete_rows_indexes[n].add(row);
+                if(t1.getValueAt(row,7) == null){
+                    table_list_delete_rows_word_date[n].add(new Date());
+                } else {
+                    table_list_delete_rows_word_date[n].add(
+                        service[0].getFormattingDate(t1.getValueAt(row, service[0].getCCI("Date")).toString()));
+                }
             }
         }
     }
 
+//    if sorted tables by word, translate, date, current id elements are changed
     private ArrayList<Integer> convert_current_index(ArrayList<String> al1, JTable c_tab) {
         ArrayList<Integer> c_list = new ArrayList<>();
         for (int i = 0; i < ((DefaultTableModel) c_tab.getModel()).getRowCount(); i++){
             for (int j = 0; j < al1.size(); j++) {
-                if(((DefaultTableModel) c_tab.getModel()).getValueAt(i, 2).equals(al1.get(j))) {
+                if(((DefaultTableModel) c_tab.getModel()).getValueAt(i, service[0].getCCI("Word")).equals(al1.get(j))) {
                     c_list.add(i);
                 }
             }
@@ -1054,21 +950,22 @@ public class ToolsUI {
         }
 
         for (int i = 0; i < t1.getRowCount(); i++) {
-            t1.setValueAt(i + 1, i, 1);
+            t1.setValueAt(i + 1, i, service[0].getCCI("№"));
         }
-
+        DefaultTableModel model = (DefaultTableModel) t2.getModel();
         for (int i = 0; i < table_list_delete_rows_indexes[n].size(); i++) {
-            DefaultTableModel model = (DefaultTableModel) t2.getModel();
-            model.addRow(new Object[]{false, t2.getRowCount() + 1, table_list_delete_rows_names[n].get(i),
+            model.addRow(new Object[]{
+                    false,
+                    t2.getRowCount() + 1,
+                    table_list_delete_rows_names[n].get(i),
                     table_list_delete_rows_translate[n].get(i),
                     table_list_delete_rows_word_type[n].get(i),
-                    "", ""});
+                    "", "", table_list_delete_rows_word_date[n].get(i)});
         }
 
         t2.changeSelection(t2.getRowCount() - 1, 0, false, false);
 
         try {
-
             JOptionPane.showMessageDialog(
                     null,
                     table_list_delete_rows_names[n].size() + " " + lang.SetLanguage("OPM_Items") +
@@ -1082,10 +979,11 @@ public class ToolsUI {
                     JOptionPane.INFORMATION_MESSAGE);
         }
 
+        table_list_delete_rows_indexes[n].clear();
         table_list_delete_rows_names[n].clear();
         table_list_delete_rows_translate[n].clear();
         table_list_delete_rows_word_type[n].clear();
-        table_list_delete_rows_indexes[n].clear();
+        table_list_delete_rows_word_date[n].clear();
     }
 
     private void add_warning_icon_to_col(Boolean save) {
@@ -1111,7 +1009,6 @@ public class ToolsUI {
                         service[0].getCCI(service[0].nc_translate_en), i);
             }
         }
-
 
         for (int i = 0; i < table1.getRowCount() - 1; i++) {
             for (int j = 0; j < table2.getRowCount() - 1; j++) {
@@ -1165,8 +1062,6 @@ public class ToolsUI {
                 if(save) {
                     line_new = line;
                 }
-
-
 
                 list_val_from_col.add(line_new);
                 Object obj = line;
@@ -1249,195 +1144,6 @@ public class ToolsUI {
         }
         return list_numbers_equal_values;
     }
-
-//    public class CellData {
-//        private final Object[] value = new Object[7];
-//        private final int col;
-//        private final JTable table;
-//        private final int row;
-//
-//        private CellData(JTable source) {
-//            this.col = source.getSelectedColumn();
-//            this.row = source.getSelectedRow();
-//
-//            for (int i = 0; i < value.length; i++) {
-//                this.value[i] = source.getValueAt(row, i);
-//            }
-//
-//            this.table = source;
-//        }
-//
-//        private int getColumn() {
-//            return col;
-//        }
-//
-//        private JTable getTable() {
-//            return table;
-//        }
-//
-//        private boolean swapValuesWith(int targetRow, int targetCol) {
-//            boolean swapped = false;
-//            if (col != service[0].getCCI("✓")) {
-//                if (targetCol == col) {
-//                    if (col == service[0].getCCI("№")) {
-//                        for (int z = 0; z < value.length; z++) {
-//                            if (z != service[0].getCCI("№")) {
-//                                export_content(targetRow, z, z);
-//                            }
-//                        }
-//                    } else if (col == service[0].getCCI(service[0].nc_word_en)) {
-//                        export_content(targetRow, service[0].getCCI(service[0].nc_word_en),
-//                                service[0].getCCI(service[0].nc_word_en));
-//                        export_content(targetRow, service[0].getCCI("W*"),
-//                                service[0].getCCI("W*"));
-//                    } else if (col == service[0].getCCI(service[0].nc_translate_en)) {
-//                        export_content(targetRow, service[0].getCCI(service[0].nc_translate_en),
-//                                service[0].getCCI(service[0].nc_translate_en));
-//                        export_content(targetRow, service[0].getCCI("T*"),
-//                                service[0].getCCI("T*"));
-//                    }
-//
-//                    swapped = true;
-//                }
-//            }
-//            return swapped;
-//        }
-//
-//        Object[] exportValue = new Object[7];
-//
-//        private void export_content(int targetRow, int numb_col, int val) {
-//            exportValue[val] = table.getValueAt(targetRow, numb_col);
-//            table.setValueAt(value[val], targetRow, numb_col);
-//            table.setValueAt(exportValue[val], row, numb_col);
-//        }
-//
-//    }
-//
-//    private static final DataFlavor CELL_DATA_FLAVOR = createConstant(CellData.class);
-//
-//    public class CellDataTransferable implements Transferable {
-//
-//        private CellData cellData;
-//
-//        private CellDataTransferable(CellData cellData) {
-//            this.cellData = cellData;
-//        }
-//
-//        @Override
-//        public DataFlavor[] getTransferDataFlavors() {
-//            return new DataFlavor[]{CELL_DATA_FLAVOR};
-//        }
-//
-//        @Override
-//        public boolean isDataFlavorSupported(DataFlavor flavor) {
-//            boolean supported = false;
-//            for (DataFlavor available : getTransferDataFlavors()) {
-//                if (available.equals(flavor)) {
-//                    supported = true;
-//                }
-//            }
-//            return supported;
-//        }
-//
-//        @Override
-//        public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
-//            return cellData;
-//        }
-//    }
-//
-//    static private DataFlavor createConstant(Class clazz) {
-//        try {
-//            return new DataFlavor(clazz, "application/x-java-celldata");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-//
-//    public class TransferHelper extends TransferHandler {
-//
-//        private static final long serialVersionUID = 1L;
-//
-//        private TransferHelper() {
-//        }
-//
-//        @Override
-//        public int getSourceActions(JComponent c) {
-//            return MOVE;
-//        }
-//
-//        @Override
-//        protected Transferable createTransferable(JComponent source) {
-//            // Create the transferable
-//            JTable table = (JTable) source;
-//            return new CellDataTransferable(new CellData(table));
-//        }
-//
-//        @Override
-//        protected void exportDone(JComponent source, Transferable data, int action) {
-//        }
-//
-//        @Override
-//        public boolean canImport(TransferSupport support) {
-//            // Reject the import by default...
-//            boolean canImport = false;
-//            // Can only import into another JTable
-//            Component comp = support.getComponent();
-//            if (comp instanceof JTable) {
-//                JTable target = (JTable) comp;
-//                // Need the location where the drop might occur
-//                DropLocation dl = support.getDropLocation();
-//                Point dp = dl.getDropPoint();
-//                // Get the column at the drop point
-//                int dragColumn = target.columnAtPoint(dp);
-//                try {
-//                    // Get the Transferable, we need to check
-//                    // the constraints
-//                    Transferable t = support.getTransferable();
-//                    CellData cd = (CellData) t.getTransferData(CELL_DATA_FLAVOR);
-//                    // Make sure we're not dropping onto ourselves...
-//                    if (cd.getTable() == target) {
-//                        // Do the columns match...?
-//                        if (dragColumn == cd.getColumn()) {
-//                            canImport = true;
-//                        }
-//                    }
-//                } catch (UnsupportedFlavorException | IOException ex) {
-//                    ex.printStackTrace();
-//                }
-//            }
-//            return canImport;
-//        }
-//
-//        @Override
-//        public boolean importData(TransferSupport support) {
-//            // Import failed for some reason...
-//            boolean imported = false;
-//            // Only import into JTables...
-//            Component comp = support.getComponent();
-//            if (comp instanceof JTable) {
-//                JTable target = (JTable) comp;
-//                // Need to know where we are importing to...
-//                DropLocation dl = support.getDropLocation();
-//                Point dp = dl.getDropPoint();
-//                int dropCol = target.columnAtPoint(dp);
-//                int dropRow = target.rowAtPoint(dp);
-//                try {
-//                    // Get the Transferable at the heart of it all
-//                    Transferable t = support.getTransferable();
-//                    CellData cd = (CellData) t.getTransferData(CELL_DATA_FLAVOR);
-//                    if (cd.getTable() == target) {
-//                        if (cd.swapValuesWith(dropRow, dropCol)) {
-//                            imported = true;
-//                        }
-//                    }
-//                } catch (UnsupportedFlavorException | IOException ex) {
-//                    ex.printStackTrace();
-//                }
-//            }
-//            return imported;
-//        }
-//    }
 
     void showFrame(ArrayList list_checked_indexes) {
         JFrame frame = new JFrame("ToolsUI");

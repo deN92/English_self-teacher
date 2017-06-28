@@ -4,23 +4,13 @@ import org.json.JSONObject;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.*;
-import java.sql.Time;
-import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Service{
     ArrayList<String> list_questions_all = new ArrayList<>();
@@ -52,7 +42,6 @@ public class Service{
 
         String str_words = content_file(current_path[0]);
         JSONObject ja_words2 = new JSONObject(str_words).getJSONObject("words_type");
-
         JSONObject ja_words3 = new JSONObject(str_words).getJSONObject("words_date");
 
         if(number == 2){
@@ -154,30 +143,14 @@ public class Service{
         }
     }
 
-    private Date getFormattingDate(String str) {
-
-
-
+    Date getFormattingDate(String str) {
         Locale locale = new Locale("en", "UK");
         DateFormatSymbols dateFormatSymbols = new DateFormatSymbols(locale);
-        dateFormatSymbols.setWeekdays(new String[]{
-//            "Unused",
-//            "Sun Sunday",
-//            "Mon Monday",
-//            "Tue Tuesday",
-//            "Wed Wednesday",
-//            "Thu Thursday",
-//            "Fri Friday",
-//            "Sat Saturday"
-        });
+        dateFormatSymbols.setWeekdays(new String[]{});
 
         String pattern = "E MMM dd HH:mm:ss z yyyy";
-//        String pattern = "dd.MM.yyyy, HH:mm";
         try {
-            DateTimeFormatter qwe = DateTimeFormatter.ofPattern(pattern, Locale.UK);
             SimpleDateFormat sdf = new SimpleDateFormat(pattern, dateFormatSymbols);
-//            LocalDateTime dt = LocalDateTime.parse(str, qwe);
-//            Date date = Date.from(dt.atZone(ZoneId.systemDefault()).toInstant());
             Date date2 = sdf.parse(str);
             return date2;
         } catch (ParseException ex) {
@@ -412,35 +385,28 @@ public class Service{
 
 
     final static class SetColor{
-        Service service = new Service();
         String val;
-        ArrayList<String> list_colors = new ArrayList<>();
         JSONArray ja_content_all;
 
         JSONObject jo_colors;
         JSONArray ja_colors;
-        JSONObject jo_colors2;
 
         SetColor(String pth, String key) {
             String content_file = new Service().content_file(pth);
             ja_content_all = new JSONArray(content_file);
             jo_colors = ja_content_all.getJSONObject(1);
-//            ja_colors = jo_colors.getJSONObject(jo_colors.names().getString(0));
             ja_colors = jo_colors.getJSONArray("color");
             for(int i=0; i<ja_colors.length(); i++){
                 if(Objects.equals(ja_colors.getJSONObject(i).names().get(0).toString(), key)){
                     val = ja_colors.getJSONObject(i).get(key).toString();
                 }
             }
-//            val = ja_colors.getString(key);
         }
     }
 
     String content_file(String pth){
         String thisLine;
         String str_words = "";
-//        String val = "";
-//        if(new File(pth).canExecute()){
         try{
             // open input stream test.txt for reading purpose.
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(pth), "windows-1251"));
@@ -460,6 +426,7 @@ public class Service{
             JSONArray words_studied = new JSONArray();
             JSONArray words_new = new JSONArray();
             JSONObject words_type = new JSONObject();
+            JSONObject words_date = new JSONObject();
 
             String[] words =
                     {"quiet", "broke/broke out", "mistake", "turn", "stay",
@@ -487,18 +454,23 @@ public class Service{
                 num2[i] = new int[]{};
             }
 
-            JSONObject jo_wt1 = new JSONObject();
-            JSONObject jo_wt2 = new JSONObject();
+            JSONObject jo_wt_new = new JSONObject();
+            JSONObject jo_wt_studied = new JSONObject();
             for(int i=0; i<word_types.length;i++) {
-                jo_wt1.put(word_types[i], num1[i]);
-                jo_wt2.put(word_types[i], num2[i]);
+                jo_wt_new.put(word_types[i], num1[i]);
+                jo_wt_studied.put(word_types[i], num2[i]);
             }
-            words_type.put("words_new", jo_wt1);
-            words_type.put("words_studied", jo_wt2);
+
+
+            words_type.put("words_new", jo_wt_new);
+            words_type.put("words_studied", jo_wt_studied);
+            words_date.put("words_new", new JSONObject().put(new Date().toString(), new int[]{0,1,2,3,4,5,6,7,8,9}));
+            words_date.put("words_studied", new JSONObject());
 
             start_list.put("words_studied", words_studied);
             start_list.put("words_new", words_new);
             start_list.put("words_type", words_type);
+            start_list.put("words_date", words_date);
 
             write_content_in_file(path, start_list, "create");
         }

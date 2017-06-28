@@ -8,7 +8,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class MainUI {
@@ -126,28 +125,16 @@ public class MainUI {
         Btn_Words_moving_to_studied_words.setEnabled(false);
         Btn_Clear_answers.setEnabled(false);
 
-
-
         // Columns setReorderingAllowed disable
         table1.getColumnModel().addColumnModelListener(new TableColumnModelListener() {
-            public void columnAdded(TableColumnModelEvent e) {
-            }
-
-            public void columnMarginChanged(ChangeEvent e) {
-            }
-
+            public void columnAdded(TableColumnModelEvent e) {}
+            public void columnMarginChanged(ChangeEvent e) {}
             public void columnMoved(TableColumnModelEvent e) {
-                if (columnValue == -1)
-                    columnValue = e.getFromIndex();
-
-                columnNewValue = e.getToIndex();
+                if (columnValue == -1) columnValue = e.getFromIndex();
+                    columnNewValue = e.getToIndex();
             }
-
-            public void columnRemoved(TableColumnModelEvent e) {
-            }
-
-            public void columnSelectionChanged(ListSelectionEvent e) {
-            }
+            public void columnRemoved(TableColumnModelEvent e) {}
+            public void columnSelectionChanged(ListSelectionEvent e) {}
         });
 
         table1.getTableHeader().addMouseListener(new MouseAdapter() {
@@ -270,7 +257,7 @@ public class MainUI {
             }
 
 
-            //          Check list_questions is not empty
+//          Check list_questions is not empty
             if (list_questions.size() != 0) {
 //          Order questions
                 if (comboBox1.getSelectedIndex() == 0) {
@@ -303,7 +290,7 @@ public class MainUI {
         });
 
         Btn_choice_answer.addActionListener((ActionEvent actionEvent) -> {
-//            JRadioButton[] rb = {RB_Option1, RB_Option2, RB_Option3, RB_Option4};
+//          JRadioButton[] rb = {RB_Option1, RB_Option2, RB_Option3, RB_Option4};
             String current_column_word = table1.getColumnName(service.getCCI(service.nc_word_en));
 //          Find true answer to the question
             String answer = "";
@@ -376,23 +363,16 @@ public class MainUI {
                     rb[i].setForeground(Color.decode("#009926"));
                 }
             }
-//            Btn_choice_answer.setEnabled(false);
+//          Btn_choice_answer.setEnabled(false);
             Btn_Next_question.setEnabled(true);
 
 //          +1 completed question
 
-//          check list_questions size == current number question from list
-//            int sum_true_false = jo_list_answer_true.length()+jo_list_answer_false.length();
             if (list_questions.size() == number_question + 1) {
 //              next_question rename to result
                 Btn_Next_question.setText(lang.SetLanguage("Lbl_Result_name").toString());
                 Btn_go_to_written_test.setEnabled(false);
             }
-//            else {
-//                if (list_questions.size() == number_question + 1) {
-//                    number_question = -1;
-//                }
-//            }
         });
 
         Btn_Next_question.addActionListener(actionEvent -> {
@@ -408,35 +388,8 @@ public class MainUI {
 
                 creating_query(list_questions.get(number_question));
                 slider();
-
-//                ArrayList<Integer> question_indexes_del = new ArrayList<>();
-//
-//                for(int i=0; i< list_questions.size(); i++) {
-//                    for(int k=0; k<jo_list_answer_true.length();k++){
-//                        if (list_questions.get(i).equals(jo_list_answer_true.names().get(k))) {
-//                            question_indexes_del.add(i);
-//                        }
-//                    }
-//                    for(int n=0; n<jo_list_answer_false.length();n++){
-//                        if(list_questions.get(i).equals(jo_list_answer_false.names().get(n))){
-//                            question_indexes_del.add(i);
-//                        }
-//                    }
-//                }
-//
-//                for(int j=0; j<question_indexes_del.size(); j++) {
-//                    if (number_question == question_indexes_del.get(j)) {
-//                        number_question++;
-//                        if (number_question == list_questions.size() - 1) {
-//                            number_question = 0;
-//                        }
-//                    }
-//                    else {
-//                        creating_query(list_questions.get(number_question));
-//                        slider();
-//                    }
-//                }
             }
+
             if (Btn_Next_question.getText().equals(lang.SetLanguage("Lbl_Result_name"))) {
                 panel_test.setVisible(false);
                 panel_option_questions.setVisible(false);
@@ -458,6 +411,7 @@ public class MainUI {
             jo_list_answer_true = new JSONObject();
             jo_list_answer_false = new JSONObject();
             jo_list_answer_null = new JSONObject();
+
             for (int j = 0; j < list_questions.size(); j++) {
                 for (int i = 0; i < table1.getRowCount(); i++) {
                     if (table1.getValueAt(i, service.getCCI(service.nc_word_en)).toString().toLowerCase().
@@ -483,7 +437,6 @@ public class MainUI {
                 } else {
                     jo_list_answer_null.put(question, value_current);
                 }
-
             }
             for (int i = 0; i < table2.getRowCount(); i++) {
                 if (table2.getValueAt(i, 4).toString().equals("")) {
@@ -811,6 +764,7 @@ public class MainUI {
             jo_list_answer_true = new JSONObject();
             jo_list_answer_null = new JSONObject();
             ArrayList<String> temp_list = new ArrayList<>();
+
             for (int i = 0; i < table2.getRowCount(); i++) {
                 try {
                     if (table2.getValueAt(i, 3).toString().contains(ii_true.toString())) {
@@ -825,10 +779,8 @@ public class MainUI {
                         number_question++;
                         temp_list.add(table2.getValueAt(i, 1).toString());
                     }
-                } catch (Exception ignored) {
-                }
+                } catch (Exception ignored) {}
             }
-
 
             for (int i = 0; i < table2.getRowCount(); i++) {
                 for (int j = 0; j < temp_list.size(); j++) {
@@ -838,14 +790,8 @@ public class MainUI {
                 }
             }
 
-            if (temp_list.size() > 0) {
-                list_questions = temp_list;
-            }
+            if (temp_list.size() > 0) {list_questions = temp_list;}
 
-//            number_question = 0;
-//            answer_true = 0;
-//            answer_false = 0;
-//            sum2 = 0;
             Lbl_Result.setForeground(panel_test.getBackground());
             creating_query(list_questions.get(number_question));
             slider();
@@ -1020,7 +966,6 @@ public class MainUI {
             creating_query(list_questions.get(number_question));
         });
     }
-
 
     private void start_current_test() {
         list_questions = new ArrayList<>();
