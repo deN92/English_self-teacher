@@ -23,6 +23,7 @@ class Service{
 
     String nc_check = "✓";
     String nc_number = "№";
+
     String nc_word_en = "Word";
     String nc_translate_en = "Translate";
     String nc_type_en = "Type";
@@ -33,10 +34,16 @@ class Service{
 
     String nc_word_ua = "Слово";
     String nc_translate_ua = "Переклад";
-//    String nc_type_ua = "Тип";
+    String nc_type_ua = "Тип";
+    String nc_example_ua = "Пр.";
+    String nc_word_copy_ua = "С.!";
+    String nc_translate_copy_ua = "П.!";
+    String nc_date_ua = "Дата";
 
     String[] name_cols =  {nc_check, nc_number, nc_word_en, nc_translate_en,
                         nc_type_en, nc_example_en, nc_word_copy_en, nc_translate_copy_en, nc_date_en};
+    String[] name_cols_ua =  {nc_check, nc_number, nc_word_ua, nc_translate_ua,
+                        nc_type_ua, nc_example_ua, nc_word_copy_ua, nc_translate_copy_ua, nc_date_ua};
     String[] word_types = {"nn", "vr", "aj", "av", "pn", "pp", "oth"};
 
     private URL url1 = ToolsUI.class.getResource("/icons/ic_word_example_full_20x20.png");
@@ -243,8 +250,7 @@ class Service{
             else strLang = "en";
 
             jo_i18n = new JSONObject().put("uaen", new JSONObject().
-                put("TC_name", new JSONObject().put("ua", new Object[] {"✔", "№", "Слово", "Переклад",
-                                                                        "Тип", "С*", "П*", "Дата"}).
+                put("TC_name", new JSONObject().put("ua", new Service().name_cols_ua).
                                                 put("en", new Service().name_cols)).
                 put("TC_name2",new JSONObject().put("ua", new String[] {"№", "Слово", "Переклад", "", "Відповідь"}).
                                                 put("en", new String[] {"№", "Word", "Translate", "", "True answer"})).

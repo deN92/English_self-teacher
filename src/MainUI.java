@@ -70,6 +70,7 @@ public class MainUI {
 
 
     private JSlider Sld_Count_questions;
+    private JSlider Sld_Checked_count_questions;
 
     private ArrayList<String> list_questions;
     private ArrayList<String> list_answers;
@@ -151,6 +152,7 @@ public class MainUI {
             }
         });
 
+        slider(Sld_Checked_count_questions, table1.getRowCount());
         RB_Count_questions.addActionListener(actionEvent -> {
             select_parameter_enable(true, false, false);
             CB_Scope_questions.setEnabled(false);
@@ -278,7 +280,7 @@ public class MainUI {
                         list_questions.remove(table1.getRowCount() - 1);
                     }
 
-                    slider();
+                    slider(Sld_Count_questions, list_questions.size());
                     creating_query(list_questions.get(number_question));
                 }
             } else
@@ -387,7 +389,7 @@ public class MainUI {
                 }
 
                 creating_query(list_questions.get(number_question));
-                slider();
+                slider(Sld_Count_questions, list_questions.size());
             }
 
             if (Btn_Next_question.getText().equals(lang.SetLanguage("Lbl_Result_name"))) {
@@ -561,7 +563,7 @@ public class MainUI {
             long seed = System.nanoTime();
             Collections.shuffle(list_questions, new Random(seed));
             spoken_test();
-            slider();
+            slider(Sld_Count_questions, list_questions.size());
         });
 
         Btn_Restart_tests.addActionListener(e -> {
@@ -596,7 +598,7 @@ public class MainUI {
 
                 if (rb1.isSelected()) {
                     spoken_test();
-                    slider();
+                    slider(Sld_Count_questions, list_questions.size());
                 } else if (rb2.isSelected()) {
                     panel_result.setVisible(false);
                     jo_list_answer_true = new JSONObject();
@@ -792,7 +794,7 @@ public class MainUI {
 
             Lbl_Result.setForeground(panel_test.getBackground());
             creating_query(list_questions.get(number_question));
-            slider();
+            slider(Sld_Count_questions, list_questions.size());
         });
 
         Btn_Words_moving_to_studied_words.addActionListener(e -> {
@@ -911,6 +913,13 @@ public class MainUI {
             update_count_checked_elements();
         });
 
+        Sld_Checked_count_questions.addChangeListener(e -> {
+            spinner1.setValue(Sld_Checked_count_questions.getValue());
+            if (Sld_Checked_count_questions.getValue() == 0) {
+                Sld_Checked_count_questions.setValue(1);
+            }
+        });
+
         Sld_Count_questions.addChangeListener(e -> {
             boolean exist_afq_t1 = false;
             boolean exist_afq_t2 = false;
@@ -963,6 +972,8 @@ public class MainUI {
             number_question = Sld_Count_questions.getValue() - 1;
             creating_query(list_questions.get(number_question));
         });
+
+        spinner1.addChangeListener(e -> Sld_Checked_count_questions.setValue((int)spinner1.getValue()));
     }
 
     private void start_current_test() {
@@ -1023,58 +1034,63 @@ public class MainUI {
         }
     }
 
-    private void slider() {
-        Sld_Count_questions.setPaintTicks(true);
-        Sld_Count_questions.repaint();
+    private void slider(JSlider c_slider, int c_size) {
+        c_slider.setPaintTicks(true);
+        c_slider.repaint();
 
-        Sld_Count_questions.setPaintLabels(true);
-        Sld_Count_questions.setLabelTable(null);
+        c_slider.setPaintLabels(true);
+        c_slider.setLabelTable(null);
 
-        if (list_questions.size() < 20) {
-            Sld_Count_questions.setMajorTickSpacing(1);
-            Sld_Count_questions.setMinorTickSpacing(1);
-        } else if (list_questions.size() >= 20 && 50 > list_questions.size()) {
-            Sld_Count_questions.setMajorTickSpacing(2);
-            Sld_Count_questions.setMinorTickSpacing(2);
-        } else if (list_questions.size() >= 50 && list_questions.size() < 300) {
-            for (int i = list_questions.size(); i >= 50; i--) {
+        if (c_size < 20) {
+            c_slider.setMajorTickSpacing(1);
+            c_slider.setMinorTickSpacing(1);
+        } else if (c_size >= 20 && 50 > c_size) {
+            c_slider.setMajorTickSpacing(2);
+            c_slider.setMinorTickSpacing(2);
+        } else if (c_size >= 50 && c_size < 300) {
+            for (int i = c_size; i >= 50; i--) {
                 if (i % 50 == 0) {
                     int mj = (int) Math.round(i * 0.1);
-                    Sld_Count_questions.setMajorTickSpacing(mj);
+                    c_slider.setMajorTickSpacing(mj);
                 }
                 if (i % 25 == 0) {
                     int mn = (int) Math.round(i * 0.1);
-                    Sld_Count_questions.setMinorTickSpacing(mn);
+                    c_slider.setMinorTickSpacing(mn);
                 }
             }
-        } else if (list_questions.size() >= 300 && list_questions.size() < 1000) {
-            for (int i = list_questions.size(); i >= 300; i--) {
+        } else if (c_size >= 300 && c_size < 1000) {
+            for (int i = c_size; i >= 300; i--) {
                 if (i % 100 == 0) {
                     int mj = (int) Math.round(i * 0.1);
-                    Sld_Count_questions.setMajorTickSpacing(mj);
+                    c_slider.setMajorTickSpacing(mj);
                 }
                 if (i % 50 == 0) {
                     int mn = (int) Math.round(i * 0.1);
-                    Sld_Count_questions.setMinorTickSpacing(mn);
+                    c_slider.setMinorTickSpacing(mn);
                 }
             }
         } else {
-            for (int i = list_questions.size(); i >= 1000; i--) {
+            for (int i = c_size; i >= 1000; i--) {
                 if (i % 500 == 0) {
                     int pro = (int) Math.round(i * 0.1);
-                    Sld_Count_questions.setMajorTickSpacing(pro);
+                    c_slider.setMajorTickSpacing(pro);
                 }
                 if (i % 250 == 0) {
                     int mn = (int) Math.round(i * 0.1);
-                    Sld_Count_questions.setMinorTickSpacing(mn);
+                    c_slider.setMinorTickSpacing(mn);
                 }
             }
         }
 
-        Sld_Count_questions.setValue(number_question + 1);
-        Sld_Count_questions.setMinimum(0);
-        Sld_Count_questions.setMaximum(list_questions.size());
-        Sld_Count_questions.setToolTipText(number_question + "/" + list_questions.size());
+        if(c_slider.equals(Sld_Count_questions)) {
+            Sld_Count_questions.setValue(number_question + 1);
+            Sld_Count_questions.setToolTipText(number_question + "/" + c_size);
+        }
+        else{
+            Sld_Checked_count_questions.setValue(5);
+        }
+        c_slider.setMinimum(0);
+        c_slider.setMaximum(c_size);
     }
 
     private void all_checked_in_tab_tf(JTable c_table, boolean tf) {

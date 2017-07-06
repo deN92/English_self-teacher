@@ -829,13 +829,12 @@ public class ToolsUI {
         Btn_Save.setToolTipText(lang.SetLanguage("Btn_Save_name").toString());
         Btn_Exchange_positions.setToolTipText(lang.SetLanguage("Btn_Exchange_positions").toString());
         String[] str = (String[])lang.SetLanguage("CB_Words_type");
-        CB_Word_type_nn.setText(str[0]);
-        CB_Word_type_vr.setText(str[1]);
-        CB_Word_type_aj.setText(str[2]);
-        CB_Word_type_av.setText(str[3]);
-        CB_Word_type_pn.setText(str[4]);
-        CB_Word_type_pp.setText(str[5]);
-        CB_Word_type_oth.setText(str[6]);
+        JCheckBox[] cb_word_types = {CB_Word_type_nn,CB_Word_type_vr,CB_Word_type_aj,
+                        CB_Word_type_av,CB_Word_type_pn,CB_Word_type_pp, CB_Word_type_oth};
+
+        for(int i=0;i< cb_word_types.length;i++){
+            cb_word_types[i].setText(str[i]);
+        }
     }
 
     private void elements_color() {
