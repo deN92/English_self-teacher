@@ -4,6 +4,7 @@ import org.json.JSONObject;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.*;
+import java.net.URL;
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,7 +13,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
-public class Service{
+class Service{
     ArrayList<String> list_questions_all = new ArrayList<>();
     ArrayList<String> list_answers_all = new ArrayList<>();
     DefaultTableModel[] model = new DefaultTableModel[4];
@@ -20,16 +21,28 @@ public class Service{
     JSONObject[] jo_number_pair;
     String[] current_path = new String[2];
 
+    String nc_check = "✓";
+    String nc_number = "№";
     String nc_word_en = "Word";
     String nc_translate_en = "Translate";
     String nc_type_en = "Type";
+    String nc_example_en = "E.";
+    String nc_word_copy_en = "W.!";
+    String nc_translate_copy_en = "T.!";
+    String nc_date_en = "Date";
 
     String nc_word_ua = "Слово";
     String nc_translate_ua = "Переклад";
 //    String nc_type_ua = "Тип";
 
-    String[] name_cols =  {"✓", "№", nc_word_en, nc_translate_en, nc_type_en, "W*", "T*", "Date"};
+    String[] name_cols =  {nc_check, nc_number, nc_word_en, nc_translate_en,
+                        nc_type_en, nc_example_en, nc_word_copy_en, nc_translate_copy_en, nc_date_en};
     String[] word_types = {"nn", "vr", "aj", "av", "pn", "pp", "oth"};
+
+    private URL url1 = ToolsUI.class.getResource("/icons/ic_word_example_full_20x20.png");
+    private URL url2 = ToolsUI.class.getResource("/icons/ic_word_example_empty_20x20.png");
+    ImageIcon im11 = new ImageIcon(url1);
+    ImageIcon im12 = new ImageIcon(url2);
 
     void table(int number, boolean[] canEdit, String lib){
         try {
@@ -41,8 +54,22 @@ public class Service{
         }
 
         String str_words = content_file(current_path[0]);
-        JSONObject ja_words2 = new JSONObject(str_words).getJSONObject("words_type");
-        JSONObject ja_words3 = new JSONObject(str_words).getJSONObject("words_date");
+
+        String[] wtde = {"words_type", "words_example", "words_date"};
+        JSONObject[] jo_words_type_date_example = new JSONObject[wtde.length];
+
+        if(Objects.equals(lib, "words_new")){
+            for(int i=0; i<wtde.length; i++) {
+                jo_words_type_date_example[i] = (JSONObject) new JSONObject(str_words).
+                                                                getJSONObject(wtde[i]).get("words_new");
+            }
+        }
+        else if(Objects.equals(lib, "words_studied")){
+            for(int i=0; i<wtde.length; i++) {
+                jo_words_type_date_example[i] = (JSONObject) new JSONObject(str_words).
+                                                                getJSONObject(wtde[i]).get("words_studied");
+            }
+        }
 
         if(number == 2){
             str_words = "";
@@ -54,18 +81,6 @@ public class Service{
         }
 
         jo_number_pair = new JSONObject[ja_words.length()];
-
-        JSONObject jo_wtt = new JSONObject();
-        JSONObject jo_wtt2 = new JSONObject();
-
-        if(Objects.equals(lib, "words_new")){
-            jo_wtt = (JSONObject) ja_words2.get("words_new");
-            jo_wtt2 = (JSONObject) ja_words3.get("words_new");
-        }
-        else if(Objects.equals(lib, "words_studied")){
-            jo_wtt = (JSONObject) ja_words2.get("words_studied");
-            jo_wtt2 = (JSONObject) ja_words3.get("words_studied");
-        }
 
         model[number] = new DefaultTableModel((Object[]) new Language(current_path[1]).SetLanguage("TC_name"), ja_words.length())
         {
@@ -86,6 +101,8 @@ public class Service{
                     case 6:
                         return ImageIcon.class;
                     case 7:
+                        return ImageIcon.class;
+                    case 8:
                         return Date.class;
                     default:
                         return String.class;
@@ -105,38 +122,44 @@ public class Service{
             jcbmi[i] = new JCheckBoxMenuItem(word_types[i]);
         }
 
-
-
         for (int i = 0; i < ja_words.length(); i++) {
             jo_number_pair[i] = (JSONObject)ja_words.get(i);
             String key = jo_number_pair[i].names().getString(0);
             String val = jo_number_pair[i].getString(key);
             list_questions_all.add(key);
             list_answers_all.add(val);
-            model[number].setValueAt(false, i, getCCI(""));
-            model[number].setValueAt(i+1, i, getCCI("№"));
-            model[number].setValueAt(key, i, getCCI("Word"));
-            model[number].setValueAt(val, i, getCCI("Translate"));
+            model[number].setValueAt(false, i, getCCI(nc_check));
+            model[number].setValueAt(i+1, i, getCCI(nc_number));
+            model[number].setValueAt(key, i, getCCI(nc_word_en));
+            model[number].setValueAt(val, i, getCCI(nc_translate_en));
             String wt_buffer = "";
             for (JCheckBoxMenuItem aJcbmi : jcbmi) {
-                JSONArray ja_wtt = (JSONArray) jo_wtt.get(aJcbmi.getText());
+                JSONArray ja_wtt = (JSONArray) jo_words_type_date_example[0].get(aJcbmi.getText());
                 for (int k = 0; k < ja_wtt.length(); k++) {
                     if ((int) ja_wtt.get(k) == i) {
                         wt_buffer += aJcbmi.getText() + " ";
-                        model[number].setValueAt(wt_buffer, i, getCCI("Type"));
+                        model[number].setValueAt(wt_buffer, i, getCCI(nc_type_en));
                     }
                 }
             }
-            model[number].setValueAt(im, i, getCCI("W*"));
-            model[number].setValueAt(im, i, getCCI("T*"));
+            model[number].setValueAt(im12, i, getCCI(nc_example_en));
+            for(int j =0; j< jo_words_type_date_example[1].length(); j++) {
+                String key_example = jo_words_type_date_example[1].names().get(j).toString();
+                int index_example = jo_words_type_date_example[1].getInt(key_example);
+                if(index_example == i) {
+                    model[number].setValueAt(im11, i, getCCI(nc_example_en));
+                }
+            }
 
+            model[number].setValueAt(im, i, getCCI(nc_word_copy_en));
+            model[number].setValueAt(im, i, getCCI(nc_translate_copy_en));
 
-            for(int j =0; j< jo_wtt2.length(); j++) {
-                String key_date = jo_wtt2.names().get(j).toString();
-                JSONArray ja_data = jo_wtt2.getJSONArray(key_date);
+            for(int j =0; j< jo_words_type_date_example[2].length(); j++) {
+                String key_date = jo_words_type_date_example[2].names().get(j).toString();
+                JSONArray ja_data = jo_words_type_date_example[2].getJSONArray(key_date);
                 for(int k =0;k<ja_data.length();k++) {
                     if ((int) ja_data.get(k) == i) {
-                        model[number].setValueAt(getFormattingDate(key_date), i, getCCI("Date"));
+                        model[number].setValueAt(getFormattingDate(key_date), i, getCCI(nc_date_en));
                     }
                 }
             }
@@ -427,12 +450,13 @@ public class Service{
             JSONArray words_new = new JSONArray();
             JSONObject words_type = new JSONObject();
             JSONObject words_date = new JSONObject();
+            JSONObject words_example = new JSONObject();
 
             String[] words =
-                    {"quiet", "broke/broke out", "mistake", "turn", "stay",
+                    {"quiet", "break/broke/broken", "mistake", "turn", "stay",
                             "mind", "explain", "calm", "still", "become"};
             String[] trans =
-                    {"тихо", "зламати/виламати", "помилка", "поворот", "залишитись",
+                    {"тихо", "зламати", "помилка", "поворот", "залишитись",
                             "дбати", "пояснювати", "спокійний", "до цих пір", "стати/відповідати"};
 
             for (int i = 0; i < 10; i++) {
@@ -454,23 +478,70 @@ public class Service{
                 num2[i] = new int[]{};
             }
 
+            String[] str_words_example = new String[]{
+                "I looked for a quiet spot in the park.\nЯ шукав спокійне містечко в парку.\n\n" +
+                "Sam is a quiet man.\nСем - спокійна людина",
+
+                "If you play ball in the house, you will break something.\n" +
+                "Якщо ви будете грати з м'ячем у будинку, ви що-небудь розіб'єте\n\n" +
+                "Our old television finally broke.\nНаш старий телевізор нарешті зламався\n\n" +
+                "Be careful with that chair. There is a break in its leg.\n" +
+                "Будь обережний з цим стільцем. У нього тріщина на ніжці.",
+
+                "I'm sorry but I made a mistake. The correct number is four.\n" +
+                "Вибачте, я зробив помилку. Правильна відповідь - чотири",
+
+                "At the end of the block, turn left.\nВ кінці кварталу, поверіть наліво\n\n" +
+                "It is your turn, so roll the dice.\nТвоя черга кидати кості",
+
+                "I'd like you to stay.\nЯ б хотів, щоб ти залишилася.\n\n" +
+                "Stay here and do not move.\nЧекайте тут і не йдіть",
+
+                "It slipped my mind.\nВилетіло з голови (or: пам'яті)\n\n" +
+                "He must have lost his mind!\nВін мабуть втратив свій розум!\n\n" +
+                "Mind your own business and don't tell others what to do\n" +
+                "Займайтеся своїми справами і не вчіть інших, що їм робити.",
+
+                "Just give me a minute and I'll explain.\nПриділіть мені хвилинку і я все поясню.",
+
+                "He was calm despite the pressure on him.\nВін був спокійний, не дивлячись на стресову ситуацію.",
+
+                "He had not eaten breakfast, but he was still not hungry.\n" +
+                "Він не снідав, але тим не менше все ще не був голодний",
+
+                "That client is becoming quite a problem.\nЦей клієнт уже стає проблемою.\n\n" +
+                "What ever became of Joe Hill? Do you know where he is now?\n" +
+                "А що сталося з Джо Хіллом? Ти знаєш, де він тепер?"
+            };
+
+
+            JSONObject jo_we_new = new JSONObject();
+            JSONObject jo_we_studied = new JSONObject();
             JSONObject jo_wt_new = new JSONObject();
             JSONObject jo_wt_studied = new JSONObject();
+
+            for(int i=0; i<str_words_example.length; i++){
+                jo_we_new.put(str_words_example[i], i);
+            }
+
             for(int i=0; i<word_types.length;i++) {
                 jo_wt_new.put(word_types[i], num1[i]);
                 jo_wt_studied.put(word_types[i], num2[i]);
             }
 
-
             words_type.put("words_new", jo_wt_new);
             words_type.put("words_studied", jo_wt_studied);
             words_date.put("words_new", new JSONObject().put(new Date().toString(), new int[]{0,1,2,3,4,5,6,7,8,9}));
             words_date.put("words_studied", new JSONObject());
+            words_example.put("words_new", jo_we_new);
+            words_example.put("words_studied", jo_we_studied);
+
 
             start_list.put("words_studied", words_studied);
             start_list.put("words_new", words_new);
             start_list.put("words_type", words_type);
             start_list.put("words_date", words_date);
+            start_list.put("words_example", words_example);
 
             write_content_in_file(path, start_list, "create");
         }

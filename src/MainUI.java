@@ -106,7 +106,7 @@ public class MainUI {
 
 //      Can edit column table1
         boolean[] canEdit = {true, false, false, false, false, false, false, false};
-        int[] table_column_widths = {25, 35, 200, 200, 60, 0, 0, 0};
+        int[] table_column_widths = {25, 35, 200, 200, 60, 0, 0, 0, 0};
 
         load_data_table1(canEdit, table_column_widths);
 
@@ -504,8 +504,7 @@ public class MainUI {
                     if (table2.getValueAt(i, 3).toString().toLowerCase().contains("ic_answ_true_20x20.png")) {
                         tf = true;
                     }
-                } catch (Exception ex) {
-                }
+                } catch (Exception ex) {}
             }
 
             if (tf) {
@@ -606,7 +605,6 @@ public class MainUI {
                     //            ast.clear();
                 }
             }
-
         });
 
         Btn_Cancel_test_variants.addActionListener(actionEvent -> {
@@ -815,11 +813,11 @@ public class MainUI {
                 JSONObject jo_q = ja11.getJSONObject(i);
                 String key = jo_q.names().getString(0);
                 String val = jo_q.getString(key);
-                for (int j = 0; j < current_table_list_delete_rows_names.size(); j++) {
-                    if (key.equals(current_table_list_delete_rows_names.get(j))) {
+                for (Object current_table_list_delete_rows_name : current_table_list_delete_rows_names) {
+                    if (key.equals(current_table_list_delete_rows_name)) {
                         table_list_delete_rows_names.add(key);
                         table_list_delete_rows_indexes.add(i);
-                    } else if (val.equals(current_table_list_delete_rows_names.get(j))) {
+                    } else if (val.equals(current_table_list_delete_rows_name)) {
                         table_list_delete_rows_translate.add(key);
                         table_list_delete_rows_indexes.add(i);
                     }
@@ -858,7 +856,7 @@ public class MainUI {
                 Tab_False_answers.setModel(dtm_true_false_answers);
 
                 int[] tab_true_false_answers_column_widths = {25, 35, 120, 120};
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < tab_true_false_answers_column_widths.length; i++) {
                     Tab_True_answers.getColumnModel().getColumn(i).setMaxWidth(tab_true_false_answers_column_widths[i]);
                     Tab_False_answers.getColumnModel().getColumn(i).setMaxWidth(tab_true_false_answers_column_widths[i]);
                 }
@@ -985,7 +983,7 @@ public class MainUI {
                 Btn_Next_question.setEnabled(false);
             }
             JRadioButton[] rb = {RB_Option1, RB_Option2};
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < rb.length; i++) {
                 group_test.add(rb[i]);
             }
 
@@ -1081,7 +1079,7 @@ public class MainUI {
 
     private void all_checked_in_tab_tf(JTable c_table, boolean tf) {
         for (int i = 0; i < c_table.getRowCount(); i++) {
-            c_table.setValueAt(tf, i, service.getCCI("✓"));
+            c_table.setValueAt(tf, i, service.getCCI(service.nc_check));
         }
     }
 
@@ -1186,15 +1184,15 @@ public class MainUI {
             int row = (int) t1.getValueAt(i, 1) - 1;
             if (checked) {
                 table_list_delete_rows_indexes[n].add(row);
-                table_list_delete_rows_names[n].add(t1.getValueAt(row, service.getCCI("Word")).toString());
-                table_list_delete_rows_translate[n].add(t1.getValueAt(row, service.getCCI("Translate")).toString());
+                table_list_delete_rows_names[n].add(t1.getValueAt(row, service.getCCI(service.nc_word_en)).toString());
+                table_list_delete_rows_translate[n].add(t1.getValueAt(row, service.getCCI(service.nc_translate_en)).toString());
             }
         }
     }
 
     private void dtm_true_false_answers_test(int count_row, JSONObject c_data) {
         boolean[] canEdit2 = {true, false, false, false};
-        dtm_true_false_answers = new DefaultTableModel((Object[]) new String[]{"✔", "№", "Word", "Translate"}, count_row) {
+        dtm_true_false_answers = new DefaultTableModel((Object[]) new String[]{service.nc_check, service.nc_number, service.nc_word_en, service.nc_translate_en}, count_row) {
             @Override
             public Class<?> getColumnClass(int column) {
                 switch (column) {
@@ -1218,12 +1216,12 @@ public class MainUI {
         };
 
         for (int i = 0; i < count_row; i++) {
-            dtm_true_false_answers.setValueAt(false, i, service.getCCI("✓"));
-            dtm_true_false_answers.setValueAt(i + 1, i, service.getCCI("№"));
+            dtm_true_false_answers.setValueAt(false, i, service.getCCI(service.nc_check));
+            dtm_true_false_answers.setValueAt(i + 1, i, service.getCCI(service.nc_number));
             String key = c_data.names().getString(i);
             String val = c_data.getString(key);
-            dtm_true_false_answers.setValueAt(key, i, service.getCCI("Word"));
-            dtm_true_false_answers.setValueAt(val, i, service.getCCI("Translate"));
+            dtm_true_false_answers.setValueAt(key, i, service.getCCI(service.nc_word_en));
+            dtm_true_false_answers.setValueAt(val, i, service.getCCI(service.nc_translate_en));
         }
     }
 
@@ -1343,6 +1341,7 @@ public class MainUI {
         table1.removeColumn(table1.getColumnModel().getColumn(5));
         table1.removeColumn(table1.getColumnModel().getColumn(5));
         table1.removeColumn(table1.getColumnModel().getColumn(5));
+        table1.removeColumn(table1.getColumnModel().getColumn(5));
         spinner1.setModel(new SpinnerNumberModel(5, 1, service.ja_words.length(), 1));
         spinner2.setModel(new SpinnerNumberModel(1, 1, service.ja_words.length() - 1, 1));
         spinner3.setModel(new SpinnerNumberModel(2, 2, service.ja_words.length(), 1));
@@ -1411,17 +1410,17 @@ public class MainUI {
     private void spinner_choice_item_table() {
         if (CB_Scope_questions.isSelected()) {
             for (int i = 0; i < table1.getRowCount(); i++) {
-                table1.setValueAt(false, i, service.getCCI("✓"));
+                table1.setValueAt(false, i, service.getCCI(service.nc_check));
             }
             for (int i = (int) spinner2.getValue() - 1; i < (int) spinner3.getValue(); i++) {
                 if (table1.getRowCount() > (int) spinner3.getValue() - 1) {
-                    table1.setValueAt(true, i, service.getCCI("✓"));
+                    table1.setValueAt(true, i, service.getCCI(service.nc_check));
                 }
             }
         } else {
             for (int i = (int) spinner2.getValue() - 1; i < (int) spinner3.getValue(); i++) {
                 if (table1.getRowCount() > 0) {
-                    table1.setValueAt(false, i, service.getCCI("✓"));
+                    table1.setValueAt(false, i, service.getCCI(service.nc_check));
                 }
             }
         }
