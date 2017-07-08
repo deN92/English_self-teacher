@@ -46,6 +46,9 @@ class Service{
                         nc_type_ua, nc_example_ua, nc_word_copy_ua, nc_translate_copy_ua, nc_date_ua};
     String[] word_types = {"nn", "vr", "aj", "av", "pn", "pp", "oth"};
 
+
+
+
     private URL url1 = ToolsUI.class.getResource("/icons/ic_word_example_full_20x20.png");
     private URL url2 = ToolsUI.class.getResource("/icons/ic_word_example_empty_20x20.png");
     ImageIcon im11 = new ImageIcon(url1);
@@ -252,8 +255,8 @@ class Service{
             jo_i18n = new JSONObject().put("uaen", new JSONObject().
                 put("TC_name", new JSONObject().put("ua", new Service().name_cols_ua).
                                                 put("en", new Service().name_cols)).
-                put("TC_name2",new JSONObject().put("ua", new String[] {"№", "Слово", "Переклад", "", "Відповідь"}).
-                                                put("en", new String[] {"№", "Word", "Translate", "", "True answer"})).
+                put("TC_name2",new JSONObject().put("ua", new String[] {"№", "Слово", "Переклад", "", "Відповідь", new Service().nc_example_ua}).
+                                                put("en", new String[] {"№", "Word", "Translate", "", "True answer", new Service().nc_example_en})).
                 put("Lbl_Title_name", new JSONObject().put("ua","Вибір запитань").put("en", "Choice questions")).
                 put("RB_Count_questions_name", new JSONObject().put("ua","Кількість запитань").
                                                                 put("en", "Count questions")).
