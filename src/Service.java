@@ -44,10 +44,7 @@ class Service{
                         nc_type_en, nc_example_en, nc_word_copy_en, nc_translate_copy_en, nc_date_en};
     String[] name_cols_ua =  {nc_check, nc_number, nc_word_ua, nc_translate_ua,
                         nc_type_ua, nc_example_ua, nc_word_copy_ua, nc_translate_copy_ua, nc_date_ua};
-    String[] word_types = {"nn", "vr", "aj", "av", "pn", "pp", "oth"};
-
-
-
+    String[] word_types = {"nn", "rvr", "ivr", "aj", "av", "pn", "pp", "oth"};
 
     private URL url1 = ToolsUI.class.getResource("/icons/ic_word_example_full_20x20.png");
     private URL url2 = ToolsUI.class.getResource("/icons/ic_word_example_empty_20x20.png");
@@ -92,30 +89,21 @@ class Service{
 
         jo_number_pair = new JSONObject[ja_words.length()];
 
-        model[number] = new DefaultTableModel((Object[]) new Language(current_path[1]).SetLanguage("TC_name"), ja_words.length())
+        model[number] = new DefaultTableModel((Object[]) new Language(current_path[1]).SetLanguage("TC_name"),
+                                                                                                ja_words.length())
         {
             public Class<?> getColumnClass(int column){
                 switch(column){
-                    case 0:
-                        return Boolean.class;
-                    case 1:
-                        return Integer.class;
-                    case 2:
-                        return String.class;
-                    case 3:
-                        return String.class;
-                    case 4:
-                        return String.class;
-                    case 5:
-                        return ImageIcon.class;
-                    case 6:
-                        return ImageIcon.class;
-                    case 7:
-                        return ImageIcon.class;
-                    case 8:
-                        return Date.class;
-                    default:
-                        return String.class;
+                    case 0: return Boolean.class;
+                    case 1: return Integer.class;
+                    case 2: return String.class;
+                    case 3: return String.class;
+                    case 4: return String.class;
+                    case 5: return ImageIcon.class;
+                    case 6: return ImageIcon.class;
+                    case 7: return ImageIcon.class;
+                    case 8: return Date.class;
+                    default: return String.class;
                 }
             }
 
@@ -155,8 +143,8 @@ class Service{
             model[number].setValueAt(im12, i, getCCI(nc_example_en));
             for(int j =0; j< jo_words_type_date_example[1].length(); j++) {
                 String key_example = jo_words_type_date_example[1].names().get(j).toString();
-                int index_example = jo_words_type_date_example[1].getInt(key_example);
-                if(index_example == i) {
+                String index_example = jo_words_type_date_example[1].getString(key_example);
+                if(index_example.equals(model[number].getValueAt(i, getCCI("Word")))) {
                     model[number].setValueAt(im11, i, getCCI(nc_example_en));
                 }
             }
@@ -255,8 +243,10 @@ class Service{
             jo_i18n = new JSONObject().put("uaen", new JSONObject().
                 put("TC_name", new JSONObject().put("ua", new Service().name_cols_ua).
                                                 put("en", new Service().name_cols)).
-                put("TC_name2",new JSONObject().put("ua", new String[] {"№", "Слово", "Переклад", "", "Відповідь", new Service().nc_example_ua}).
-                                                put("en", new String[] {"№", "Word", "Translate", "", "True answer", new Service().nc_example_en})).
+                put("TC_name2",new JSONObject().put("ua", new String[] {"№", "Слово", "Переклад", "", "Відповідь",
+                                                                                    new Service().nc_example_ua}).
+                                                put("en", new String[] {"№", "Word", "Translate", "", "True answer",
+                                                                                    new Service().nc_example_en})).
                 put("Lbl_Title_name", new JSONObject().put("ua","Вибір запитань").put("en", "Choice questions")).
                 put("RB_Count_questions_name", new JSONObject().put("ua","Кількість запитань").
                                                                 put("en", "Count questions")).
@@ -264,6 +254,7 @@ class Service{
                                                                  put("en", "Choice from table")).
                 put("RB_Scope_questions_name", new JSONObject().put("ua","В межах з:").put("en", "Scope from:")).
                 put("Lbl_sp2_to_sp3_name", new JSONObject().put("ua","до").put("en", "to")).
+                put("Btn_Parts_of_speech", new JSONObject().put("ua","Частини мови...").put("en", "Parts of speech...")).
                 put("Lbl_Type_test", new JSONObject().put("ua","Тип тесту: ").put("en", "Test type")).
                 put("CB_Elements_name", new JSONObject().put("en", new String[] {"Written", "Spoken"}).
                                                          put("ua", new String[] {"Письмовий", "Усний"})).
@@ -295,8 +286,8 @@ class Service{
                 put("Btn_Add_name", new JSONObject().put("ua","Додати").put("en", "Add")).
                 put("Btn_Del_name", new JSONObject().put("ua","Видалити").put("en", "Del")).
                 put("Btn_Save_name", new JSONObject().put("ua","Зберегти").put("en", "Save")).
-                put("Btn_Moving_to_studied_words", new JSONObject().put("ua","Перемістити до вивчених слів").
-                                                                    put("en", "Move to the studied words")).
+                put("Btn_Transfer_to_studied_words", new JSONObject().put("ua","Перемістити до вивчених слів").
+                                                                    put("en", "Transfer to the studied words")).
                 put("OPM_Title", new JSONObject().put("ua","Повідомлення").put("en", "Message")).
                 put("OPM_Text_question_null", new JSONObject().put("ua","Запитань не вибрано!").
                                                                put("en", "Question is not selected!")).
@@ -305,7 +296,7 @@ class Service{
                 put("OPM_Are_you_sure", new JSONObject().put("ua","Ви впевнені?").put("en", "Are you sure?")).
 
                 put("OPM_Title_removing", new JSONObject().put("ua","Видалення ").put("en", "Deleting ")).
-                put("OPM_Title_moving", new JSONObject().put("ua","Переміщення ").put("en", "Moving ")).
+                put("OPM_Title_transfer", new JSONObject().put("ua","Переміщення ").put("en", "Transferring ")).
                 put("OPM_Words_repositioned", new JSONObject().put("ua"," було переміщено!").
                                                                put("en", " Words have been repositioned")).
                 put("OPM_Clear_answers", new JSONObject().put("ua","Прибрати відмічені").put("en", "Clear marked")).
@@ -327,10 +318,12 @@ class Service{
                                                          put("en", "Go to common words")).
                 put("Btn_Table_IT", new JSONObject().put("ua","Перейти до IT слів").
                                                      put("en", "Go to IT words")).
-                put("CB_Words_type",new JSONObject().put("ua", new String[] {"Імен.", "Дієсл.", "Прикм.",
-                                                                            "Присл.", "Займ.", "Прийм.", "Інше"}).
-                                                     put("en", new String[] {"Noun", "Verb", "Adject.",
-                                                                            "Adverb", "Pronoun", "Preposit.", "Oth."})).
+                put("CB_Words_type",new JSONObject().put("ua", new String[]{"Іменник", "Прав. дієсл.", "Неправ. дієсл.",
+                                                                            "Прикметник", "Прислівник", "Займенник",
+                                                                            "Прийменник", "Інше"}).
+                                                     put("en", new String[]{"Noun", "Reg. verb", "Irreg. verb",
+                                                                            "Adjective", "Adverb", "Pronoun",
+                                                                            "Preposition", "Other"})).
                 put("Btn_Exchange_positions", new JSONObject().put("ua","Поміняти місцями").
                                                                put("en", "Exchange positions")).
                 put("OPM_Minimum_5_words",
@@ -462,8 +455,8 @@ class Service{
             JSONObject words_example = new JSONObject();
 
             String[] words =
-                    {"quiet", "break/broke/broken", "mistake", "turn", "stay",
-                            "mind", "explain", "calm", "still", "become"};
+                    {"quiet", "to break-broke-broken", "mistake", "turn", "stay",
+                            "mind", "explain", "calm", "still", "to become-became-become"};
             String[] trans =
                     {"тихо", "зламати", "помилка", "поворот", "залишитись",
                             "дбати", "пояснювати", "спокійний", "до цих пір", "стати/відповідати"};
