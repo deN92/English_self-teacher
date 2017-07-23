@@ -468,13 +468,14 @@ class Service{
             int[][] num1 = new int[word_types.length][];
             int[][] num2 = new int[word_types.length][];
 
-            num1[0] = new int[]{0,2,3,4,5,7,8};
-            num1[1] = new int[]{2,3,4,5,6,7,9};
-            num1[2] = new int[]{1,7};
-            num1[3] = new int[]{0,1,8};
-            num1[4] = new int[]{};
+            num1[0] = new int[]{2,3};
+            num1[1] = new int[]{4,5,6};
+            num1[2] = new int[]{1,9};
+            num1[3] = new int[]{7};
+            num1[4] = new int[]{0,8};
             num1[5] = new int[]{};
-            num1[6] = new int[]{8};
+            num1[6] = new int[]{};
+            num1[7] = new int[]{};
 
             for(int i=0; i<word_types.length; i++){
                 num2[i] = new int[]{};
@@ -523,7 +524,7 @@ class Service{
             JSONObject jo_wt_studied = new JSONObject();
 
             for(int i=0; i<str_words_example.length; i++){
-                jo_we_new.put(str_words_example[i], i);
+                jo_we_new.put(str_words_example[i], words[i]);
             }
 
             for(int i=0; i<word_types.length;i++) {

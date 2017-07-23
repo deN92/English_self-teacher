@@ -1034,9 +1034,29 @@ public class ToolsUI extends JFrame {
                     Btn_Del.setEnabled(false);
                     break;
                 } else {
-                    Btn_Add.setEnabled(true);
-                    Btn_Del.setEnabled(true);
-                    Btn_Save.setEnabled(true);
+
+
+                    Boolean[] cb_words_type_selected1 = new Boolean[8];
+                    Boolean[] cb_words_type_selected2 = new Boolean[8];
+                    for(int q=0; q<cb_words_type_selected1.length; q++){
+                        cb_words_type_selected1[q] = CB_WT1[q].isSelected();
+                    }
+                    for(int q=0; q<cb_words_type_selected2.length; q++){
+                        cb_words_type_selected2[q] = CB_WT2[q].isSelected();
+                    }
+
+                    Boolean[][] cb_words_type_selected = {cb_words_type_selected1, cb_words_type_selected2};
+
+                    if ((Arrays.asList(cb_words_type_selected[0]).contains(true))||
+                        (Arrays.asList(cb_words_type_selected[1]).contains(true))) {
+                        Btn_Save.setEnabled(false);
+                        Btn_Add.setEnabled(false);
+                        Btn_Del.setEnabled(false);
+                    }else{
+                        Btn_Save.setEnabled(true);
+                        Btn_Add.setEnabled(true);
+                        Btn_Del.setEnabled(true);
+                    }
                 }
             }
         }
