@@ -499,7 +499,8 @@
                   </grid>
                 </constraints>
                 <properties>
-                  <text value="B"/>
+                  <icon value="icons/bt_add_word_multi_25x25.png"/>
+                  <text value=""/>
                 </properties>
               </component>
             </children>

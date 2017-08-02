@@ -284,6 +284,7 @@ class Service{
                 put("Btn_Duplicates_name", new JSONObject().put("ua","Перевірити наявність повторень").
                                                             put("en", "Check for duplicates")).
                 put("Btn_Add_name", new JSONObject().put("ua","Додати").put("en", "Add")).
+                    put("Btn_Add_more_name", new JSONObject().put("ua","Додати більше").put("en", "Add more")).
                 put("Btn_Del_name", new JSONObject().put("ua","Видалити").put("en", "Del")).
                 put("Btn_Save_name", new JSONObject().put("ua","Зберегти").put("en", "Save")).
                 put("Btn_Transfer_to_studied_words", new JSONObject().put("ua","Перемістити до вивчених слів").

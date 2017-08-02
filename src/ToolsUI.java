@@ -1022,6 +1022,7 @@ public class ToolsUI extends JFrame {
         Lbl_sp2_to_sp3.setText(lang.SetLanguage("Lbl_sp2_to_sp3_name").toString());
         Btn_Check_duplicates.setToolTipText(lang.SetLanguage("Btn_Duplicates_name").toString());
         Btn_Add.setToolTipText(lang.SetLanguage("Btn_Add_name").toString());
+        Btn_Add_multiple_items.setToolTipText(lang.SetLanguage("Btn_Add_more_name").toString());
         Btn_Del.setToolTipText(lang.SetLanguage("Btn_Del_name").toString());
         Btn_Save.setToolTipText(lang.SetLanguage("Btn_Save_name").toString());
         Btn_Exchange_positions.setToolTipText(lang.SetLanguage("Btn_Exchange_positions").toString());
