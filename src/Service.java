@@ -314,10 +314,7 @@ class Service{
                                                             put("en", "Words not saved")).
                 put("Btn_Answers_all", new JSONObject().put("ua","Показати всі відповіді").
                                                         put("en", "Show answers all")).
-                put("Btn_Table_common", new JSONObject().put("ua","Перейти до загальних слів").
-                                                         put("en", "Go to common words")).
-                put("Btn_Table_IT", new JSONObject().put("ua","Перейти до IT слів").
-                                                     put("en", "Go to IT words")).
+                put("Lbl_Example", new JSONObject().put("ua", "Приклад:").put("en", "Example:")).
                 put("CB_Words_type",new JSONObject().put("ua", new String[]{"Іменник", "Прав. дієсл.", "Неправ. дієсл.",
                                                                             "Прикметник", "Прислівник", "Займенник",
                                                                             "Прийменник", "Інше"}).

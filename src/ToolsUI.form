@@ -389,7 +389,7 @@
               </grid>
             </constraints>
           </hspacer>
-          <grid id="b50c7" binding="panel_right" layout-manager="GridLayoutManager" row-count="7" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="b50c7" binding="panel_right" layout-manager="GridLayoutManager" row-count="8" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="0" indent="0" use-parent-layout="false">
@@ -403,7 +403,7 @@
             <children>
               <component id="3fa30" class="javax.swing.JButton" binding="Btn_Del">
                 <constraints>
-                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                  <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
                     <minimum-size width="50" height="35"/>
                     <preferred-size width="50" height="35"/>
                     <maximum-size width="50" height="35"/>
@@ -432,7 +432,7 @@
               </component>
               <component id="598a4" class="javax.swing.JButton" binding="Btn_Check_duplicates">
                 <constraints>
-                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
                     <minimum-size width="50" height="35"/>
                     <preferred-size width="50" height="35"/>
                     <maximum-size width="50" height="35"/>
@@ -446,7 +446,7 @@
               </component>
               <vspacer id="50693">
                 <constraints>
-                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false">
                     <minimum-size width="-1" height="70"/>
                     <preferred-size width="-1" height="70"/>
                     <maximum-size width="-1" height="70"/>
@@ -464,7 +464,7 @@
               </vspacer>
               <component id="ef6ec" class="javax.swing.JButton" binding="Btn_Exchange_positions">
                 <constraints>
-                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false">
                     <minimum-size width="50" height="35"/>
                     <preferred-size width="50" height="35"/>
                     <maximum-size width="50" height="35"/>
@@ -478,7 +478,7 @@
               </component>
               <component id="eb430" class="javax.swing.JButton" binding="Btn_Save">
                 <constraints>
-                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
                     <minimum-size width="50" height="35"/>
                     <preferred-size width="50" height="35"/>
                     <maximum-size width="50" height="35"/>
@@ -488,6 +488,18 @@
                   <icon value="icons/bt_save_word_25x25.png"/>
                   <margin top="2" left="2" bottom="2" right="2"/>
                   <text value=""/>
+                </properties>
+              </component>
+              <component id="4d80d" class="javax.swing.JButton" binding="Btn_Add_multiple_items">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                    <minimum-size width="50" height="35"/>
+                    <preferred-size width="50" height="35"/>
+                    <maximum-size width="50" height="35"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <text value="B"/>
                 </properties>
               </component>
             </children>

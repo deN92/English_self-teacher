@@ -35,6 +35,7 @@ public class ToolsUI extends JFrame {
     private JCheckBox CB_t2_all_checking;
     private JButton Btn_Parts_of_speech1;
     private JButton Btn_Parts_of_speech2;
+    private JButton Btn_Add_multiple_items;
     private JSONArray[] ja_equal_words = new JSONArray[2];
     private JSONArray[] ja_equal_words2 = new JSONArray[2];
 
@@ -256,6 +257,69 @@ public class ToolsUI extends JFrame {
                         lang.SetLanguage("OPM_Line_not_completed").toString(),
                         lang.SetLanguage("OPM_Title").toString(),
                         JOptionPane.WARNING_MESSAGE);
+            }
+        });
+
+        Btn_Add_multiple_items.addActionListener(e -> {
+            JTextArea text_area[] = new JTextArea[2];
+            JScrollPane jb[] = new JScrollPane[2];
+
+            JPanel panel_wt = new JPanel();
+
+            String[] columns_name = (String[])lang.SetLanguage("TC_name");
+            text_area[0] = new JTextArea(""+lang.SetLanguage("Lbl_Example")+"\n"+columns_name[2]+"1\n"+
+                                                           columns_name[2]+"2\n"+
+                                                           columns_name[2]+"3\n", 10, 15);
+            text_area[1] = new JTextArea(""+lang.SetLanguage("Lbl_Example")+"\n"+columns_name[3]+"1\n"+
+                                                           columns_name[3]+"2\n"+
+                                                           columns_name[3]+"3\n", 10, 15);
+
+            jb[0] = new JScrollPane(text_area[0]);
+            jb[1] = new JScrollPane(text_area[1]);
+
+            panel_wt.add(jb[0]);
+            panel_wt.add(jb[1]);
+
+            switch (JOptionPane.showConfirmDialog(null, panel_wt,
+                    lang.SetLanguage("OPM_Title").toString(), JOptionPane.OK_CANCEL_OPTION)) {
+                case JOptionPane.OK_OPTION:
+                    ArrayList<String>[] list_name_translate = new ArrayList[2];
+
+                    list_name_translate[0] = new ArrayList<>();
+                    list_name_translate[1] = new ArrayList<>();
+
+                    Collections.addAll(list_name_translate[0], text_area[0].getText().split("\\r?\\n"));
+                    Collections.addAll(list_name_translate[1], text_area[1].getText().split("\\r?\\n"));
+
+                    if(list_name_translate[0].size()>list_name_translate[1].size()) {
+                        list_name_translate[1] = add_value_to_empty_line(list_name_translate[0], list_name_translate[1]);
+                    }
+                    else if(list_name_translate[1].size()>list_name_translate[0].size()){
+                        list_name_translate[0] = add_value_to_empty_line(list_name_translate[1], list_name_translate[0]);
+                    }
+
+
+                    for(int i=0; i<list_name_translate[0].size(); i++) {
+                        if (!table1.getValueAt(table1.getRowCount() - 1, nc_word_en).equals("")) {
+                            DefaultTableModel model1 = (DefaultTableModel) table1.getModel();
+                            model1.addRow(new Object[]{false, table1.getRowCount() + 1,
+                                    list_name_translate[0].get(i).
+                                            replace(",","").
+                                            replace("'","").
+                                            replace("\"", ""),
+                                    list_name_translate[1].get(i).
+                                            replace(",","").
+                                            replace("'","").
+                                            replace("\"", ""),
+                                    "", "", "", new Date()});
+                            for (int j = 0; j < table_column_widths.length; j++) {
+                                table1.getColumnModel().getColumn(j).setMaxWidth(table_column_widths[j]);
+                            }
+                            table1.changeSelection(table1.getRowCount() - 1, 0, false,
+                                    false);
+                        }
+                    }
+                    break;
             }
         });
 
@@ -589,6 +653,19 @@ public class ToolsUI extends JFrame {
                 all_checked_in_tab_tf(table2, true);
             } else all_checked_in_tab_tf(table2, false);
         });
+    }
+
+//    if list_names != list_translate
+    private ArrayList<String> add_value_to_empty_line(ArrayList<String> c_list1, ArrayList<String> c_list2){
+        if(c_list1.size()>c_list2.size()){
+            int qw = c_list1.size()-c_list2.size();
+            int i=0;
+            while(i<qw){
+                c_list2.add("");
+                i++;
+            }
+        }
+        return c_list2;
     }
 
     private void sort_by_number(MouseEvent e, int n, boolean[] c_canEdit){
